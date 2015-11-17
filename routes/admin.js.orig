@@ -7,10 +7,17 @@ exports.adminLoginPage = function(req, res){
 			res.render('adminHome', {user:JSON.stringify(req.session.passport.user)});
 		}
 		else
+<<<<<<< HEAD
+			res.render('loginAdmin', {user:JSON.stringify({})});
+	}
+	else
+		res.render('loginAdmin', {user:JSON.stringify({})});
+=======
 			res.render('loginadmin', {user:JSON.stringify({})});
 	}
 	else
 		res.render('loginadmin', {user:JSON.stringify({})});
+>>>>>>> dfc4161d2940de52dcf17f28e8ee7d9f867e236c
 };
 
 exports.adminHome = function(req, res){

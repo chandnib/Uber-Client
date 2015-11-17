@@ -1,3 +1,6 @@
+<<<<<<< HEAD
+{"libs":["ecma5"],"plugins":{"node":{}},"ide":{}}
+=======
 {
   "plugins": {
     "outline": {
@@ -43,3 +46,4 @@
     "jquery"
   ]
 }
+>>>>>>> dfc4161d2940de52dcf17f28e8ee7d9f867e236c

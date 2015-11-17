@@ -1,4 +1,5 @@
 var express = require('express')
+<<<<<<< HEAD
 , routes = require('./routes')
 , user = require('./routes/user')
 , http = require('http')
@@ -6,6 +7,13 @@ var express = require('express')
 , admin= require('./routes/admin')
 , customer = require('./routes/customer')
 , driver = require ('./routes/driver');
+=======
+  , routes = require('./routes')
+  , user = require('./routes/user')
+  , http = require('http')
+  , path = require('path')
+  , admin= require('./routes/admin');
+>>>>>>> dfc4161d2940de52dcf17f28e8ee7d9f867e236c
 
 //Passport login for 
 var amqp = require('amqp');
@@ -14,6 +22,22 @@ var rpc = new (require('./rpc/amqprpc'))(connection);
 
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
+<<<<<<< HEAD
+=======
+var mysql = require('mysql');
+var connection = mysql.createConnection({
+	multipleStatements: true,
+	host : 'localhost',
+	user : 'root',
+	password : 'YyX26VXPxLHAGQK8',
+	database: 'uberdb',
+	connectTimeout: 6000,
+	waitForConnections: true,
+	pool: false,
+});
+var mongoose = require('mongoose/');
+mongoose.connect('mongodb://localhost:27017/authentication');
+>>>>>>> dfc4161d2940de52dcf17f28e8ee7d9f867e236c
 
 //MongoSession
 var mongoSessionConnectURL = "mongodb://localhost:27017/sessions";
@@ -33,11 +57,18 @@ app.use(expressSession({
 	store: new mongoStore({ url: mongoSessionConnectURL })
 }));
 
+<<<<<<< HEAD
 //all environments
 app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
+=======
+// all environments
+app.set('port', process.env.PORT || 3000);
+app.set('views', __dirname + '/views');
+app.set('view engine', 'ejs');
 app.use(express.favicon("/images/favicon.ico"));
+>>>>>>> dfc4161d2940de52dcf17f28e8ee7d9f867e236c
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
@@ -52,11 +83,41 @@ app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/public', express.static(__dirname + "/public"));
 
+<<<<<<< HEAD
 //development only
 if ('development' == app.get('env')) {
 	app.use(express.errorHandler());
 }
 
+=======
+// development only
+if ('development' == app.get('env')) {
+  app.use(express.errorHandler());
+}
+
+//Admin Related
+//Passport Login function
+app.get('/adminLoginPage',admin.adminLoginPage);
+app.get('/adminHome',admin.adminHome);
+app.get('/invalidAdminLogin',admin.invalidAdminLogin);
+app.get('/invalidSessionAdminLogin',admin.invalidSessionAdminLogin);
+app.post('/loginAdmin', 
+passport.authenticate('local', {
+	successRedirect: '/adminHome',
+	failureRedirect: '/invalidAdminLogin'
+}));
+
+//Passport Login for admin
+var Schema = mongoose.Schema;
+
+var UserDetail = new Schema({
+	"EMAIL" : String,
+	"PASSWORD" : String
+}, {collection: 'USERS'});
+
+var UserDetails = mongoose.model('USERS',UserDetail);
+
+>>>>>>> dfc4161d2940de52dcf17f28e8ee7d9f867e236c
 passport.serializeUser(function(user, done) {
 	done(null, user);
 });
@@ -65,6 +126,7 @@ passport.deserializeUser(function(user, done) {
 	done(null, user);
 });
 
+<<<<<<< HEAD
 //Passport Login for admin
 
 //Passport Login Local Strategy
@@ -80,6 +142,20 @@ passport.use('admin-local',new LocalStrategy({ usernameField: 'username',
 		data.PASSWORD = password;
 			rpc.makeRequest("verifyAdmin", data,
 					function(err, user) {
+=======
+//Passport Login Local Strategy
+passport.use(new LocalStrategy(
+	function(username, password, done) {
+		console.log("username : "+ username + "  password :  " + password);
+		process.nextTick(function () {
+			//UserDetails.findOne({'EMAIL':username},
+			//connection.query("select * from ADMIN where EMAIL = '"+username+"'",
+			var data = {};
+			data.EMAIL = username;
+			data.PASSWORD = password;
+			rpc.makeRequest("verifyUser", data,
+			function(err, user) {
+>>>>>>> dfc4161d2940de52dcf17f28e8ee7d9f867e236c
 				console.log("User : "+ JSON.stringify(user));
 				if(err){
 					return done(err);
@@ -95,6 +171,7 @@ passport.use('admin-local',new LocalStrategy({ usernameField: 'username',
 						}else{
 							return done(null, false);
 						}
+<<<<<<< HEAD
 
 					}
 				}
@@ -217,6 +294,35 @@ app.get('/signUpCustomer', function(req, res){
 });
 
 app.post('/addCustomer', customer.customerSignUp);
+=======
+						
+					}
+				}
+				/*if (err) {//Activate for non MQPassport Auth 
+					return done(err);
+				}else{
+					if (user == [] || user == "" || user == null || user == {}) {
+						return done(null, false); 
+					}else{
+						//if (!bcrypt.compareSync(password,user.PASSWORD)) {
+						if (password != user[0].PASSWORD) {
+							return done(null, false); 
+						}
+						else{
+							return done(null, user[0]);
+						}
+					}
+				}*/
+			});
+		});
+	}
+));
+//END
+
+app.get('/', function(req, res){
+	  res.render('home', { title: 'HOME' });
+	});
+>>>>>>> dfc4161d2940de52dcf17f28e8ee7d9f867e236c
 
 mongo.connect(mongoSessionConnectURL, function() {
 	http.createServer(app).listen(app.get('port'), function(){
