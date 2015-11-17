@@ -56,12 +56,19 @@ if ('development' == app.get('env')) {
 	app.use(express.errorHandler());
 }
 
-//Passport Login for admin
 
-//Passport Login Local Strategy
+	passport.serializeUser(function(user, done) {
+		done(null, user);
+	});
+	
+	passport.deserializeUser(function(user, done) {
+		done(null, user);
+	});
+
+//Passport Login for admin
 passport.use('admin-local',new LocalStrategy({ usernameField: 'username',
-    passwordField: 'password' ,passReqToCallback: true},
-		function(req, username, password, done) {
+    passwordField: 'password'},
+		function(username, password, done) {
 	console.log("username : "+ username + "  password :  " + password);
 	process.nextTick(function () {
 		//UserDetails.findOne({'EMAIL':username},
@@ -69,10 +76,6 @@ passport.use('admin-local',new LocalStrategy({ usernameField: 'username',
 		var data = {};
 		data.EMAIL = username;
 		data.PASSWORD = password;
-		data.TYPE = req.body.loginType;
-		console.log(JSON.stringify(req.body.loginType));
-		if(req.body.loginType == "admin")
-		{
 			rpc.makeRequest("verifyAdmin", data,
 					function(err, user) {
 				console.log("User : "+ JSON.stringify(user));
@@ -94,55 +97,6 @@ passport.use('admin-local',new LocalStrategy({ usernameField: 'username',
 					}
 				}
 			});
-		}
-		else if (req.body.loginType == "customer")
-		{
-			rpc.makeRequest("verifyCustomer", data,
-					function(err, user) {
-				console.log("User : "+ JSON.stringify(user));
-				if(err){
-					return done(err);
-				}
-				else{
-					if(user == null || user == "" || user == {}){
-						return done(null, false);
-					}
-					else{
-						if(user.code == "200"){
-							console.log("Everthing is fine!!!")
-							return done(null, user);
-						}else{
-							return done(null, false);
-						}
-
-					}
-				}
-			});
-		}
-		else
-		{
-			rpc.makeRequest("verifyDriver", data,
-					function(err, user) {
-				console.log("User : "+ JSON.stringify(user));
-				if(err){
-					return done(err);
-				}
-				else{
-					if(user == null || user == "" || user == {}){
-						return done(null, false);
-					}
-					else{
-						if(user.code == "200"){
-							console.log("Everthing is fine!!!")
-							return done(null, user);
-						}else{
-							return done(null, false);
-						}
-
-					}
-				}
-			});
-		}
 
 	});
 }
@@ -151,8 +105,8 @@ passport.use('admin-local',new LocalStrategy({ usernameField: 'username',
 
 //customer
 passport.use('customer-local', new LocalStrategy({ usernameField: 'username',
-    passwordField: 'password' ,passReqToCallback: true},
-		function(req, username, password, done) {
+    passwordField: 'password'},
+		function(username, password, done) {
 	console.log("customer ==> username : "+ username + "  password :  " + password);
 	process.nextTick(function () {
 		//UserDetails.findOne({'EMAIL':username},
@@ -160,34 +114,6 @@ passport.use('customer-local', new LocalStrategy({ usernameField: 'username',
 		var data = {};
 		data.EMAIL = username;
 		data.PASSWORD = password;
-		data.TYPE = req.body.loginType;
-		console.log(JSON.stringify(req.body.loginType));
-		if(req.body.loginType == "admin")
-		{
-			rpc.makeRequest("verifyAdmin", data,
-					function(err, user) {
-				console.log("User : "+ JSON.stringify(user));
-				if(err){
-					return done(err);
-				}
-				else{
-					if(user == null || user == "" || user == {}){
-						return done(null, false);
-					}
-					else{
-						if(user.code == "200"){
-							console.log("Everthing is fine!!!")
-							return done(null, user);
-						}else{
-							return done(null, false);
-						}
-
-					}
-				}
-			});
-		}
-		else if (req.body.loginType == "customer")
-		{
 			rpc.makeRequest("verifyCustomer", data,
 					function(err, user) {
 				console.log("User : "+ JSON.stringify(user));
@@ -209,9 +135,21 @@ passport.use('customer-local', new LocalStrategy({ usernameField: 'username',
 					}
 				}
 			});
-		}
-		else
-		{
+	});
+}
+));
+
+//Passport Login for driver
+passport.use('driver-local',new LocalStrategy({ usernameField: 'username',
+    passwordField: 'password'},
+		function(username, password, done) {
+	console.log("username : "+ username + "  password :  " + password);
+	process.nextTick(function () {
+		//UserDetails.findOne({'EMAIL':username},
+		//connection.query("select * from ADMIN where EMAIL = '"+username+"'",
+		var data = {};
+		data.EMAIL = username;
+		data.PASSWORD = password;
 			rpc.makeRequest("verifyDriver", data,
 					function(err, user) {
 				console.log("User : "+ JSON.stringify(user));
@@ -233,11 +171,11 @@ passport.use('customer-local', new LocalStrategy({ usernameField: 'username',
 					}
 				}
 			});
-		}
 
 	});
 }
 ));
+//END
 
 
 //Admin Related
@@ -256,14 +194,14 @@ app.post('/loginAdmin',
 		}));
 app.post('/loginCustomer', 
 		passport.authenticate('customer-local', {
-			successRedirect: '/customerHome',
+			successRedirect: '/adminHome',
 			failureRedirect: '/invalidCustomerLogin'
 		}));
-//app.post('/loginDriver', 
-//passport.authenticate('local', {
-//successRedirect: '/adminHome2',
-//failureRedirect: '/invalidAdminLogin2'
-//}));
+app.post('/loginDriver', 
+passport.authenticate('driver-local', {
+successRedirect: '/adminHome',
+failureRedirect: '/invalidDriverLogin'
+}));
 
 app.get('/', function(req, res){
 	res.render('home', { title: 'HOME' });
