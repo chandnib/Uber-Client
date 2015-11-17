@@ -165,6 +165,7 @@ passport.use('driver-local',new LocalStrategy({ usernameField: 'username',
 							console.log("Everthing is fine!!!")
 							return done(null, user);
 						}else{
+							alert(user.err);
 							return done(null, false);
 						}
 
@@ -212,6 +213,8 @@ app.get('/Log_In', function(req, res){
 app.get('/signUpCustomer', function(req, res){
 	res.render('Sign_Up_Customer', { title: 'HOME' });
 });
+
+app.post('/addCustomer', customer.customerSignUp);
 
 mongo.connect(mongoSessionConnectURL, function() {
 	http.createServer(app).listen(app.get('port'), function(){

@@ -5,7 +5,10 @@
     <script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="../public/stylesheets/Sign_up_Customer.css" rel="stylesheet" type="text/css">
-  </head><body>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.4/angular.js"></script>
+    <script type="text/javascript" src="/js/customerjs.js"></script>
+  </head>
+  <body ng-app="UberPrototype" ng-controller="loginController">
     <div class="navbar navbar-default navbar-static-top">
       <div class="container">
         <div class="navbar-header">
@@ -39,7 +42,7 @@
           </div>
           <div class="col-md-11">
             <h1>Account</h1>
-            <form role="form">
+            <form role="form" method="POST" ng-submit="submit()">
               <div class="form-group">
                 <label class="control-label" for="email">Email address</label>
                 <input class="form-control" ng-model="email" id="email" placeholder="Enter email" type="email">
@@ -118,6 +121,18 @@
               </div>
               <br>
               <br>
+            <div class="form-group">
+                <label class="control-label" for="address">Address</label>
+                <input class="form-control" ng-model="address" id="address" placeholder="Address" type="text">
+              </div>
+               <div class="form-group">
+                <label class="control-label" for="city">City</label>
+                <input class="form-control" ng-model="city" id="city" placeholder="City" type="text">
+              </div>
+                <div class="form-group">
+                <label class="control-label" for="state">State</label>
+                <input class="form-control" ng-model="state" id="state" placeholder="State" type="text">
+              </div>
               <div class="form-group">
                 <label class="control-label" for="zipCode">Postal Code</label>
                 <input class="form-control" ng-model="zipCode" id="zipCode" placeholder="Zip Code" type="text">
