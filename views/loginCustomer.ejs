@@ -32,15 +32,15 @@
 					<form role="form" name="customerLoginForm" id="customerLoginForm"
 						action="/loginCustomer" method="post" novalidate>
 						<div class="form-group">
-							<label class="control-label" for="exampleInputEmail1">Email
-								address</label><input class="form-control" id="user.username"
+							<label class="control-label">Email
+								address</label><input class="form-control" name= "username" id="user.username"
 								id="user.username" ng-model="user.username"
 								placeholder="Enter email" type="email">
 						</div>
 						<div class="form-group">
 							<label class="control-label" for="exampleInputPassword1">Password</label>
 							<input
-								class="form-control" id="user.password" ng-model="user.password"
+								class="form-control" name = "password" id="user.password" ng-model="user.password"
 								placeholder="Password" type="password">
 						</div>
 						<input type = "hidden" name= "loginType" id= "user.loginType" ng-model="user.loginType" value="customer">
