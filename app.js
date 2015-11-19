@@ -5,7 +5,8 @@ var express = require('express')
 , path = require('path')
 , admin= require('./routes/admin')
 , customer = require('./routes/customer')
-, driver = require ('./routes/driver');
+, driver = require ('./routes/driver')
+, rides = require ('./routes/rides');
 
 //Passport login for 
 var amqp = require('amqp');
