@@ -1,0 +1,50 @@
+ 
+ <div class="row" style="padding-top:20px; padding-bottom:20px;">
+      <div class="col-xs-4 col-xs-offset-4" style="text-align:center;">
+        <h3>Your Ride Has Started</h3>
+      </div>
+    </div>
+    <div class="row">
+       <div ng-if="editRide == false" class="col-xs-10 col-xs-offset-1" style="border-top: 1px solid #ccc; padding-top:30px; padding-bottom:30px;">
+        <div class="col-xs-4 col-xs-offset-4" style="text-align:center;">
+          <input type="button" value="Edit Ride" class="btn btn-primary btn-md"
+          style="min-width: 150px;">
+        </div>
+      </div> 
+   <div class="row" ng-if="editRide == false">
+      <div class="col-xs-8 col-xs-offset-2" style="text-align:center;">
+        <div class="row">
+          <div class="col-xs-2 col-xs-offset-3" style="text-align:center; padding-top:5px;">
+            <label>destination location</label>
+          </div>
+          <div class="col-xs-4 ">
+          <!-- <input type="text" id="txtSource" value="Bandra, Mumbai, India" style="width: 200px" />
+          <input type="text" id="txtDestination" value="Andheri, Mumbai, India" style="width: 200px" />  -->
+           <input type="text" class="form-control"  id="sourceLocation" name="sourceLocation"
+            ng-model="sourceLocation" googlesource/> 
+           <input type="text" class="form-control" id="destLocation" name="destLocation"
+            ng-model="destLocation" googlesource/> 
+          </div>
+        </div>
+        <div class="row" style="padding-top:10px;">
+          <div class="col-xs-3 col-xs-offset-3">
+            <input type="button" value="Submit" onclick="getRoute()" class="btn btn-primary btn-md" style="min-width: 100px;">
+          </div>
+          <div class="col-xs-3">
+            <input type="button" value="Cancel" class="btn btn-primary btn-md" style="min-width: 100px;">
+          </div>
+        </div>
+      </div>
+      </div>
+      <div class="row" style="padding-top:10px;">
+      <div class="col-xs-8 col-xs-offset-2" style="text-align:center;">
+      <div id="dvMap" style="width: 500px; height: 200px" ng-model="dvMap">
+      </div>
+    </div>
+    <div class="col-xs-8 col-xs-offset-2" style="text-align:center;">
+    <div id="dvDistance" ng-model="distance">
+        </div>
+     <div id="dvDuration" ng-model="duration">
+        </div>
+       </div>
+    </div>

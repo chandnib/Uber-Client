@@ -197,7 +197,7 @@ app.post('/loginAdmin',
 		}));
 app.post('/loginCustomer', 
 		passport.authenticate('customer-local', {
-			successRedirect: '/adminHome',
+			successRedirect: '/customerHome',
 			failureRedirect: '/invalidCustomerLogin'
 		}));
 app.post('/loginDriver', 
@@ -215,8 +215,15 @@ app.get('/Log_In', function(req, res){
 app.get('/signUpCustomer', function(req, res){
 	res.render('Sign_Up_Customer', { title: 'HOME' });
 });
+app.get('/customerHome', function(req, res){
+	res.render('customerHome', { title: 'HOME' });
+});
 
 app.post('/addCustomer', customer.customerSignUp);
+
+app.post('/createRide',rides.createRide);
+app.post('/editRide',rides.editRide);
+app.post('/deleteRide',rides.deleteRide);
 
 mongo.connect(mongoSessionConnectURL, function() {
 	http.createServer(app).listen(app.get('port'), function(){
