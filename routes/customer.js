@@ -70,6 +70,47 @@ exports.customerSignUp = function(req, res){
 			}
 };
 
+exports.customerSignUp = function(req, res){
+	var data = {};
+	if(req.param("email") && req.param("password") && req.param("firstName") && req.param("lastName") && req.param("mobileNumber") && req.param("language") && req.param("creditCardNumber") && req.param("cvv") && req.param("month") && req.param("year") && req.param("address") && req.param("city") && req.param("state") && req.param("zipCode"))
+		{
+	data.EMAIL = req.param("email");
+	data.PASSWORD = req.param("password");
+	data.FIRSTNAME = req.param("firstName");
+	data.LASTNAME = req.param("lastName");
+	data.MOBILENUMBER = req.param("mobileNumber");
+	data.LANGUAGE = req.param("language");
+	data.CREDITCARDNUMBER = req.param("creditCardNumber");
+	data.CVV = req.param("cvv");
+	data.MONTH = req.param("month");
+	data.YEAR = req.param("year");
+	data.ADDRESS = req.param("address");
+	data.CITY = req.param("city");
+	data.STATE = req.param("state");
+	data.ZIPCODE = req.param("zipCode");
+		rpc.makeRequest("addCustomer", data,
+				function(err, user) {
+			console.log("User : "+ JSON.stringify(user));
+			if(err){
+				res.redirect("/customerSignUp");
+			}
+			else{
+					if(user.code == "200"){
+						console.log("Everthing is fine!!!");
+						res.redirect("/Log_In");					
+						}
+					else{
+						res.redirect("/customerSignUpError");
+					}
+			}
+		});
+		}
+	else
+		{
+		res.send({"statusCode" : 401});
+		}
+};
+
 exports.invalidAdminLogin = function(req, res){
 	var user = {};
 	user.errorInloginForm = true;

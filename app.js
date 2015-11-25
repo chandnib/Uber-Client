@@ -216,11 +216,15 @@ app.get('/Log_In', function(req, res){
 app.get('/signUpCustomer', function(req, res){
 	res.render('Sign_Up_Customer', { title: 'HOME' });
 });
+app.get('/signUpDriver', function(req, res){
+	res.render('Sign_Up_Driver', { title: 'HOME' });
+});
 app.get('/customerHome', function(req, res){
 	res.render('customerHome', { title: 'HOME' });
 });
 
 app.post('/addCustomer', customer.customerSignUp);
+app.post('/addDriver', driver.driverSignUp);
 
 app.post('/createRide',rides.createRide);
 app.post('/editRide',rides.editRide);
