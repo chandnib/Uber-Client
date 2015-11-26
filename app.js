@@ -222,6 +222,12 @@ app.get('/signUpDriver', function(req, res){
 app.get('/customerHome', function(req, res){
 	res.render('customerHome', { title: 'HOME' });
 });
+//app.get('/deleteCustomer', customer.deleteCustomer)
+app.get('/deleteCustomer', function (req, res){
+	  req.session.destroy(function (err) {
+	    res.redirect('/'); //Inside a callback… bulletproof!
+	  });
+	});
 
 app.post('/addCustomer', customer.customerSignUp);
 app.post('/addDriver', driver.driverSignUp);

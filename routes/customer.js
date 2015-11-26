@@ -111,6 +111,11 @@ exports.customerSignUp = function(req, res){
 		}
 };
 
+exports.deleteCustomer = function(req, res){
+	req.logout();
+	req.session.destroy();
+};
+
 exports.invalidAdminLogin = function(req, res){
 	var user = {};
 	user.errorInloginForm = true;

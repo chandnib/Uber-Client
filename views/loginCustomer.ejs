@@ -44,6 +44,9 @@
 								placeholder="Password" name = "password" type="password">
 
 						</div>
+							<div class="alert alert-danger" ng-hide="invalid_login">
+							<strong>Error! Wrong Login Information</strong>
+						</div>
 						<input type = "hidden" name= "loginType" id= "user.loginType" ng-model="user.loginType" value="customer">
 						<button type="submit" class="btn btn-primary">Submit</button>
 					</form>
