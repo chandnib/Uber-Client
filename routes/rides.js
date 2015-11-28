@@ -1,265 +1,346 @@
-var express = require('express')
-, routes = require('./routes')
-, user = require('./routes/user')
-, http = require('http')
-, path = require('path')
-, admin= require('./routes/admin')
-, customer = require('./routes/customer')
-, driver = require ('./routes/driver')
-, billing = require ('./routes/billing')
-, rides = require ('./routes/rides');
+var ejs = require("ejs");
+// var mysql = require('./mysql');
+var mq_client = require('../rpc/client');
 
-//Passport login for 
-var amqp = require('amqp');
-var connection = amqp.createConnection({host:'127.0.0.1'});
-var rpc = new (require('./rpc/amqprpc'))(connection);
 
-var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
+exports.createRide = function(req, res) {
+	var pickup_address = req.param("pickup_address");
+	var dropoff_address = req.param("dropoff_address");
+	var pickup_latitude = req.param("pickupLat");
+	var pickup_longitude = req.param("pickupLng");
+	var dropoff_latitude = req.param("dropoffLat");
+	var dropoff_longitude = req.param("dropoffLng");
+	var customer_id = req.param("customer_id");
+	var driver_id = req.param("driver_id");
+	var pickup_location, dropoff_location;
+	
+//	var pickup_address = "190 Street, San Jose, CA, 95110";
+//	var dropoff_address = "San Jose Stae University, San Jose , CA 95110";
+//	var pickup_latitude = "37.340848";
+//	var pickup_longitude = "-121.898409";
+//	var dropoff_latitude = "37.309767";
+//	var dropoff_longitude = "-121.874345";
+	
 
-//MongoSession
-var mongoSessionConnectURL = "mongodb://localhost:27017/sessions";
-var expressSession = require("express-session");
-var mongoStore = require("connect-mongo")(expressSession);
-var mongo = require("./routes/mongo"); // Database configuration file
+	console.log(JSON.stringify(pickup_address));
+	console.log(JSON.stringify(dropoff_address));
+	console.log(pickup_latitude + pickup_longitude +dropoff_latitude + dropoff_longitude );
+//	console.log("pickup address" + pickup_address[0]);
+//	console.log("Street :  "+ pickup_address[0].address_components[0].long_name);
+//	console.log("Route :  "+ pickup_address[0].address_components[1].long_name);
+//	console.log("Locality :  "+ pickup_address[0].address_components[2].long_name);
+//	console.log("State :  "+ pickup_address[0].address_components[4].long_name);
+//	console.log("State :  "+ pickup_address[0].address_components[3].long_name);
+//	console.log("Country :  "+ pickup_address[0].address_components[5].long_name);
+//	console.log("Zip Code :  "+ pickup_address[0].address_components[6].long_name);
+// 
+	
 
-var app = express();
+		var msg_payload = {
+		"pickup_location" : pickup_address,
+		"dropoff_location" : dropoff_address,
+		"customer_id" : customer_id,
+		"driver_id" : driver_id,
+		"pickup_latitude" : pickup_latitude,
+		"pickup_longitude" : pickup_longitude,
+		"dropoff_latitude" : dropoff_latitude,
+		"dropoff_longitude" : dropoff_longitude
+	};
 
-//Sessions handling in mongodb
-app.use(expressSession({
-	secret : 'uberApplicationPrototype',
-	resave : true,
-	saveUninitialized : false,
-	duration: 30 * 60 * 1000,
-	activeDuration: 5 * 60 * 1000,
-	store: new mongoStore({ url: mongoSessionConnectURL })
-}));
+	mq_client.make_request('uber_createRide_queue', msg_payload, function(err,
+			results) {
+		console.log(results);
+		if (err) {
+			throw err;
+		} else {
+			console.log("i'm here");
+			if (results.code == 200) {
+				console.log("back to node: ride inserted successful");
+				res.send(results);
+			} else {
+				console.log("back to node: insert failed");
+				res.send("failed");
+			}
+		}
+	});
+};
 
-//all environments
-app.set('port', process.env.PORT || 3000);
-app.set('views', __dirname + '/views');
-app.set('view engine', 'ejs');
-app.use(express.favicon("/images/favicon.ico"));
-app.use(express.logger('dev'));
-app.use(express.bodyParser());
-app.use(express.methodOverride());
 
-//Initialize Passport
-app.use(passport.initialize());
-app.use(passport.session());
+exports.editRide = function(req, res) {
+	console.log("inside edit ride");
+	var newdropoff_address = req.param("newdropoff_location");
+	var newdropoff_latitude = req.param("newdropoffLat");
+	var newdropoff_longitude = req.param("newdropoffLng");
+	
+	
+//	var newdropoff_address = "St James Station, San Jose, CA, United States";
+//	var newdropoff_latitude = "37.340848";
+//	var newdropoff_longitude = "-121.898409";
+	
+	var customer_id = 35;
+	var msg_payload, newdropoff_location;
 
-app.use(app.router);
+	console.log(newdropoff_address + "," + newdropoff_latitude + "," + newdropoff_longitude);
 
-//Exposing the public folder to be accessed
-app.use(express.static(path.join(__dirname, 'public')));
-app.use('/public', express.static(__dirname + "/public"));
+	console.log(JSON.stringify(newdropoff_address));
+//	console.log("newdrop off address");
+//	console.log("Street :  "+ newdropoff_address[0].address_components[0].long_name);
+//	console.log("Route :  "+ newdropoff_address[0].address_components[1].long_name);
+//	console.log("Locality :  "+ newdropoff_address[0].address_components[2].long_name);
+//	console.log("Admin area :  "+ newdropoff_address[0].address_components[3].long_name);
+//	console.log("State :  "+ newdropoff_address[0].address_components[4].long_name);
+//	console.log("Country :  "+ newdropoff_address[0].address_components[5].long_name);
+//	console.log("Zip Code :  "+ newdropoff_address[0].address_components[6].long_name);
 
-//development only
-if ('development' == app.get('env')) {
-	app.use(express.errorHandler());
-}
+	msg_payload = {
+		"newdropoff_address" : newdropoff_address,
+		"newdropoff_latitude" : newdropoff_latitude,
+		"newdropoff_longitude" : newdropoff_longitude,
+		"customer_id" : customer_id
+	};
+	
 
-passport.serializeUser(function(user, done) {
-	done(null, user);
-});
 
-passport.deserializeUser(function(user, done) {
-	done(null, user);
-});
-
-//Passport Login for admin
-
-//Passport Login Local Strategy
-passport.use('admin-local',new LocalStrategy({ usernameField: 'username',
-    passwordField: 'password'},
-		function(username, password, done) {
-	console.log("username : "+ username + "  password :  " + password);
-	process.nextTick(function () {
-		//UserDetails.findOne({'EMAIL':username},
-		//connection.query("select * from ADMIN where EMAIL = '"+username+"'",
-		var data = {};
-		data.EMAIL = username;
-		data.PASSWORD = password;
-			rpc.makeRequest("verifyAdmin", data,
-					function(err, user) {
-				console.log("User : "+ JSON.stringify(user));
-				if(err){
-					return done(err);
-				}
-				else{
-					if(user == null || user == "" || user == {}){
-						return done(null, false);
+			mq_client.make_request('uber_editRide_queue', msg_payload, function(err,results) {
+				console.log(results);
+				if (err) {
+					throw err;
+				} else {
+					console.log("i'm here");
+					if (results.code == 200) {
+						console.log("back to node: ride updated successful");
+						res.send(results);
+					} else {
+						console.log("back to node: update failed");
+						res.send("failed");
 					}
-					else{
-						if(user.code == "200"){
-							console.log("Everthing is fine!!!")
-							return done(null, user);
-						}else{
-							return done(null, false);
-						}
+				}
+	});
+							
+};
 
+
+exports.deleteRide = function(req,res)
+{
+	console.log("inside delete ride");
+	var customer_id = 12345;
+	
+	var msg_payload =  {
+			"customer_id" : customer_id
+		};
+	mq_client.make_request('uber_deleteRide_queue',msg_payload,function(err, results) 
+			{
+				console.log(results);
+				if (err)
+				{
+					throw err;
+				} 
+				else 
+				{
+					console.log("i'm here");
+					if (results.code == 200) {
+						console.log("back to node: ride deleted successful");
+						res.send(results);
+					} else {
+						console.log("back to node: delete failed");
+						res.send("failed");
 					}
 				}
 			});
 
-	});
-}
-));
-//END
+	
+};
 
-//customer
-passport.use('customer-local', new LocalStrategy({ usernameField: 'username',
-    passwordField: 'password'},
-		function(username, password, done) {
-	console.log("customer ==> username : "+ username + "  password :  " + password);
-	process.nextTick(function () {
-		//UserDetails.findOne({'EMAIL':username},
-		//connection.query("select * from ADMIN where EMAIL = '"+username+"'",
-		var data = {};
-		data.EMAIL = username;
-		data.PASSWORD = password;
-			rpc.makeRequest("verifyCustomer", data,
-					function(err, user) {
-				console.log("User : "+ JSON.stringify(user));
-				if(err){
-					return done(err);
-				}
-				else{
-					if(user == null || user == "" || user == {}){
-						return done(null, false);
-					}
-					else{
-						if(user.code == "200"){
-							console.log("Everthing is fine!!!")
-							return done(null, user);
-						}else{
-							return done(null, false);
-						}
-
+exports.startRide = function(req,res)
+{
+	console.log("inside start ride");
+	var ride_id = req.param("ride_id");
+	console.log(ride_id);
+	
+	var msg_payload = {
+			"ride_id" : ride_id
+		};
+	
+	mq_client.make_request('uber_startRide_queue',msg_payload,function(err, results) 
+			{
+				console.log(results);
+				if (err)
+				{
+					throw err;
+				} 
+				else 
+				{
+					console.log("i'm here");
+					if (results.code == 200) {
+						console.log("back to node: ride started successful");
+						res.send(results);
+					} else {
+						console.log("back to node: start ride failed");
+						res.send("failed");
 					}
 				}
 			});
-	});
-}
-));
+	
+};
 
-//Passport Login for driver
-passport.use('driver-local',new LocalStrategy({ usernameField: 'username',
-    passwordField: 'password'},
-		function(username, password, done) {
-	console.log("username : "+ username + "  password :  " + password);
-	process.nextTick(function () {
-		//UserDetails.findOne({'EMAIL':username},
-		//connection.query("select * from ADMIN where EMAIL = '"+username+"'",
-		var data = {};
-		data.EMAIL = username;
-		data.PASSWORD = password;
-			rpc.makeRequest("verifyDriver", data,
-					function(err, user) {
-				console.log("User : "+ JSON.stringify(user));
-				if(err){
-					return done(err);
-				}
-				else{
-					if(user == null || user == "" || user == {}){
-						return done(null, false);
-					}
-					else{
-						if(user.code == "200"){
-							console.log("Everthing is fine!!!")
-							return done(null, user);
-						}else{
-							alert(user.err);
-							return done(null, false);
-						}
-
+exports.cancelRide = function(req,res)
+{
+	console.log("inside cancel ride");
+	var ride_id = req.param("ride_id");
+	console.log(ride_id);
+	
+	var msg_payload = {
+			"ride_id" : ride_id
+		};
+	
+	mq_client.make_request('uber_cancelRide_queue',msg_payload,function(err, results) 
+			{
+				console.log(results);
+				if (err)
+				{
+					throw err;
+				} 
+				else 
+				{
+					console.log("i'm here");
+					if (results.code == 200) {
+						console.log("back to node: ride cancel successful");
+						res.send(results);
+					} else {
+						console.log("back to node: cancel ride failed");
+						res.send("failed");
 					}
 				}
 			});
+	
+};
 
-	});
-}
-));
-//END
+exports.endRide = function(req,res)
+{
+	console.log("inside end ride");
+	var ride_id = req.param("ride_id");
+	console.log(ride_id);
+	
+	var msg_payload = {
+			"ride_id" : ride_id
+		};
+	
+	mq_client.make_request('uber_endRide_queue',msg_payload,function(err, results) 
+			{
+				console.log(results);
+				if (err)
+				{
+					throw err;
+				} 
+				else 
+				{
+					console.log("i'm here");
+					if (results.code == 200) {
+						console.log("back to node: ride end successful");
+						res.send(results);
+					} else {
+						console.log("back to node: end ride failed");
+						res.send("failed");
+					}
+				}
+			});
+	
+};
 
+exports.fetchRideStatus = function(req,res)
+{
+	console.log("inside fetch status");
+	var ride_id = req.param("ride_id");
+	console.log(ride_id);
+	
+	var msg_payload = {
+			"ride_id" : ride_id
+		};
+	
+	mq_client.make_request('uber_fetchRideStatus_queue',msg_payload,function(err, results) 
+			{
+				console.log(results);
+				if (err)
+				{
+					throw err;
+				} 
+				else 
+				{
+					console.log("i'm here");
+					if (results.code == 200) {
+						console.log("back to node: ride fetch successful");
+						res.send(results);
+					} else {
+						console.log("back to node: ride fetch failed");
+						res.send("failed");
+					}
+				}
+			});
+	
+};
 
-//Admin Related
-//Passport Login function
-app.get('/adminLoginPage',admin.adminLoginPage);
-app.get('/customerLoginPage',customer.customerLoginPage);
-app.get('/driverLoginPage',driver.driverLoginPage);
-app.get('/adminHome',admin.adminHome);
-app.get('/invalidAdminLogin',admin.invalidAdminLogin);
-app.get('/invalidSessionAdminLogin',admin.invalidSessionAdminLogin);
+exports.getRideCreated = function(req,res)
+{
+	console.log("inside getRideCreated");
+	
+	var driver_id = req.param("driver_id");
+	console.log (driver_id);
+	
+	var msg_payload = {
+			"driver_id" : driver_id
+		};
+	
+	mq_client.make_request('uber_getRideCreated_queue',msg_payload,function(err, results) 
+			{
+				console.log(results);
+				if (err)
+				{
+					throw err;
+				} 
+				else 
+				{
+					console.log("i'm here");
+					if (results.code == 200) {
+						console.log("back to node: get Details successful");
+						res.send(results);
+					} else {
+						console.log("back to node: get Details failed");
+						res.send("failed");
+					}
+				}
+			});
+	
+};
 
-app.post('/loginAdmin', 
-		passport.authenticate('admin-local', {
-			successRedirect: '/adminHome',
-			failureRedirect: '/invalidAdminLogin'
-		}));
-app.post('/loginCustomer', 
-		passport.authenticate('customer-local', {
-			successRedirect: '/customerHome',
-			failureRedirect: '/invalidCustomerLogin'
-		}));
-app.post('/loginDriver', 
-passport.authenticate('driver-local', {
-successRedirect: '/driverHome',
-failureRedirect: '/invalidDriverLogin'
-}));
-
-app.get('/', function(req, res){
-	res.render('home', { title: 'HOME' });
-});
-app.get('/Log_In', function(req, res){
-	res.render('Log_In', { title: 'HOME' });
-});
-app.get('/Log_Out', function(req, res){
-	req.logout();
-	req.session.destroy();
-	res.render('home', { title: 'HOME' });
-});
-app.get('/signUpCustomer', function(req, res){
-	res.render('Sign_Up_Customer', { title: 'HOME' });
-});
-app.get('/signUpDriver', function(req, res){
-	res.render('Sign_Up_Driver', { title: 'HOME' });
-});
-app.get('/customerHome', function(req, res){
-	res.render('customerHome', { title: 'HOME' });
-});
-app.get('/driverHome', function(req, res){
-	res.render('driverHome', { title: 'HOME' });
-});
-app.get('/CustomerEditProfile', customer.infoCustomer)
-app.get('/DriverEditProfile', driver.infoDriver)
-app.get('/deleteCustomer', customer.deleteCustomer);
-app.get('/deleteDriver', driver.deleteDriver);
-
-
-app.post('/addCustomer', customer.customerSignUp);
-app.post('/addDriver', driver.driverSignUp);
-app.post('/updateProfile', customer.updateProfile);
-app.post('/updateDriverProfile', driver.updateProfile);
-
-
-app.post('/createRide',rides.createRide);
-app.post('/editRide',rides.editRide);
-app.post('/deleteRide',rides.deleteRide);
-app.post('/startRide',user.startRide);
-app.post('/cancelRide',user.cancelRide);
-app.post('/endRide',user.endRide);
-app.get('/fetchRideStatus',user.fetchRideStatus);
-app.get('/getRideCreated',user.getRideCreated);
-app.get('/getCustomerTripSummary',user.getCustomerTripSummary);
-
-
-//Billing call by Parteek
-app.get('/getBillSummary',billing.generateBill);
-app.get('/getFareEstimate',billing.generateBill);
-
-mongo.connect(mongoSessionConnectURL, function() {
-	http.createServer(app).listen(app.get('port'), function(){
-		console.log('Uber server listening on port ' + app.get('port'));
-	});
-});
+exports.getCustomerTripSummary = function(req,res)
+{
+	console.log("inside getCustomerTripSummary");
+	
+	var customer_id = req.param("customer_id");
+	console.log (customer_id);
+	
+	var msg_payload = {
+			"customer_id" : customer_id
+		};
+	
+	mq_client.make_request('uber_getCustomerTripSummary_queue',msg_payload,function(err, results) 
+			{
+				console.log(results);
+				if (err)
+				{
+					throw err;
+				} 
+				else 
+				{
+					console.log("i'm here");
+					if (results.code == 200) {
+						console.log("back to node: getCustomerTripSummary successful");
+						res.send(results);
+					} else {
+						console.log("back to node: getCustomerTripSummary failed");
+						res.send("failed");
+					}
+				}
+			});
+	
+};
