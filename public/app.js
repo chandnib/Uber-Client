@@ -6,6 +6,10 @@ UberPrototypeCustomer.config(['$locationProvider', '$routeProvider', function($l
 		});
   $routeProvider
   .when('/customerHome', {
+    templateUrl: '/templates/MyTrips.html',
+    controller: 'CustomerController'
+  }) 
+  .when('/BookaRide', {
     templateUrl: '/templates/BookaRide.html',
     controller: 'CustomerController'
   }) 
@@ -21,6 +25,10 @@ UberPrototypeCustomer.config(['$locationProvider', '$routeProvider', function($l
 	    templateUrl: '/templates/CustomerRideStarted.html',
 	    controller: 'CustRideStartedController'
   })
+  .when('/RequestUber', {
+	    templateUrl: '/templates/RequestUber.html',
+	    controller: 'CustomerController'
+})
   /*.when('/BookaRide', {
     templateUrl: '/templates/BookaRide.html',
     controller: 'CustomerController'

@@ -1,0 +1,59 @@
+<div class="row" ng-init="initMyTrips()">
+<div class="col-xs-12">
+	<div class="col-xs-10 col-xs-offset-1" style="border-bottom: 1px solid #ccc; text-align:center;">
+      <div class="col-xs-4 col-xs-offset-4">
+        <h1>My Trips</h1>
+      </div>
+     </div>
+ </div>
+ </div>
+    <div class="row">
+    <div class="col-xs-12">
+      <div class="col-xs-10 col-xs-offset-1" style="border-bottom: 1px solid #ccc; padding-top:10px; padding-bottom:10px;">
+        <div class="row">
+        <div class="col-xs-1"></div>
+        <div class="col-xs-2">PickUp</div>
+        <div class="col-xs-2">Driver</div>
+        <div class="col-xs-1">Fare</div>
+        <div class="col-xs-1">Car</div>
+        <div class="col-xs-2">City</div>
+        <div class="col-xs-3">Payment Method</div>
+        </div>
+      </div>
+      <div ng-repeat="trips in mytrips">
+      <div class="row">
+      <div class="col-xs-12">
+      <div class="col-xs-10 col-xs-offset-1" style="border-bottom: 1px solid #ccc; padding-top:10px; padding-bottom:10px;">
+        <div class="row">
+        <div class="col-xs-1"><span ng-click="toggleMyTrips({{trips.RideId}})">&#8744</span></div>
+        <div class="col-xs-2">{{trips.Pickup}}</div>
+        <div class="col-xs-2">{{trips.Driver}}</div>
+        <div class="col-xs-1">{{trips.Fare}}</div>
+        <div class="col-xs-1">{{trips.Car}}</div>
+        <div class="col-xs-2">{{trips.City}}</div>
+        <div class="col-xs-3">{{trips.Payment}}</div>
+        </div>
+      </div>
+    </div>
+    </div>
+    <div class="row" ng-hide="TripDetails">
+    <div class="col-xs-10 col-xs-offset-1" style="border-bottom: 1px solid #ccc; padding-top:10px; padding-bottom:10px;">
+        <div class="row">
+        <div class="col-xs-6">
+        <img src="../images/mastercard.png" style="width:310px;height:200px;">
+        </div>
+        <div class="col-xs-6"><div class="row" align="center" style="font-size:22px;"><b>{{Fare}}</b></div>
+        <div class="row" align="center">Payment Mode</div>
+        <br>
+        <div class="row"><div class="col-xs-10 col-xs-offset-1">{{Pickuptime}}</div></div>
+        <div class="row"><div class="col-xs-10 col-xs-offset-1">{{Sourcelocation}}</div></div>
+        <br>
+        <div class="row"><div class="col-xs-10 col-xs-offset-1">{{Dropofftime}}</div></div>
+        <div class="row"><div class="col-xs-10 col-xs-offset-1">{{Destinationlocation}}</div></div>
+        </div>	
+        </div>
+      </div>
+      </div>
+      </div>
+      </div>
+    </div>
