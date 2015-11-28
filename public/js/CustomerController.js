@@ -274,18 +274,38 @@ UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$loc
 					"latitude" : pickupLat,
 					"longitude" : pickupLng
 				}
-			}).success(function(data) {
-				if (data.code == 200) {
-					$scope.fareestimate = data.fare;
-				}
-				else {
-					console.log("Error calculating the estimate");
-				}
+			}).success(function(res) {
+				
+				 var infoWindow = new google.maps.InfoWindow({
+				    });
+				     for (var i = 0, length = res.data.length; i < length; i++) {
+							var data = res.data[i];
+								latLng = new google.maps.LatLng(data.LATITUDE,data.LONGITUDE);
+							// Creating a marker and putting it on the map
+							    marker = new google.maps.Marker({
+								position: latLng,
+								map: map,
+							//	title: data.title,
+								icon:'../images/car.png'
+							});
+							(function(marker, data) {
+								// Attaching a click event to the current marker
+								google.maps.event.addListener(marker, "click", function(e) {
+									//infoWindow.setContent(data.toString());
+								  //  infoWindow.setContent(sample);
+								//	infoWindow.open(map, marker);
+								});
+
+
+							})(marker, data);
+
+						}
+				
 			}).error(function(error) {
 				console.log("Error calculating the estimate");
 			});
 		     //hardcoding driver current location  37.3427555  -121.87057349999998
-		     var res = [
+		/*     var res = [
 		                {
 		                	"lat":37.3427553,
 		                	"lng":-121.87057349999999,
@@ -314,68 +334,29 @@ UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$loc
 		                	"title":"driver4"
 		                }
 		                
-		                ]
-		   
-		    var infoWindow = new google.maps.InfoWindow({
-		    	content: '<a href="https://www.youtube.com/watch?v=mp74xotRMVs">Introduction</a>'
-		    });
-		     for (var i = 0, length = res.length; i < length; i++) {
-					var data = res[i],
-						latLng = new google.maps.LatLng(data.lat,data.lng);
-						console.log("latlng "+latLng);
-					// Creating a marker and putting it on the map
-					    marker = new google.maps.Marker({
-						position: latLng,
-						map: map,
-						title: data.title,
-						icon:'../images/car.png'
-					});
-					(function(marker, data) {
-						var sample = '<a href="https://www.youtube.com/watch?v=mp74xotRMVs">Introduction</a>';
-						// Attaching a click event to the current marker
-						google.maps.event.addListener(marker, "click", function(e) {
-							//infoWindow.setContent(data.toString());
-						    infoWindow.setContent(sample);
-							infoWindow.open(map, marker);
-						});
-
-
-					})(marker, data);
-
-				}
-		     
+		                ]*/
 	  };
 	  
 	  $scope.initMyTrips = function(){
 		  
 		 $scope.TripDetails = true;
-		 $scope.mytrips = [ {
-			 	 RideId : "0001",
-				 Pickup : "11/20/2015",
-				 Driver : "James",
-				 Fare : "$27",
-				 Car : "UberX",
-				 City : "San Jose",
-				 Payment : "1123",
-				 Source : "Julian - St. James, San Jose, CA, United States",
-				 Destination : "Dr. Martin Luther King, Jr. Library, East San Fernando Street, San Jose, CA, United States",
-				 Pickuptime : "2:30PM",
-				 Dropofftime : "2:45PM" 
-		 },
-		 {
-			 RideId : "0002",
-			 Pickup : "11/25/2015",
-			 Driver : "Joey",
-			 Fare : "$32",
-			 Car : "UberX",
-			 City : "San Jose",
-			 Payment : "1123",
-			 Source : "1900 Kammerer Avenue, San Jose, CA, United States",
-			 Destination : "Dr. Martin Luther King, Jr. Library, East San Fernando Street, San Jose, CA, United States",
-			 Pickuptime : "5:30PM",
-			 Dropofftime : "5:45PM" 
-		 }
-		 ];
+		 $http({
+				method : "GET",
+				url : '/getCustomerTripSummary',
+				params : {
+					"customer_id" : 35
+				}
+			}).success(function(data) {
+				if (data.code == 200) {
+					$scope.mytrips = data.value;
+				}
+				else {
+					console.log("Error in getting value");
+				}
+			}).error(function(error) {
+				console.log("Error in getting value");
+			});
+	
 		 
 		 $scope.toggleMyTrips = function(){
 			 $scope.TripDetails = $scope.TripDetails === false ? true: false;

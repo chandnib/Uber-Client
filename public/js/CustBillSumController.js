@@ -13,14 +13,16 @@ UberPrototypeCustomer.controller('CustBillSumController' ,function($scope,$http,
 		 $http({
 				method : "GET",
 				url : '/getBillSummary',
-				data : {
-					"rideId" : $scope.rideId,
+				params : {
+					//"rideId" : $scope.rideId,
+					"rideId" : 1,
 					"distance" : 10,
 					"time" : 10
 				}
 			}).success(function(data) {
 				//checking the response data for statusCode
-				if (data.statusCode == 200) {
+				if (data.code == 200) {
+					console.log("data"+JSON.stringify(data));
 					$scope.amount = data.bill_amount;
 					$scope.baseFare = data.base_fare;
 					$scope.timeFare = data.time_fare;

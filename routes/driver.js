@@ -143,12 +143,7 @@ exports.showDriverin10Mile = function(req, res) {
 		if (err) {
 			console.log("There is an error: " + err);
 		} else {
-			if (user.code == "200") {
-				console.log("Everthing is fine!!!");
 				res.send(user);
-			} else {
-				console.log("Could not get driver info. Try again");
-			}
 		}
 	});
 };

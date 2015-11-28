@@ -249,6 +249,12 @@ app.post('/showDriverin10Mile', driver.showDriverin10Mile);
 app.post('/createRide',rides.createRide);
 app.post('/editRide',rides.editRide);
 app.post('/deleteRide',rides.deleteRide);
+app.post('/startRide',rides.startRide);
+app.post('/cancelRide',rides.cancelRide);
+app.post('/endRide',rides.endRide);
+app.get('/fetchRideStatus',rides.fetchRideStatus);
+app.get('/getRideCreated',rides.getRideCreated);
+app.get('/getCustomerTripSummary',rides.getCustomerTripSummary);
 
 
 //Billing call by Parteek
