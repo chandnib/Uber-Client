@@ -6,6 +6,7 @@ var express = require('express')
 , admin= require('./routes/admin')
 , customer = require('./routes/customer')
 , driver = require ('./routes/driver')
+, billing = require ('./routes/billing')
 , rides = require ('./routes/rides');
 
 //Passport login for 
@@ -245,6 +246,10 @@ app.post('/updateDriverProfile', driver.updateProfile);
 app.post('/createRide',rides.createRide);
 app.post('/editRide',rides.editRide);
 app.post('/deleteRide',rides.deleteRide);
+
+
+//Billing call by Parteek
+app.get('/getBillSummary',billing.generateBill);
 
 mongo.connect(mongoSessionConnectURL, function() {
 	http.createServer(app).listen(app.get('port'), function(){
