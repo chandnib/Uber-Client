@@ -17,8 +17,7 @@ UberPrototypeCustomer.directive('googledestination', function() {
 });
 
 
-
-UberPrototypeCustomer.controller('CustRideStartedController' ,function($scope,$http,$location,$window){
+UberPrototypeCustomer.controller('CustRideCreatedController' ,function($scope,$http,$location,$window){
 	 
 	console.log("inside my controller");
 	$scope.src;
@@ -71,13 +70,43 @@ UberPrototypeCustomer.controller('CustRideStartedController' ,function($scope,$h
 	 $scope.getPageData = function(){
 		 console.log("inside init func");
 		 $scope.editRide = false;
-		 $scope.source = "190 Ryland Street, San Jose, CA 95110";
-		 $scope.destination = "1 Washington Sq, San Jose, CA 95192";
-		// var directionsService = new google.maps.DirectionsService();
+		 $scope.canceled = false;
 		 
-		 getTimeDest();
 		 if($window.localStorage.category == "C"){
 			 var RideStatus = setInterval(function(){ getRideStatus() }, 5000);
+			 $scope.source = "190 Ryland Street, San Jose, CA 95110";
+			 $scope.destination = "1 Washington Sq, San Jose, CA 95192";
+			// var directionsService = new google.maps.DirectionsService();
+			 
+			 getTimeDest();
+		 }
+		 
+		 if($window.localStorage.category == "D"){
+			 var RideStatus = setInterval(function(){ getRideStatus() }, 5000);
+			 
+			 $http({
+					method : "POST",
+					url : '/getRideCreated',
+					params : {
+						"driver_id" : $scope.driverId
+					}
+				}).success(function(data) {
+					//checking the response data for statusCode
+					if (data.code == 200) {
+						$scope.source = "190 Ryland Street, San Jose, CA 95110";
+						 $scope.destination = "1 Washington Sq, San Jose, CA 95192";
+						console.log(JSON.stringify(data.value));
+						// var directionsService = new google.maps.DirectionsService();
+						 
+						 getTimeDest();
+					}
+					else{
+						//Making a get call to the '/CustomerBillSummary' page
+						console.log("Error in starting the ride");
+					}
+				}).error(function(error) {
+					console.log("Error in starting the ride");
+				});
 		 }
 		 
 
@@ -166,24 +195,44 @@ UberPrototypeCustomer.controller('CustRideStartedController' ,function($scope,$h
 		 $scope.editRide = true;
 	 };
 	 
-	 $scope.endTheRide = function(){
+	 $scope.cancelTheRide = function(){
 		 $http({
 				method : "POST",
-				url : '/endRide',
+				url : '/cancelRide',
 				data : {
 					"ride_id" : $scope.rideId
 				}
 			}).success(function(data) {
 				//checking the response data for statusCode
 				if (data.code == 200) {
-					$location.path('/DriverBillSummary'); 
+					$scope.canceled = true;
 				}
 				else{
 					//Making a get call to the '/CustomerBillSummary' page
-					console.log("Error in ending the ride");
+					console.log("Error in cancelling the ride");
 				}
 			}).error(function(error) {
-				console.log("Error in ending the ride");
+				console.log("Error in cancelling the ride");
+			});
+	 };
+	 $scope.startTheRide = function(){
+		 $http({
+				method : "POST",
+				url : '/startRide',
+				data : {
+					"ride_id" : $scope.rideId
+				}
+			}).success(function(data) {
+				//checking the response data for statusCode
+				if (data.code == 200) {
+					$location.path('/DriverRideStarted'); 
+				}
+				else{
+					//Making a get call to the '/CustomerBillSummary' page
+					console.log("Error in starting the ride");
+				}
+			}).error(function(error) {
+				console.log("Error in starting the ride");
 			});
 	 };
 	 
@@ -197,38 +246,18 @@ UberPrototypeCustomer.controller('CustRideStartedController' ,function($scope,$h
 			}).success(function(data) {
 				//checking the response data for statusCode
 				if (data.code == 200) {
-					if (data.status == "E"){
-						$location.path('/CustomerBillSummary'); 
+					if (data.status == "S"){
+						$location.path('/CustomerRideStarted'); 
+					}else if(data.status == "CA"){
+						$scope.canceled = true;
 					}
 				}
 				else{
 					//Making a get call to the '/CustomerBillSummary' page
-					console.log("The ride not completed yet");
+					console.log("The ride not started or canceled yet");
 				}
 			}).error(function(error) {
-				console.log("The ride not completed yet");
+				console.log("The ride not started or canceled yet");
 			});
 	 };
-	 /*$scope.submitNewRoute = function() {
-			$http({
-				method : "POST",
-				url : '/editRide',
-				data : {
-					"newdropoffLat" : $scope.newdropoff_lat,
-					"newdropoffLng" : $scope.newdropoff_lng,
-					"newdropoff_location": $scope.destination
-				}
-			}).success(function(data) {
-				//checking the response data for statusCode
-				if (data.code == 200) {
-					$scope.getNewRoute();
-				}
-				else{
-					//Making a get call to the '/CustomerBillSummary' page
-					console.log("Error in updating the destination location");
-				}
-			}).error(function(error) {
-				console.log("Error in updating the destination location");
-			});
-		};*/
 });

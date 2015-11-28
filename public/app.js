@@ -21,8 +21,20 @@ UberPrototypeCustomer.config(['$locationProvider', '$routeProvider', function($l
 	    templateUrl: '/templates/DriverEditProfile.html'
 	    //controller: 'CustomerController'
   })
+  .when('/CustomerRideCreated', {
+	    templateUrl: '/templates/CustomerRideCreated.html',
+	    controller: 'CustRideCreatedController'
+  })
+  .when('/DriverRideCreated', {
+	    templateUrl: '/templates/DriverRideCreated.html',
+	    controller: 'CustRideCreatedController'
+  })
   .when('/CustomerRideStarted', {
 	    templateUrl: '/templates/CustomerRideStarted.html',
+	    controller: 'CustRideStartedController'
+  })
+  .when('/DriverRideStarted', {
+	    templateUrl: '/templates/DriverRideStarted.html',
 	    controller: 'CustRideStartedController'
   })
   .when('/RequestUber', {
@@ -33,9 +45,9 @@ UberPrototypeCustomer.config(['$locationProvider', '$routeProvider', function($l
 	    templateUrl: '/templates/CustomerBillSummary.html',
 	    controller: 'CustBillSumController'
   })
- .when('/CustomerPayment', {
-	    templateUrl: '/templates/CustomerPayment.html',
-	    controller: 'CustomerController'
+  .when('/DriverBillSummary', {
+	    templateUrl: '/templates/DriverBillSummary.html',
+	    controller: 'CustBillSumController'
   })
   /*.when('/BookaRide', {
     templateUrl: '/templates/BookaRide.html',
