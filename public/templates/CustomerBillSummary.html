@@ -1,0 +1,67 @@
+<div class="row" ng-init="getPageData()">
+<div class="col-xs-10 col-xs-offset-1" style="border-bottom: 1px solid #ccc; padding-top:30px; padding-bottom:30px;">
+<div class="row">
+  <div class="col-xs-5" style="padding-left:40px; ">
+    <h4>
+      <b>Thanks for riding Uber!</b>
+    </h4>
+    <p>
+      <br>
+      <label style="font-family: Helvetica Neue,Helvetica,Arial,sans-serif; color: #9197a3;">Billed to</label>
+      <br>{{ customerId }}
+      <br>
+    </p>
+    <p>
+      <br>
+      <label style="font-family: Helvetica Neue,Helvetica,Arial,sans-serif; color: #9197a3;">TRIP REQUEST DATE</label>
+      <br>{{ tripDate }}</p>
+    <p>
+      <br>
+      <label style="font-family: Helvetica Neue,Helvetica,Arial,sans-serif; color: #9197a3;">Pickup Location</label>
+      <br>{{ pickupLocation }}</p>
+    <p>
+      <br>
+      <label style="font-family: Helvetica Neue,Helvetica,Arial,sans-serif; color: #9197a3;">Dropoff Location</label>
+      <br>{{ dropoffLocation }}</p>
+    <p>
+      <br>
+      <label style="font-family: Helvetica Neue,Helvetica,Arial,sans-serif; color: #9197a3;">CREDIT CARD</label>
+      <br><img src="../images/mastercard.png" alt="Online Img" style="width: 30px;height: 30px;">Personal Visa</p>
+    <p>
+      <br>
+      <label style="font-family: Helvetica Neue,Helvetica,Arial,sans-serif; color: #9197a3;">BILLED TO CARD</label>
+      <br>{{ amount }}</p>
+  </div>
+  <div class="col-xs-7">
+  <div class="row">
+  <div class="col-xs-2">
+  <img src="../images/mastercard.png" alt="Online Img" style="width: 60px;height: 60px;">
+  </div>
+  <div class="col-xs-4">
+  <p>
+      <br>
+      <label style="font-family: Helvetica Neue,Helvetica,Arial,sans-serif; color: #9197a3;">DRIVER</label>
+      <br>{{ driverName }}</p>
+  </div>
+  </div>
+  <div class="row">
+  <div class="col-xs-11">
+  <map center="current-position" zoom-to-include-markers='true'">
+<!-- <marker position="{{sourcePosition.lat}}, {{sourcePosition.lng}}"></marker>
+<marker position="{{destPosition.lat}}, {{destPosition.lng}}"></marker> -->
+	<directions
+         draggable="true"
+         travel-mode="DRIVING"
+         origin={{source}}
+         destination={{destination}}>
+     		</directions>
+</map>
+   </div>
+   </div>
+   </div>
+ </div>
+ <div clas="row">
+ 
+ </div>
+ </div>
+ </div>

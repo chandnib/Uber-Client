@@ -29,6 +29,10 @@ UberPrototypeCustomer.config(['$locationProvider', '$routeProvider', function($l
 	    templateUrl: '/templates/RequestUber.html',
 	    controller: 'CustomerController'
 })
+ .when('/CustomerBillSummary', {
+	    templateUrl: '/templates/CustomerBillSummary.html',
+	    controller: 'CustBillSumController'
+  })
   /*.when('/BookaRide', {
     templateUrl: '/templates/BookaRide.html',
     controller: 'CustomerController'
