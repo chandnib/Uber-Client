@@ -126,7 +126,9 @@ UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$loc
 		            
 		            $scope.distance = $scope.distance.split(" ",1);
 		            $scope.distance = $scope.distance * 0.62;
-		            //$scope.time = $scope.time.split(" ",1);
+		            $scope.distance = Math.round($scope.distance, -2);
+		            $scope.time = $scope.time.split(" ",1);
+		            $scope.time = Number($scope.time);
 		        } else {
 		            console.log("Unable to find the distance via road.");
 		        }
@@ -162,21 +164,34 @@ UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$loc
 																						{
 																							if (status === google.maps.GeocoderStatus.OK) 
 																							{ 
-																									$window.localStorage.pickup_address = pickupaddress;
-																									$window.localStorage.dropoff_address = dropoffaddress;
+																									$window.localStorage.pickup_address = $scope.source;
+																									$window.localStorage.dropoff_address = $scope.destination;
 																									$window.localStorage.pickupLat = pickupLat;
 																									$window.localStorage.pickupLng = pickupLng;
 																									$window.localStorage.dropoffLat = dropoffLat;
 																									$window.localStorage.dropoffLng = dropoffLng;
+																									console.log("time:"+$scope.time);
+																									console.log("distance:"+$scope.distance);
+																									$http({
+																										method : "GET",
+																										url : '/getFareEstimate',
+																										params : {
+																											"distance" : $scope.distance,
+																											"time" : $scope.time
+																										}
+																									}).success(function(data) {
+																										console.log(data.fare);
+																										if (data.code == 200) {
+																											$scope.fareestimate = data.fare;
+																										}
+																										else {
+																											console.log("Error calculating the estimate");
+																										}
+																									}).error(function(error) {
+																										console.log("Error calculating the estimate");
+																									});
 																									
 																									$scope.HideFareEstimate = false;
-																									$scope.distanceinmiles = $scope.distance+" miles";
-																									$scope.fareestimate = $scope.distance * 18;
-																									
-																									console.log(pickupLat);
-																									console.log(pickupLng);
-																									console.log(dropoffLat);
-																									console.log(dropoffLng);
 
 																							} else {
 																								$scope.invaliddestination = "Invalid Destination Address";
@@ -197,6 +212,7 @@ UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$loc
 													}
 												});
 							});
+			
 	  };
 	  
 	  $scope.RequestUberX = function(){
@@ -251,6 +267,23 @@ UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$loc
 		      map: map
 		   });
 		     
+		   $http({
+				method : "POST",
+				url : '/showDriverin10Mile',
+				data : {
+					"latitude" : pickupLat,
+					"longitude" : pickupLng
+				}
+			}).success(function(data) {
+				if (data.code == 200) {
+					$scope.fareestimate = data.fare;
+				}
+				else {
+					console.log("Error calculating the estimate");
+				}
+			}).error(function(error) {
+				console.log("Error calculating the estimate");
+			});
 		     //hardcoding driver current location  37.3427555  -121.87057349999998
 		     var res = [
 		                {
@@ -324,8 +357,8 @@ UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$loc
 				 Car : "UberX",
 				 City : "San Jose",
 				 Payment : "1123",
-				 Source : "190 Ryland Street",
-				 Destination : "Dr.MLK Library",
+				 Source : "Julian - St. James, San Jose, CA, United States",
+				 Destination : "Dr. Martin Luther King, Jr. Library, East San Fernando Street, San Jose, CA, United States",
 				 Pickuptime : "2:30PM",
 				 Dropofftime : "2:45PM" 
 		 },
@@ -337,8 +370,8 @@ UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$loc
 			 Car : "UberX",
 			 City : "San Jose",
 			 Payment : "1123",
-			 Source : "Bassett Street",
-			 Destination : "Dr.MLK Library",
+			 Source : "1900 Kammerer Avenue, San Jose, CA, United States",
+			 Destination : "Dr. Martin Luther King, Jr. Library, East San Fernando Street, San Jose, CA, United States",
 			 Pickuptime : "5:30PM",
 			 Dropofftime : "5:45PM" 
 		 }

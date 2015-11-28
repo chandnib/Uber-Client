@@ -102,20 +102,15 @@ exports.updateProfile = function(req, res) {
 
 exports.deleteDriver = function(req, res) {
 	var data = {};
-	data.EMAIL = req.session.passport.user.EMAIL
-	rpc.makeRequest("deleteDriver", data, function(err, user) {
-		console.log("User : " + JSON.stringify(user));
+	data.latitude = req.param.latitude;
+	data.longitude = req.param.longitude;
+	rpc.makeRequest("deleteDriver", data, function(err, result) {
+		console.log("User : " + JSON.stringify(result));
 		if (err) {
-			alert("There is an error: " + err);
+			res.code = 401;
+			res.err = err;
 		} else {
-			if (user.code == "200") {
-				console.log("Everthing is fine!!!");
-				req.logout();
-				req.session.destroy();
-				res.redirect("/");
-			} else {
-				alert("Did not delete. Try again");
-			}
+				res.send(result);
 		}
 	});
 };
@@ -133,6 +128,26 @@ exports.infoDriver = function(req, res) {
 				res.send(user);
 			} else {
 				console.log("Did not delete. Try again");
+			}
+		}
+	});
+};
+
+exports.showDriverin10Mile = function(req, res) {
+	var data = {
+			latitude: req.param("latitude"),
+			longitude: req.param("longitude")
+	};
+	rpc.makeRequest("showDriverin10Mile_queue", data, function(err, user) {
+		console.log("User : " + JSON.stringify(user));
+		if (err) {
+			console.log("There is an error: " + err);
+		} else {
+			if (user.code == "200") {
+				console.log("Everthing is fine!!!");
+				res.send(user);
+			} else {
+				console.log("Could not get driver info. Try again");
 			}
 		}
 	});

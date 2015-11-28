@@ -41,7 +41,7 @@ exports.getFareEstimate = function(req, res) {
 
 	mq_client.make_request('uber_getFareEstimate_queue',msg_payload,function(err, results) 
 			{
-						console.log(results);
+						//console.log(results);
 						if (err) 
 						{
 							throw err;

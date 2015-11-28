@@ -1,4 +1,4 @@
-var UberPrototypeCustomer = angular.module('UberPrototypeCustomer', ['ngRoute','ui.bootstrap']);
+var UberPrototypeCustomer = angular.module('UberPrototypeCustomer', ['ngRoute','ui.bootstrap','ngMap']);
 UberPrototypeCustomer.config(['$locationProvider', '$routeProvider', function($locationProvider,$routeProvider) {
 	  $locationProvider.html5Mode({
 		  enabled: true,
@@ -32,6 +32,10 @@ UberPrototypeCustomer.config(['$locationProvider', '$routeProvider', function($l
  .when('/CustomerBillSummary', {
 	    templateUrl: '/templates/CustomerBillSummary.html',
 	    controller: 'CustBillSumController'
+  })
+ .when('/CustomerPayment', {
+	    templateUrl: '/templates/CustomerPayment.html',
+	    controller: 'CustomerController'
   })
   /*.when('/BookaRide', {
     templateUrl: '/templates/BookaRide.html',

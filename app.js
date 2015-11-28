@@ -242,6 +242,9 @@ app.post('/addDriver', driver.driverSignUp);
 app.post('/updateProfile', customer.updateProfile);
 app.post('/updateDriverProfile', driver.updateProfile);
 
+//Rekha
+app.post('/showDriverin10Mile', driver.showDriverin10Mile);
+
 
 app.post('/createRide',rides.createRide);
 app.post('/editRide',rides.editRide);
@@ -250,7 +253,7 @@ app.post('/deleteRide',rides.deleteRide);
 
 //Billing call by Parteek
 app.get('/getBillSummary',billing.generateBill);
-app.get('/getFareEstimate',billing.generateBill);
+app.get('/getFareEstimate',billing.getFareEstimate);
 
 mongo.connect(mongoSessionConnectURL, function() {
 	http.createServer(app).listen(app.get('port'), function(){
