@@ -323,11 +323,9 @@ UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$loc
 				 Fare : "$27",
 				 Car : "UberX",
 				 City : "San Jose",
-				 Payment : "1234567890121123",
+				 Payment : "1123",
 				 Source : "190 Ryland Street",
 				 Destination : "Dr.MLK Library",
-				 Sourcecoordinate : "1234",
-				 Destinationcoordinate : "1234",
 				 Pickuptime : "2:30PM",
 				 Dropofftime : "2:45PM" 
 		 },
@@ -338,28 +336,16 @@ UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$loc
 			 Fare : "$32",
 			 Car : "UberX",
 			 City : "San Jose",
-			 Payment : "1234567890121123",
+			 Payment : "1123",
 			 Source : "Bassett Street",
 			 Destination : "Dr.MLK Library",
-			 Sourcecoordinate : "1234",
-			 Destinationcoordinate : "1234",
 			 Pickuptime : "5:30PM",
 			 Dropofftime : "5:45PM" 
 		 }
 		 ];
 		 
-		 $scope.toggleMyTrips = function(rideid){
-			 console.log("Inside toggle"+rideid);
-			 for (var trips in $scope.mytrips){
-				 if(trips.RideId === rideid){
-					 $scope.Pickuptime = trips.Pickuptime;
-					 $scope.Sourcelocation = trips.Source;
-					 $scope.Destinationlocation = trips.Destination;
-					 $scope.Dropofftime = trips.Dropofftime;
-					 $scope.Fare = trips.Fare;
-				 }
-			 }
-			 $scope.TripDetails = false;
+		 $scope.toggleMyTrips = function(){
+			 $scope.TripDetails = $scope.TripDetails === false ? true: false;
 		 };
 		 
 		 
