@@ -31,29 +31,27 @@
     </div>
     <div class="row">
       <div class="col-xs-10 col-xs-offset-1">
-        <form class="form" name="editProfile" ng-submit="editProfile()" novalidate="">
+        <form class="form" method="post" ng-submit="editProfile(firstName,lastName,city,zip,email,password,phoneNumber)">
           <div class="row" style="padding-top:10px; padding-bottom:10px;">
             <div class="col-xs-1" style="padding-top:5px;">
               <label>Name</label>
             </div>
             <div class="col-xs-2 col-xs-offset-1">
-              <input type="text" class="form-control" id="firstName" name="firstName" ng-model="firstName">
+              <input type="text" class="form-control" id="firstName" name="firstName" ng-model="firstName" placeholder="{{profile.FIRST_NAME}}">
             </div>
             <div class="col-xs-2">
-              <input type="text" class="form-control" id="lastName" name="lastName" ng-model="lastName">
+              <input type="text" class="form-control" id="lastName" name="lastName" ng-model="lastName" placeholder="{{profile.LAST_NAME}}">
             </div>
             <div class="col-xs-1" style="padding-top:5px;">
-              <label>Location</label>
+              <label>City/Postal Code</label>
             </div>
             <div class="col-xs-2 col-xs-offset-1">
               <span>
-                <select name="location" class="form-control" id="location">
-                  <option value="Location">Location</option>
-                </select>
+          <input type="text" class="form-control" id="city" name="city" ng-model="city" placeholder="{{profile.CITY}}">
               </span>
             </div>
             <div class="col-xs-2">
-              <input type="text" class="form-control" id="zip" name="zip" ng-model="zip" placeholder="00000">
+              <input type="text" class="form-control" id="zip" name="zip" ng-model="zip" placeholder="{{profile.ZIPCODE}}">
             </div>
           </div>
           <div class="row" style="border-top: 1px solid #ccc; padding-top:10px; padding-bottom:10px;">
@@ -62,9 +60,7 @@
             </div>
             <div class="col-xs-4">
               <span>
-                <select name="emailAdd" class="form-control" id="emailAdd">
-                  <option value="emailAdd">Email Address</option>
-                </select>
+				<input type="text" class="form-control" id="email" name="email" ng-model="email" placeholder="{{profile.EMAIL}}">
               </span>
             </div>
             <div class="col-xs-1" style="padding-top:5px;">
@@ -84,19 +80,14 @@
             </div>
             <div class="col-xs-4">
               <span>
-                <select name="Mobile" class="form-control" id="Mobile">
-                  <option value="Mobile">United States +1</option>
-                </select>
+			<input type="text" class="form-control" id="phoneNumber" name="phoneNumber" ng-model="phoneNumber" placeholder="{{profile.PHONE_NUM}}">
               </span>
             </div>
             <div class="col-xs-1" style="padding-top:5px;">
               <label>Password</label>
             </div>
             <div class="col-xs-2 col-xs-offset-1">
-              <label>. . . . . . . . . . .</label>
-            </div>
-            <div class="col-xs-2">
-              <a href="#">change</a>
+              <input type="password" class="form-control" id="password" name="password" ng-model="password" placeholder=". . . . . . . .">
             </div>
           </div>
           <div class="row" style="border-top: 1px solid #ccc; padding-top:10px; padding-bottom:10px;">
@@ -105,8 +96,8 @@
             </div>
           </div>
         </form>
-        <a href="/deleteCustomer">
-				<button type="button" class="btn btn-danger">Delete Account</button>
-				</a>
+<form action="/deleteCustomer">
+<input type="submit" value="Delete Account" class="btn btn-danger">
+</form>
       </div>
     </div>

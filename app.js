@@ -203,7 +203,7 @@ app.post('/loginCustomer',
 		}));
 app.post('/loginDriver', 
 passport.authenticate('driver-local', {
-successRedirect: '/adminHome',
+successRedirect: '/driverHome',
 failureRedirect: '/invalidDriverLogin'
 }));
 
@@ -212,6 +212,11 @@ app.get('/', function(req, res){
 });
 app.get('/Log_In', function(req, res){
 	res.render('Log_In', { title: 'HOME' });
+});
+app.get('/Log_Out', function(req, res){
+	req.logout();
+	req.session.destroy();
+	res.render('home', { title: 'HOME' });
 });
 app.get('/signUpCustomer', function(req, res){
 	res.render('Sign_Up_Customer', { title: 'HOME' });
@@ -222,15 +227,20 @@ app.get('/signUpDriver', function(req, res){
 app.get('/customerHome', function(req, res){
 	res.render('customerHome', { title: 'HOME' });
 });
-//app.get('/deleteCustomer', customer.deleteCustomer)
-app.get('/deleteCustomer', function (req, res){
-	  req.session.destroy(function (err) {
-	    res.redirect('/'); //Inside a callback… bulletproof!
-	  });
-	});
+app.get('/driverHome', function(req, res){
+	res.render('driverHome', { title: 'HOME' });
+});
+app.get('/CustomerEditProfile', customer.infoCustomer)
+app.get('/DriverEditProfile', driver.infoDriver)
+app.get('/deleteCustomer', customer.deleteCustomer);
+app.get('/deleteDriver', driver.deleteDriver);
+
 
 app.post('/addCustomer', customer.customerSignUp);
 app.post('/addDriver', driver.driverSignUp);
+app.post('/updateProfile', customer.updateProfile);
+app.post('/updateDriverProfile', driver.updateProfile);
+
 
 app.post('/createRide',rides.createRide);
 app.post('/editRide',rides.editRide);

@@ -20,7 +20,7 @@
 	  <link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
       <link href="http://pingendo.github.io/pingendo-bootstrap/themes/default/bootstrap.css" rel="stylesheet" type="text/css">
       <script type="text/javascript" src="../app.js"></script>
-      <script type="text/javascript" src="../js/CustomerController.js"></script>
+      <script type="text/javascript" src="../js/DriverController.js"></script>
 		
 	  <script type="text/javascript" src="../js/CustRideStartedController.js"></script>
 	  
@@ -91,7 +91,8 @@
    
   </head>
   
-  <body style="padding-top: 80px; padding-bottom: 70px;" ng-controller="CustomerController">
+  <body style="padding-top: 80px; padding-bottom: 70px;" ng-controller="DriverController" ng-init = "loadProfile();">
+  
   <nav class="navbar navbar-default navbar-fixed-top col-lg-offset-0 col-lg-12"
     style="background-color: #000000; min-height: 95">
       <div class="container-fluid">
@@ -152,7 +153,7 @@
                   <div class="list-group" style="padding:0px 0px;margin-left:0;margin-right:0;">
                     <a href="" class="list-group-item" style="margin-left:0;margin-right:0; border-left:none;font-size:18px;border-right:none">My Trips</a>
                     <a href="" ng-click="routeToTemplate('/BookaRide')" class="list-group-item" style="margin-left:0;margin-right:0; border-left:none;font-size:18px;border-right:none">Book a Ride</a>
-                    <a href="" ng-click="routeToTemplate('/CustomerEditProfile')" class="list-group-item" style="margin-left:0;margin-right:0; border-left:none;font-size:18px;border-right:none">Profile</a>
+                    <a href="" ng-click="routeToTemplate('/DriverEditProfile')" class="list-group-item" style="margin-left:0;margin-right:0; border-left:none;font-size:18px;border-right:none">Profile</a>
                     <a href="" ng-click="routeToTemplate('/CustomerPayment')" class="list-group-item" style="margin-left:0;margin-right:0; border-left:none;font-size:18px;border-right:none">Payment</a>
                     <a href="" ng-click="logout()" class="list-group-item" style="margin-left:0;margin-right:0; border-left:none;font-size:18px;border-right:none">Logout</a>
                   </div>

@@ -9,8 +9,12 @@ UberPrototypeCustomer.config(['$locationProvider', '$routeProvider', function($l
     templateUrl: '/templates/BookaRide.html',
     controller: 'CustomerController'
   }) 
-  .when('/EditProfile', {
-	    templateUrl: '/templates/EditProfile.html'
+  .when('/CustomerEditProfile', {
+	    templateUrl: '/templates/CustomerEditProfile.html'
+	    //controller: 'CustomerController'
+  })
+  .when('/DriverEditProfile', {
+	    templateUrl: '/templates/DriverEditProfile.html'
 	    //controller: 'CustomerController'
   })
   .when('/CustomerRideStarted', {

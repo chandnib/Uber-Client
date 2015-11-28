@@ -36,9 +36,9 @@ UberPrototypeCustomer.directive('googledestination', function() {
     };
 });
 
-UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$location,$window){
+UberPrototypeCustomer.controller('DriverController',function($scope,$http,$location,$window){
 	 
-	$http.get('http://localhost:3000/CustomerEditProfile').success(function(data) {
+	$http.get('http://localhost:3000/DriverEditProfile').success(function(data) {
 		//checking the response data for statusCode
 		if (data.statusCode == 401) {
 		}
@@ -50,15 +50,20 @@ UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$loc
 		$scope.invalid_login = true;
 	});
 	
-	$scope.editProfile = function(firstName,lastName,city,zip,email,password,phoneNumber) {
+	$scope.editProfile = function(firstName,lastName,address,city,state,zip,carModel,carColor,carYear,email,language,phoneNumber,password) {
 		$http({
 			method : "POST",
-			url : '/updateProfile',
+			url : '/updateDriverProfile',
 			data: {	
 				"firstName" : firstName,
 				"lastName" : lastName,
+				"address" : address,
 				"city" : city,
+				"state": state,
 				"zip" : zip,
+				"carModel": carModel,
+				"carColor": carColor,
+				"carYear": carYear,
 				"email" : email,
 				"phoneNumber" : phoneNumber,
 				"password" : password,
@@ -70,7 +75,7 @@ UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$loc
 			else{
 				console.log("after everything checking if i made it here");
 				//Making a get call to the '/about' API
-				window.location.assign('/customerLoginPage');
+				window.location.assign('/driverLoginPage');
 			}
 		}).error(function(error) {
 			$scope.invalid_login = true;
