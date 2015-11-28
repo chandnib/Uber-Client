@@ -1,206 +1,265 @@
-var ejs = require("ejs");
-// var mysql = require('./mysql');
-var mq_client = require('../rpc/client');
+var express = require('express')
+, routes = require('./routes')
+, user = require('./routes/user')
+, http = require('http')
+, path = require('path')
+, admin= require('./routes/admin')
+, customer = require('./routes/customer')
+, driver = require ('./routes/driver')
+, billing = require ('./routes/billing')
+, rides = require ('./routes/rides');
 
+//Passport login for 
+var amqp = require('amqp');
+var connection = amqp.createConnection({host:'127.0.0.1'});
+var rpc = new (require('./rpc/amqprpc'))(connection);
 
-exports.createRide = function(req, res) {
-	var pickup_address = req.param("pickup_address");
-	var dropoff_address = req.param("dropoff_address");
-	var pickupLat = req.param("pickupLat");
-	var pickupLng = req.param("pickupLng");
-	var dropoffLat = req.param("dropoffLat");
-	var dropoffLng = req.param("dropoffLng");
-	var customer_id = req.param("customer_id");
-	var driver_id = req.param("driver_id");
-	var pickup_location, dropoff_location;
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
 
-	console.log(JSON.stringify(pickup_address));
-	console.log(JSON.stringify(dropoff_address));
-	console.log("pickup address" + pickup_address[0]);
-	console.log("Street :  "+ pickup_address[0].address_components[0].long_name);
-	console.log("Route :  "+ pickup_address[0].address_components[1].long_name);
-	console.log("Locality :  "+ pickup_address[0].address_components[2].long_name);
-	console.log("State :  "+ pickup_address[0].address_components[4].long_name);
-	console.log("State :  "+ pickup_address[0].address_components[3].long_name);
-	console.log("Country :  "+ pickup_address[0].address_components[5].long_name);
-	console.log("Zip Code :  "+ pickup_address[0].address_components[6].long_name);
+//MongoSession
+var mongoSessionConnectURL = "mongodb://localhost:27017/sessions";
+var expressSession = require("express-session");
+var mongoStore = require("connect-mongo")(expressSession);
+var mongo = require("./routes/mongo"); // Database configuration file
 
-	var msg_payload = {"location" : pickup_address,"latitude" : pickupLat,"longitude" : pickupLng};
+var app = express();
 
-	mq_client.make_request('uber_createLocation_queue',msg_payload,function(err, results) 
-			{
-						console.log(results);
-						if (err) 
-						{
-							throw err;
-						} 
-						else 
-						{
-							console.log("i'm here");
-							if (results.code == 200) {
-								console.log("back to node: pickup location inserted successful");
-								pickup_location = results.value;
-								console.log("pickup_location : "+ pickup_location);
+//Sessions handling in mongodb
+app.use(expressSession({
+	secret : 'uberApplicationPrototype',
+	resave : true,
+	saveUninitialized : false,
+	duration: 30 * 60 * 1000,
+	activeDuration: 5 * 60 * 1000,
+	store: new mongoStore({ url: mongoSessionConnectURL })
+}));
 
-								msg_payload = {"location" : dropoff_address,"latitude" : dropoffLat,"longitude" : dropoffLng};
-								mq_client.make_request('uber_createLocation_queue',msg_payload,function(err, results_dropoff) 
-										{
-													console.log(results);
-													if (err) 
-													{
-														throw err;
-													} 
-													else 
-													{
-														console.log("i'm here");
-														if (results.code == 200) {
-															console.log("back to node: dropoff location inserted successful");
-															dropoff_location = results_dropoff.value;
-															console.log("dropoff_location : "+ dropoff_location);
+//all environments
+app.set('port', process.env.PORT || 3000);
+app.set('views', __dirname + '/views');
+app.set('view engine', 'ejs');
+app.use(express.favicon("/images/favicon.ico"));
+app.use(express.logger('dev'));
+app.use(express.bodyParser());
+app.use(express.methodOverride());
 
-															msg_payload = {"pickup_location" : pickup_location,"dropoff_location" : dropoff_location,"customer_id" : customer_id,"driver_id" : driver_id};
+//Initialize Passport
+app.use(passport.initialize());
+app.use(passport.session());
 
-															mq_client.make_request('uber_createRide_queue',msg_payload,function(err,results) 
-																	{
-																				console.log(results);
-																				if (err) 
-																				{
-																					throw err;
-																				}
-																				else 
-																				{
-																					console.log("i'm here");
-																					if (results.code == 200) 
-																					{
-																						console.log("back to node: ride inserted successful");
-																						res.send(results);
-																					}
-																					else 
-																					{
-																						console.log("back to node: insert failed");
-																						res.send("failed");
-																					}
-																				}
-																			});
+app.use(app.router);
 
-														} else {
-															console.log("back to node: insert failed");
-															// res.send("failed");
-														}
-													}
-												});
+//Exposing the public folder to be accessed
+app.use(express.static(path.join(__dirname, 'public')));
+app.use('/public', express.static(__dirname + "/public"));
 
-								// res.send(results.value);
-							} else {
-								console.log("back to node: insert failed");
-								res.send("failed");
-							}
+//development only
+if ('development' == app.get('env')) {
+	app.use(express.errorHandler());
+}
+
+passport.serializeUser(function(user, done) {
+	done(null, user);
+});
+
+passport.deserializeUser(function(user, done) {
+	done(null, user);
+});
+
+//Passport Login for admin
+
+//Passport Login Local Strategy
+passport.use('admin-local',new LocalStrategy({ usernameField: 'username',
+    passwordField: 'password'},
+		function(username, password, done) {
+	console.log("username : "+ username + "  password :  " + password);
+	process.nextTick(function () {
+		//UserDetails.findOne({'EMAIL':username},
+		//connection.query("select * from ADMIN where EMAIL = '"+username+"'",
+		var data = {};
+		data.EMAIL = username;
+		data.PASSWORD = password;
+			rpc.makeRequest("verifyAdmin", data,
+					function(err, user) {
+				console.log("User : "+ JSON.stringify(user));
+				if(err){
+					return done(err);
+				}
+				else{
+					if(user == null || user == "" || user == {}){
+						return done(null, false);
+					}
+					else{
+						if(user.code == "200"){
+							console.log("Everthing is fine!!!")
+							return done(null, user);
+						}else{
+							return done(null, false);
 						}
-					});
-};
 
-exports.editRide = function(req, res) {
-	console.log("inside edit ride");
-	var newdropoff_address = req.param("newdropoff_location");
-	var newdropoffLat = req.param("newdropoffLat");
-	var newdropoffLng = req.param("newdropoffLng");
-	var customer_id = 12345;
-	var msg_payload, newdropoff_location;
-
-	console.log(newdropoff_address + "," + newdropoffLat + "," + newdropoffLng);
-
-	console.log(JSON.stringify(newdropoff_address));
-	console.log("newdrop off address");
-	console.log("Street :  "+ newdropoff_address[0].address_components[0].long_name);
-	console.log("Route :  "+ newdropoff_address[0].address_components[1].long_name);
-	console.log("Locality :  "+ newdropoff_address[0].address_components[2].long_name);
-	console.log("Admin area :  "+ newdropoff_address[0].address_components[3].long_name);
-	console.log("State :  "+ newdropoff_address[0].address_components[4].long_name);
-	console.log("Country :  "+ newdropoff_address[0].address_components[5].long_name);
-	console.log("Zip Code :  "+ newdropoff_address[0].address_components[6].long_name);
-
-	msg_payload = {
-		"location" : newdropoff_address,
-		"latitude" : newdropoffLat,
-		"longitude" : newdropoffLng
-	};
-	mq_client.make_request('uber_createLocation_queue',msg_payload,function(err, results_newdropoff)
-			{
-						console.log(results_newdropoff);
-						if (err) 
-						{
-							throw err;
-						}
-						else 
-						{
-							console.log("i'm here");
-							if (results_newdropoff.code == 200) {
-								console.log("back to node: new dropoff location inserted successful");
-								newdropoff_location = results_newdropoff.value;
-								console.log("new dropoff_location : "+ newdropoff_location);
-
-								msg_payload = {
-									"newdropoff_location" : newdropoff_location,
-									"customer_id" : customer_id
-								};
-
-								mq_client.make_request('uber_editRide_queue',msg_payload,function(err, results) 
-										{
-													console.log(results);
-													if (err) 
-													{
-														throw err;
-													} 
-													else 
-													{
-														console.log("i'm here");
-														if (results.code == 200) {
-															console.log("back to node: ride updated successful");
-															res.send(results);
-														} 
-														else 
-														{
-															console.log("back to node: update failed");
-															res.send("failed");
-														}
-													}
-												});
-							} else {
-								console.log("back to node: insert location failed");
-								//				res.send("failed");
-							}
-						}
-					});
-};
-
-
-exports.deleteRide = function(req,res)
-{
-	console.log("inside delete ride");
-	var customer_id = 12345;
-	
-	var msg_payload =  {
-			"customer_id" : customer_id
-		};
-	mq_client.make_request('uber_deleteRide_queue',msg_payload,function(err, results) 
-			{
-				console.log(results);
-				if (err)
-				{
-					throw err;
-				} 
-				else 
-				{
-					console.log("i'm here");
-					if (results.code == 200) {
-						console.log("back to node: ride deleted successful");
-						res.send(results);
-					} else {
-						console.log("back to node: delete failed");
-						res.send("failed");
 					}
 				}
 			});
 
-	
-};
+	});
+}
+));
+//END
+
+//customer
+passport.use('customer-local', new LocalStrategy({ usernameField: 'username',
+    passwordField: 'password'},
+		function(username, password, done) {
+	console.log("customer ==> username : "+ username + "  password :  " + password);
+	process.nextTick(function () {
+		//UserDetails.findOne({'EMAIL':username},
+		//connection.query("select * from ADMIN where EMAIL = '"+username+"'",
+		var data = {};
+		data.EMAIL = username;
+		data.PASSWORD = password;
+			rpc.makeRequest("verifyCustomer", data,
+					function(err, user) {
+				console.log("User : "+ JSON.stringify(user));
+				if(err){
+					return done(err);
+				}
+				else{
+					if(user == null || user == "" || user == {}){
+						return done(null, false);
+					}
+					else{
+						if(user.code == "200"){
+							console.log("Everthing is fine!!!")
+							return done(null, user);
+						}else{
+							return done(null, false);
+						}
+
+					}
+				}
+			});
+	});
+}
+));
+
+//Passport Login for driver
+passport.use('driver-local',new LocalStrategy({ usernameField: 'username',
+    passwordField: 'password'},
+		function(username, password, done) {
+	console.log("username : "+ username + "  password :  " + password);
+	process.nextTick(function () {
+		//UserDetails.findOne({'EMAIL':username},
+		//connection.query("select * from ADMIN where EMAIL = '"+username+"'",
+		var data = {};
+		data.EMAIL = username;
+		data.PASSWORD = password;
+			rpc.makeRequest("verifyDriver", data,
+					function(err, user) {
+				console.log("User : "+ JSON.stringify(user));
+				if(err){
+					return done(err);
+				}
+				else{
+					if(user == null || user == "" || user == {}){
+						return done(null, false);
+					}
+					else{
+						if(user.code == "200"){
+							console.log("Everthing is fine!!!")
+							return done(null, user);
+						}else{
+							alert(user.err);
+							return done(null, false);
+						}
+
+					}
+				}
+			});
+
+	});
+}
+));
+//END
+
+
+//Admin Related
+//Passport Login function
+app.get('/adminLoginPage',admin.adminLoginPage);
+app.get('/customerLoginPage',customer.customerLoginPage);
+app.get('/driverLoginPage',driver.driverLoginPage);
+app.get('/adminHome',admin.adminHome);
+app.get('/invalidAdminLogin',admin.invalidAdminLogin);
+app.get('/invalidSessionAdminLogin',admin.invalidSessionAdminLogin);
+
+app.post('/loginAdmin', 
+		passport.authenticate('admin-local', {
+			successRedirect: '/adminHome',
+			failureRedirect: '/invalidAdminLogin'
+		}));
+app.post('/loginCustomer', 
+		passport.authenticate('customer-local', {
+			successRedirect: '/customerHome',
+			failureRedirect: '/invalidCustomerLogin'
+		}));
+app.post('/loginDriver', 
+passport.authenticate('driver-local', {
+successRedirect: '/driverHome',
+failureRedirect: '/invalidDriverLogin'
+}));
+
+app.get('/', function(req, res){
+	res.render('home', { title: 'HOME' });
+});
+app.get('/Log_In', function(req, res){
+	res.render('Log_In', { title: 'HOME' });
+});
+app.get('/Log_Out', function(req, res){
+	req.logout();
+	req.session.destroy();
+	res.render('home', { title: 'HOME' });
+});
+app.get('/signUpCustomer', function(req, res){
+	res.render('Sign_Up_Customer', { title: 'HOME' });
+});
+app.get('/signUpDriver', function(req, res){
+	res.render('Sign_Up_Driver', { title: 'HOME' });
+});
+app.get('/customerHome', function(req, res){
+	res.render('customerHome', { title: 'HOME' });
+});
+app.get('/driverHome', function(req, res){
+	res.render('driverHome', { title: 'HOME' });
+});
+app.get('/CustomerEditProfile', customer.infoCustomer)
+app.get('/DriverEditProfile', driver.infoDriver)
+app.get('/deleteCustomer', customer.deleteCustomer);
+app.get('/deleteDriver', driver.deleteDriver);
+
+
+app.post('/addCustomer', customer.customerSignUp);
+app.post('/addDriver', driver.driverSignUp);
+app.post('/updateProfile', customer.updateProfile);
+app.post('/updateDriverProfile', driver.updateProfile);
+
+
+app.post('/createRide',rides.createRide);
+app.post('/editRide',rides.editRide);
+app.post('/deleteRide',rides.deleteRide);
+app.post('/startRide',user.startRide);
+app.post('/cancelRide',user.cancelRide);
+app.post('/endRide',user.endRide);
+app.get('/fetchRideStatus',user.fetchRideStatus);
+app.get('/getRideCreated',user.getRideCreated);
+app.get('/getCustomerTripSummary',user.getCustomerTripSummary);
+
+
+//Billing call by Parteek
+app.get('/getBillSummary',billing.generateBill);
+app.get('/getFareEstimate',billing.generateBill);
+
+mongo.connect(mongoSessionConnectURL, function() {
+	http.createServer(app).listen(app.get('port'), function(){
+		console.log('Uber server listening on port ' + app.get('port'));
+	});
+});
