@@ -6,12 +6,48 @@ module.exports = {
 		setup : function(){
 			console.log("RabbitMQ Connection Setup!!");
 		},
-		verifyUserSession : function(user,req,res){
+		loadUnverifiedCustomers : function(user,req,res){
 			var MQConnection = require('./mongoDBRequestBroker');
-			MQConnection.handleDBRequest("verifyUserSession",user,req,res,rpc);
+			MQConnection.handleDBRequest("loadUnverifiedCustomers",user,req,res,rpc);
 		},
 		userUnverified : function(req,res){
 			res.redirect("/invalidSessionAdminLogin");
+		},
+		approveCustomer : function(user,req,res){
+			var MQConnection = require('./mongoDBRequestBroker');
+			MQConnection.handleDBRequest("approveCustomer",user,req,res,rpc);
+		},
+		rejectCustomer : function(user,req,res){
+			var MQConnection = require('./mongoDBRequestBroker');
+			MQConnection.handleDBRequest("rejectCustomer",user,req,res,rpc);
+		},
+		approveAllCustomer: function(user,req,res){
+			var MQConnection = require('./mongoDBRequestBroker');
+			MQConnection.handleDBRequest("approveAllCustomer",user,req,res,rpc);
+		},
+		rejectAllCustomer : function(user,req,res){
+			var MQConnection = require('./mongoDBRequestBroker');
+			MQConnection.handleDBRequest("rejectAllCustomer",user,req,res,rpc);
+		},
+		loadUnverifiedDrivers : function(user,req,res){
+			var MQConnection = require('./mongoDBRequestBroker');
+			MQConnection.handleDBRequest("loadUnverifiedDrivers",user,req,res,rpc);
+		},
+		approveDriver : function(user,req,res){
+			var MQConnection = require('./mongoDBRequestBroker');
+			MQConnection.handleDBRequest("approveDriver",user,req,res,rpc);
+		},
+		rejectDriver : function(user,req,res){
+			var MQConnection = require('./mongoDBRequestBroker');
+			MQConnection.handleDBRequest("rejectDriver",user,req,res,rpc);
+		},
+		approveAllDriver: function(user,req,res){
+			var MQConnection = require('./mongoDBRequestBroker');
+			MQConnection.handleDBRequest("approveAllDriver",user,req,res,rpc);
+		},
+		rejectAllDriver : function(user,req,res){
+			var MQConnection = require('./mongoDBRequestBroker');
+			MQConnection.handleDBRequest("rejectAllDriver",user,req,res,rpc);
 		}
 };
 

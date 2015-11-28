@@ -83,7 +83,7 @@ passport.use('admin-local',new LocalStrategy({ usernameField: 'username',
 					function(err, user) {
 				console.log("User : "+ JSON.stringify(user));
 				if(err){
-					return done(err);
+					return done(null, false);
 				}
 				else{
 					if(user == null || user == "" || user == {}){
@@ -121,7 +121,7 @@ passport.use('customer-local', new LocalStrategy({ usernameField: 'username',
 					function(err, user) {
 				console.log("User : "+ JSON.stringify(user));
 				if(err){
-					return done(err);
+					return done(null, false);
 				}
 				else{
 					if(user == null || user == "" || user == {}){
@@ -157,7 +157,7 @@ passport.use('driver-local',new LocalStrategy({ usernameField: 'username',
 					function(err, user) {
 				console.log("User : "+ JSON.stringify(user));
 				if(err){
-					return done(err);
+					return done(null, false);
 				}
 				else{
 					if(user == null || user == "" || user == {}){
@@ -191,16 +191,31 @@ app.get('/adminHome',admin.adminHome);
 app.get('/invalidAdminLogin',admin.invalidAdminLogin);
 app.get('/invalidSessionAdminLogin',admin.invalidSessionAdminLogin);
 
+//Changes
+app.post('/loadUnverifiedCustomers', admin.loadUnverifiedCustomers);
+app.post('/approveCustomer',admin.approveCustomer);
+app.post('/rejectCustomer',admin.rejectCustomer);
+app.post('/approveAllCustomer',admin.approveAllCustomer);
+app.post('/rejectAllCustomer',admin.rejectAllCustomer);
+
+app.post('/loadUnverifiedDrivers', admin.loadUnverifiedDrivers);
+app.post('/approveDriver',admin.approveDriver);
+app.post('/rejectDriver',admin.rejectDriver);
+app.post('/approveAllDriver',admin.approveAllDriver);
+app.post('/rejectAllDriver',admin.rejectAllDriver);
+
+
 app.post('/loginAdmin', 
-		passport.authenticate('admin-local', {
-			successRedirect: '/adminHome',
-			failureRedirect: '/invalidAdminLogin'
-		}));
+passport.authenticate('admin-local', {
+	successRedirect: '/adminHome',
+	failureRedirect: '/invalidAdminLogin'
+}));
 app.post('/loginCustomer', 
-		passport.authenticate('customer-local', {
-			successRedirect: '/customerHome',
-			failureRedirect: '/invalidCustomerLogin'
-		}));
+passport.authenticate('customer-local', {
+	successRedirect: '/customerHome',
+	failureRedirect: '/invalidCustomerLogin'
+}));
+
 app.post('/loginDriver', 
 passport.authenticate('driver-local', {
 successRedirect: '/adminHome',

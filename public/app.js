@@ -38,3 +38,24 @@ UberPrototypeCustomer.config(['$locationProvider', '$routeProvider', function($l
   });
 }]);
 
+var UberPrototypeAdmin = angular.module('UberPrototypeAdmin', ['ngRoute','ui.bootstrap']);
+UberPrototypeAdmin.config(['$locationProvider', '$routeProvider', function($locationProvider,$routeProvider) {
+	$locationProvider.html5Mode({
+	  enabled: true,
+	  requireBase: false
+	});
+	$routeProvider
+	/*
+	.when('/CustomerTripSummary', {
+	  templateUrl: '/templates/CustomerTripSummary.html',
+	  controller: 'CustomerController'
+	})*/
+	//Admin Related Routing
+	 .when('/adminHome', {
+	  templateUrl: '/templates/adminreview.html',
+	  controller: 'AdminReviewController'
+	}) 
+	.otherwise({
+	  redirectTo: '/'
+	});
+}]);
