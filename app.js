@@ -246,6 +246,12 @@ app.post('/updateDriverProfile', driver.updateProfile);
 app.post('/createRide',rides.createRide);
 app.post('/editRide',rides.editRide);
 app.post('/deleteRide',rides.deleteRide);
+app.post('/startRide',user.startRide);
+app.post('/cancelRide',user.cancelRide);
+app.post('/endRide',user.endRide);
+app.get('/fetchRideStatus',user.fetchRideStatus);
+app.get('/getRideCreated',user.getRideCreated);
+app.get('/getCustomerTripSummary',user.getCustomerTripSummary);
 
 
 //Billing call by Parteek
