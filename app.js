@@ -250,6 +250,7 @@ app.post('/deleteRide',rides.deleteRide);
 
 //Billing call by Parteek
 app.get('/getBillSummary',billing.generateBill);
+app.get('/getFareEstimate',billing.generateBill);
 
 mongo.connect(mongoSessionConnectURL, function() {
 	http.createServer(app).listen(app.get('port'), function(){
