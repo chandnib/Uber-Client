@@ -36,7 +36,7 @@ UberPrototypeCustomer.directive('googledestination', function() {
     };
 });
 
-UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$location,$window){
+UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$location,$window,$sce){
 	 
 	$http.get('http://localhost:3000/CustomerEditProfile').success(function(data) {
 		//checking the response data for statusCode
@@ -138,6 +138,10 @@ UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$loc
 		    
 		    var pickup_location = $scope.source;
 			var dropoff_location = $scope.destination;
+			
+			console.log("source:"+$scope.source);
+			console.log("source:"+$scope.destination);
+			
 			geocoder = new google.maps.Geocoder();
 			geocoder.geocode({'address' : pickup_location},
 							function(results, status)
@@ -163,7 +167,7 @@ UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$loc
 																				geocoder.geocode({'location' : latlng},function(dropoffaddress,status) 
 																						{
 																							if (status === google.maps.GeocoderStatus.OK) 
-																							{ 
+																							{ 		
 																									$window.localStorage.pickup_address = $scope.source;
 																									$window.localStorage.dropoff_address = $scope.destination;
 																									$window.localStorage.pickupLat = pickupLat;
@@ -182,7 +186,7 @@ UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$loc
 																									}).success(function(data) {
 																										console.log(data.fare);
 																										if (data.code == 200) {
-																											$scope.fareestimate = data.fare;
+																											$scope.fareestimate = Math.round(data.fare, -2);
 																										}
 																										else {
 																											console.log("Error calculating the estimate");
@@ -226,13 +230,13 @@ UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$loc
 		  var pos = { };
 
 		     map = new google.maps.Map(document.getElementById('map'), {
-		     center: {lat: -33.8688, lng: 151.2195},
+		     center: {lat: 58.602611, lng: -111.269531},
 		     zoom: 14,
 		     mapTypeId: google.maps.MapTypeId.ROADMAP
 		   });
 
-		  var southWest = new google.maps.LatLng(37.3860517, -122.0838511);
-		  var northEast = new google.maps.LatLng(37.1911821, -121.70814540000003);
+		  var southWest = new google.maps.LatLng(62.255139, -135.263672);
+		  var northEast = new google.maps.LatLng(50.478483, -88.066406);
 		  var lngSpan = northEast.lng() - southWest.lng();
 		  var latSpan = northEast.lat() - southWest.lat();
 		  for (var i = 0; i < 1000; i++) {
@@ -243,10 +247,11 @@ UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$loc
 	  }
 	
 
-	  
 	  $scope.LoadDrivers = function(){
 		  
-		 // $scope.showAllCooridnates();
+		  //$scope.showAllCooridnates();
+		  $scope.DriverDetails = true;
+		  
 		  var pickupLat = Number($window.localStorage.pickupLat);
 		  var pickupLng = Number($window.localStorage.pickupLng);
 		  var centerpoint = new google.maps.LatLng(pickupLat,pickupLng);
@@ -266,6 +271,19 @@ UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$loc
 		      position: {lat: pickupLat, lng: pickupLng},
 		      map: map
 		   });
+		   
+		   $scope.loadreview = function(data){
+			   console.log("inside function");
+			    //$scope.DriverDetails = true;
+			    $scope.drivername = "Joey Williams";
+				$scope.driverrating = "4/5";
+				$scope.carmodel = "Mini Cooper";
+				$scope.carcolor = "Red";
+				$scope.videourl = $sce.trustAsResourceUrl("http://www.youtube.com/embed/XGSy3_Czz8k?autoplay=1");
+				$scope.driverimg = "../images/mastercard.png";
+				
+		   };
+		  
 		     
 		   $http({
 				method : "POST",
@@ -277,6 +295,14 @@ UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$loc
 			}).success(function(res) {
 				
 				 var infoWindow = new google.maps.InfoWindow({
+					 content: '<p>Driver : Joey Thomas</p>' +
+					    '<p>Rating : 4/5</p>' +
+					    '<p>Car Model : Mini Cooper</p>' +
+					    '<p>Car Color : Red</p>' +
+						'<video controls="" style="width:300px;height:180px;" poster="poster.png">' +
+					    '<source src="http://www.html5rocks.com/en/tutorials/video/basics/devstories.mp4" type="video/webm;">' +
+					    '<source src="http://www.html5rocks.com/en/tutorials/video/basics/devstories.mp4" type="video/mp4;">' +
+					    '</video>'
 				    });
 				     for (var i = 0, length = res.data.length; i < length; i++) {
 							var data = res.data[i];
@@ -293,7 +319,10 @@ UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$loc
 								google.maps.event.addListener(marker, "click", function(e) {
 									//infoWindow.setContent(data.toString());
 								  //  infoWindow.setContent(sample);
-								//	infoWindow.open(map, marker);
+									 var driverid = data.DRIVER_ID;
+									 console.log("driver id"+driverid);
+								     infoWindow.open(map, marker);
+									//$scope.loadreview(data);
 								});
 
 
@@ -304,6 +333,40 @@ UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$loc
 			}).error(function(error) {
 				console.log("Error calculating the estimate");
 			});
+		   
+		   $scope.createRide = function(){
+			   var pickupLat = $window.localStorage.pickupLat;
+			   var pickupLng = $window.localStorage.pickupLng;
+			   var dropoffLat = $window.localStorage.dropoffLat;
+			   var dropoffLng = $window.localStorage.dropoffLng;
+			   
+			   $http({
+					method : "POST",
+					url : '/createRide',
+					data : {
+						"pickup_address" : $scope.source,
+						"dropoff_address" : $scope.destination,
+						"customer_id" : 35,
+						"driver_id" : 1,
+						"pickupLat" : pickupLat,
+						"pickupLng" : pickupLng,
+						"dropoffLat" : dropoffLat,
+						"dropoffLng" : dropoffLng
+					}
+				}).success(function(data) {
+					if (data.code == 200) {
+						console.log("ride id"+data.value);
+						$window.localStorage.rideId = data.value;
+						//neha put ur routing here
+					}
+					else {
+						console.log("Error in creating ride");
+					}
+				}).error(function(error) {
+					console.log("Error in creating ride");
+				});
+			   
+		   };
 		     //hardcoding driver current location  37.3427555  -121.87057349999998
 		/*     var res = [
 		                {
