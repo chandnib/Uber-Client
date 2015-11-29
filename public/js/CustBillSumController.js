@@ -4,18 +4,18 @@ UberPrototypeCustomer.controller('CustBillSumController' ,function($scope,$http,
 		
 		
 		 console.log("inside init func of CustBillSumController");
-		 $scope.source = "190 Ryland Street, San Jose, CA 95110";
-		 $scope.destination = "1 Washington Sq, San Jose, CA 95192";
+		 $scope.source = $window.localStorage.pickup_address;
+		 $scope.destination = $window.localStorage.dropoff_address;
 		 $scope.pickupLocation = $scope.source;
 			$scope.dropoffLocation = $scope.destination;
-			$scope.tripDate = Date();
+			$scope.tripDate = Date().substring(0, 15);
 		 
 		 $http({
 				method : "GET",
 				url : '/getBillSummary',
 				params : {
 					//"rideId" : $scope.rideId,
-					"rideId" : 1,
+					"rideId" : $window.localStorage.rideId,
 					"distance" : 10,
 					"time" : 10
 				}

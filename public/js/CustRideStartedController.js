@@ -23,6 +23,7 @@ UberPrototypeCustomer.controller('CustRideStartedController' ,function($scope,$h
 	console.log("inside my controller");
 	$scope.src;
 	 $scope.dest;
+	 var RideStatus;
 	 
 	 
 	 var getTimeDest = function(){
@@ -46,8 +47,9 @@ UberPrototypeCustomer.controller('CustRideStartedController' ,function($scope,$h
 		            $scope.distance = response.rows[0].elements[0].distance.text;
 		            $scope.duration = response.rows[0].elements[0].duration.text;
 		            
-		            $scope.distance = $scope.distance.split(" ",1);
-		            $scope.distance = $scope.distance * 0.62 + " miles";
+		            var dist = $scope.distance.split(" ",1);
+		            dist = dist * 0.62 + " miles";
+		            $scope.distance = dist.toFixed(2)+ " miles";
 		            console.log("distance : " + $scope.distance);
 		            console.log("duration : " + $scope.duration);
 		            //$scope.time = $scope.time.split(" ",1);
@@ -57,41 +59,21 @@ UberPrototypeCustomer.controller('CustRideStartedController' ,function($scope,$h
 		    });
 	 };
 	 
-	 
-	 
-	 /*$scope.sourcePosition = {lat : 37.340848,
-			lng : -121.898409};
-	 $scope.destPosition = {lat : 37.335142,
-				lng : -121.881276};
-	 $scope.positions = [ {
-			lat : 37.335719,
-			lng : -121.886708
-		} ];*/
+
 	 
 	 $scope.getPageData = function(){
 		 console.log("inside init func");
 		 $scope.editRide = false;
-		 $scope.source = "190 Ryland Street, San Jose, CA 95110";
-		 $scope.destination = "1 Washington Sq, San Jose, CA 95192";
+		 $scope.source = $window.localStorage.pickup_address;
+		 $scope.destination = $window.localStorage.dropoff_address;
 		// var directionsService = new google.maps.DirectionsService();
 		 
 		 getTimeDest();
-		 if($window.localStorage.category == "C"){
-			 var RideStatus = setInterval(function(){ getRideStatus() }, 5000);
+		 if($window.localStorage.category.localeCompare("C") == 0){
+			 $scope.rideId = $window.localStorage.rideId;
+			RideStatus = setInterval(function(){ getRideStatus() }, 5000);
+			 //clearInterval(RideStatus);
 		 }
-		 
-
-		 /* var directionsService = new google.maps.DirectionsService();
-		    var request = {
-		        origin: source,
-		        destination: destination,
-		        travelMode: google.maps.TravelMode.DRIVING
-		    };
-		    directionsService.route(request, function (response, status) {
-		        if (status == google.maps.DirectionsStatus.OK) {
-		            directionsDisplay.setDirections(response);
-		        }
-		    });*/
 		    
 	 };
 	 
@@ -99,6 +81,7 @@ UberPrototypeCustomer.controller('CustRideStartedController' ,function($scope,$h
 		 var newdropoff_lat,newdropoff_lng;
 		 $scope.destination = document.getElementById("destLocation").value;
 		 console.log("check "+ document.getElementById("destLocation").value);
+		 $window.localStorage.dropoff_address = $scope.destination;
 		// $scope.destination = "1 Polk Street, San Francisco, CA, United States";
 		 console.log("$scope.destination" + $scope.destination);
 		 var dropoff_location = $scope.destination;
@@ -132,7 +115,8 @@ UberPrototypeCustomer.controller('CustRideStartedController' ,function($scope,$h
 											data : {
 												"newdropoffLat" : $scope.dropoffLat,
 												"newdropoffLng" : $scope.dropoffLng,
-												"newdropoff_location": $scope.destination
+												"newdropoff_location": $scope.destination,
+												"ride_id" : $scope.rideId
 											}
 										}).success(function(data) {
 											//checking the response data for statusCode
@@ -141,7 +125,6 @@ UberPrototypeCustomer.controller('CustRideStartedController' ,function($scope,$h
 												//$scope.isDisabled = false;
 											}
 											else{
-												//Making a get call to the '/CustomerBillSummary' page
 												console.log("Error in updating the destination location");
 											}
 										}).error(function(error) {
@@ -179,7 +162,6 @@ UberPrototypeCustomer.controller('CustRideStartedController' ,function($scope,$h
 					$location.path('/DriverBillSummary'); 
 				}
 				else{
-					//Making a get call to the '/CustomerBillSummary' page
 					console.log("Error in ending the ride");
 				}
 			}).error(function(error) {
@@ -197,7 +179,8 @@ UberPrototypeCustomer.controller('CustRideStartedController' ,function($scope,$h
 			}).success(function(data) {
 				//checking the response data for statusCode
 				if (data.code == 200) {
-					if (data.status == "E"){
+					if (data.value[0].STATUS == "E"){
+						clearInterval(RideStatus);
 						$location.path('/CustomerBillSummary'); 
 					}
 				}
@@ -209,26 +192,4 @@ UberPrototypeCustomer.controller('CustRideStartedController' ,function($scope,$h
 				console.log("The ride not completed yet");
 			});
 	 };
-	 /*$scope.submitNewRoute = function() {
-			$http({
-				method : "POST",
-				url : '/editRide',
-				data : {
-					"newdropoffLat" : $scope.newdropoff_lat,
-					"newdropoffLng" : $scope.newdropoff_lng,
-					"newdropoff_location": $scope.destination
-				}
-			}).success(function(data) {
-				//checking the response data for statusCode
-				if (data.code == 200) {
-					$scope.getNewRoute();
-				}
-				else{
-					//Making a get call to the '/CustomerBillSummary' page
-					console.log("Error in updating the destination location");
-				}
-			}).error(function(error) {
-				console.log("Error in updating the destination location");
-			});
-		};*/
 });

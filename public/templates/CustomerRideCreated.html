@@ -2,12 +2,12 @@
 <div class="row" style="padding-top: 20px; padding-bottom: 20px;"
 	ng-init="getPageData()">
 	<div class="col-xs-4 col-xs-offset-4" style="text-align: center;">
-		<h3>Your Ride Has Been Created</h3>
+		<h4>Your Ride Has Been Created</h4>
 	</div>
 </div>
-<div ng-if="canceled == true" class="row" style="padding-top: 20px; padding-bottom: 20px;>
+<div ng-if="canceled == true" class="row" style="padding-top: 20px; padding-bottom: 20px;">
 	<div class="col-xs-4 col-xs-offset-4" style="text-align: center;">
-		<h4>Your Ride Has Been Canceled</h4>
+		<h4>Your Ride Has Been Cancelled</h4>
 	</div>
 </div>
 <div ng-if="canceled == false" class="row">
@@ -53,7 +53,7 @@
 						class="btn btn-primary btn-md" style="min-width: 100px;">
 				</div> -->
 				<div class="col-xs-3">
-					<input type="button" value="Cancel" ng-click="cancelEditRide()" class="btn btn-primary btn-md"
+					<input type="button" value="Cancel Ride" ng-click="cancelTheRide()" class="btn btn-primary btn-md"
 						style="min-width: 100px;">
 				</div>
 			</div>
