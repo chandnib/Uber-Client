@@ -20,7 +20,6 @@ exports.createRide = function(req, res) {
 //	var pickup_longitude = "-121.898409";
 //	var dropoff_latitude = "37.309767";
 //	var dropoff_longitude = "-121.874345";
-	
 
 	console.log(JSON.stringify(pickup_address));
 	console.log(JSON.stringify(dropoff_address));
@@ -65,14 +64,14 @@ exports.createRide = function(req, res) {
 	});
 };
 
-
 exports.editRide = function(req, res) {
 	console.log("inside edit ride");
 	var newdropoff_address = req.param("newdropoff_location");
 	var newdropoff_latitude = req.param("newdropoffLat");
 	var newdropoff_longitude = req.param("newdropoffLng");
+	var ride_id = req.param("ride_id");
 	
-	
+//	var ride_id = 10;
 //	var newdropoff_address = "St James Station, San Jose, CA, United States";
 //	var newdropoff_latitude = "37.340848";
 //	var newdropoff_longitude = "-121.898409";
@@ -96,7 +95,8 @@ exports.editRide = function(req, res) {
 		"newdropoff_address" : newdropoff_address,
 		"newdropoff_latitude" : newdropoff_latitude,
 		"newdropoff_longitude" : newdropoff_longitude,
-		"customer_id" : customer_id
+		"customer_id" : customer_id,
+		"ride_id" : ride_id
 	};
 	
 
@@ -150,6 +150,55 @@ exports.deleteRide = function(req,res)
 
 	
 };
+
+exports.showAllRides = function(req,res)
+{
+	var searchSpec = req.param("searchSpec");
+	var newSearchSpec;
+	console.log("inside showallrides : "+searchSpec);
+	var AND = 0, OR = 0;
+	
+	searchSpec = searchSpec.substring(0,searchSpec.length - 1);
+	
+	console.log(searchSpec);
+	if(searchSpec.contains(','))
+		{
+			AND = 1;
+			newSearchSpec = searchSpec.split(",");
+		}
+	else if(searchSpec.contains('|'))
+		{
+			OR = 1;
+			newSearchSpec = searchSpec.split("|");
+		}
+	
+	var msg_payload =  {
+			"searchSpec" : newSearchSpec, "and" : AND, "or" : OR
+		};
+	mq_client.make_request('uber_searchRides_queue',msg_payload,function(err, results) 
+			{
+				console.log(results);
+				if (err) 
+				{
+					throw err;
+				} 
+				else 
+				{
+					console.log("i'm here");
+					if (results.code == 200) {
+						console.log("back to node: search successful");
+						res.send(results);
+					} 
+					else 
+					{
+						console.log("back to node: search failed");
+						res.send("failed");
+					}
+				}
+			});
+	
+};
+
 
 exports.startRide = function(req,res)
 {

@@ -104,6 +104,9 @@ UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$loc
 		    var directionsService = new google.maps.DirectionsService();
 		    var source = $scope.source;
 		    var destination = $scope.destination;
+		    
+		    $window.localStorage.pickup_address = $scope.source;
+			$window.localStorage.dropoff_address = $scope.destination;
 		 
 		    var request = {
 		        origin: $scope.source,
@@ -141,8 +144,6 @@ UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$loc
 		    var pickup_location = $scope.source;
 			var dropoff_location = $scope.destination;
 			
-			console.log("source:"+$scope.source);
-			console.log("source:"+$scope.destination);
 			
 			geocoder = new google.maps.Geocoder();
 			geocoder.geocode({'address' : pickup_location},
@@ -170,8 +171,7 @@ UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$loc
 																						{
 																							if (status === google.maps.GeocoderStatus.OK) 
 																							{ 		
-																									$window.localStorage.pickup_address = $scope.source;
-																									$window.localStorage.dropoff_address = $scope.destination;
+																									
 																									$window.localStorage.pickupLat = pickupLat;
 																									$window.localStorage.pickupLng = pickupLng;
 																									$window.localStorage.dropoffLat = dropoffLat;
@@ -258,7 +258,6 @@ UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$loc
 		  var pickupLng = Number($window.localStorage.pickupLng);
 		  var centerpoint = new google.maps.LatLng(pickupLat,pickupLng);
 		  
-		  console.log("pickupLat "+pickupLat);
 		  geocoder = new google.maps.Geocoder();
 		  directionsService = new google.maps.DirectionsService();
 		  var pos = { };
@@ -336,6 +335,8 @@ UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$loc
 				console.log("Error calculating the estimate");
 			});
 		   
+		   
+			
 		   $scope.createRide = function(){
 			   var pickupLat = $window.localStorage.pickupLat;
 			   var pickupLng = $window.localStorage.pickupLng;
@@ -344,12 +345,19 @@ UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$loc
 			   $window.localStorage.driverId = 1;
 			   $window.localStorage.category ="C";
 			   
+			   console.log(pickupLat);
+			   console.log(pickupLng);
+			   console.log(dropoffLat);
+			   console.log(dropoffLng);
+			   
+			   
+			   
 			   $http({
 					method : "POST",
 					url : '/createRide',
 					data : {
-						"pickup_address" : $scope.source,
-						"dropoff_address" : $scope.destination,
+						"pickup_address" : $window.localStorage.pickup_address,
+						"dropoff_address" : $window.localStorage.dropoff_address,
 						"customer_id" : 35,
 						"driver_id" : 1,
 						"pickupLat" : pickupLat,
@@ -362,6 +370,7 @@ UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$loc
 						console.log("ride id"+data.value);
 						$window.localStorage.rideId = data.value;
 						//neha put ur routing here
+						$scope.routeToTemplate('/CustomerRideCreated');
 					}
 					else {
 						console.log("Error in creating ride");
