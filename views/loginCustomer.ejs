@@ -1,6 +1,8 @@
 <html>
 <head>
+<title>Uber</title>
 <meta charset="utf-8">
+<link rel="icon" href="/images/favicon.ico">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script type="text/javascript"
 	src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -20,7 +22,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-md-12">
-					<img src="http://imgur.com/Ixo0znz.png" class="img-responsive">
+					<a href="/"><img src="http://imgur.com/Ixo0znz.png" class="img-responsive"></a>
 				</div>
 			</div>
 		</div>
@@ -42,13 +44,18 @@
 							<input
 								class="form-control" id="user.password" ng-model="user.password"
 								placeholder="Password" name = "password" type="password">
-
 						</div>
-							<div class="alert alert-danger" ng-hide="invalid_login">
+						<div class="alert alert-danger" ng-hide="invalid_login">
 							<strong>Error! Wrong Login Information</strong>
 						</div>
 						<input type = "hidden" name= "loginType" id= "user.loginType" ng-model="user.loginType" value="customer">
 						<button type="submit" class="btn btn-primary">Submit</button>
+						</br>
+						<div class="row" style = "padding:20 55;"><div class="col-md-2"></div><div class="col-md-7"><div class="alert alert-danger" ng-init="user=<%= user  %>"
+							ng-show="user.errorInloginForm">
+							<strong>Error! {{user.errorMessage}}</strong>
+						</div></div></div>
+						
 					</form>
 				</div>
 			</div>

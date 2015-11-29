@@ -1,12 +1,10 @@
 <html ng-app="UberPrototypeAdmin">
   
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- 	  <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-	  <script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-	  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.4/angular.js"></script> -->
-	  
+<title>Uber</title>
+<meta charset="utf-8">
+<link rel="icon" href="/images/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1">	  
 	  <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 	  <script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 	  <script src="https://code.angularjs.org/1.4.2/angular.js"></script>
@@ -20,10 +18,10 @@
 	  
 	  <link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="http://pingendo.github.io/pingendo-bootstrap/themes/default/bootstrap.css" rel="stylesheet" type="text/css">
-    <link href="main.css" rel="stylesheet" type="text/css">
+    <link href="adminstyle.css" rel="stylesheet" type="text/css">
   </head>
   
-<body style="padding-top: 80px; padding-bottom: 70px;" ng-controller="AdminReviewController">
+<body style="padding-top: 80px; padding-bottom: 70px;" ng-controller="AdminReviewController" ng-init="curuser=<%= user %>;">
   <nav class="navbar navbar-default navbar-fixed-top col-lg-offset-0 col-lg-12"
     style="background-color: #000000; min-height: 95">
       <div class="container-fluid">
@@ -42,22 +40,22 @@
         <div class="collapse navbar-collapse" id="topFixedNavbar1">
           <ul class="nav navbar-nav navbar-right">
             <li class="dropdown col-lg-12" style="bottom:40%;right: 200%;margin-left: -0px !important;">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" style="color:#FFFFFF">Username<span class="caret"></span></a>
+              <a ng-click="routeToTemplate('/adminHome')"  class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" style="color:#FFFFFF">{{curuser.FIRST_NAME}} {{curuser.LAST_NAME}}<span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
                 <li>
-                  <a href="#mytrip" data-toggle="tab" role="tab">My Trips</a>
+                  <a ng-click="routeToTemplate('/adminHome')" data-toggle="tab" role="tab">Review Accounts</a>
                 </li>
                 <li class="divider"></li>
                 <li>
-                  <a href="#profile" data-toggle="tab" role="tab">Profile</a>
+                  <a ng-click="routeToTemplate('/BookaRide')"  data-toggle="tab" role="tab">Ride Statistics</a>
                 </li>
                 <li class="divider"></li>
                 <li>
-                  <a href="#payment" data-toggle="tab" role="tab">Payment</a>
+                  <a ng-click="routeToTemplate('/EditProfile')" data-toggle="tab" role="tab">Ride Graphs</a>
                 </li>
                 <li class="divider"></li>
                 <li>
-                  <a href="#logout" data-toggle="tab" role="tab">Logout</a>
+                  <a ng-click="logout()" data-toggle="tab" role="tab">Logout</a>
                 </li>
               </ul>
             </li>
@@ -76,17 +74,17 @@
             <div class="row" >
               <div class="col-xs-12">
                 <div class="panel-group" id="accordion1" style="padding-top:30px;">
-                  <img src="/images/default_profile_pic.jpeg" class="img-circle img-responsive" alt="Placeholder image">
+                  <img ng-src="{{curuser.IMAGE_URL}}" class="img-circle img-responsive" alt="Placeholder image">
                 </div>
               </div>
               <div class="row">
                 <div class="col-xs-12">
                   <div class="list-group" style="padding:0px 0px;margin-left:0;margin-right:0;">
                     <a href="" ng-click="routeToTemplate('/adminHome')" class="list-group-item" style="margin-left:0;margin-right:0; border-left:none;font-size:18px;border-right:none">Review Accounts</a>
-                    <a href="" ng-click="routeToTemplate('/BookaRide')" class="list-group-item" style="margin-left:0;margin-right:0; border-left:none;font-size:18px;border-right:none">Book a Ride</a>
-                    <a href="" ng-click="routeToTemplate('/EditProfile')" class="list-group-item" style="margin-left:0;margin-right:0; border-left:none;font-size:18px;border-right:none">Profile</a>
-                    <a href="" ng-click="routeToTemplate('/CustomerPayment')" class="list-group-item" style="margin-left:0;margin-right:0; border-left:none;font-size:18px;border-right:none">Payment</a>
-                    <a href="" class="list-group-item" style="margin-left:0;margin-right:0; border-left:none;font-size:18px;border-right:none">Logout</a>
+                    <a href="" ng-click="routeToTemplate('/BookaRide')" class="list-group-item" style="margin-left:0;margin-right:0; border-left:none;font-size:18px;border-right:none">Ride Statistics</a>
+                    <a href="" ng-click="routeToTemplate('/EditProfile')" class="list-group-item" style="margin-left:0;margin-right:0; border-left:none;font-size:18px;border-right:none">Ride Graphs</a>
+                    <a href="" ng-click="routeToTemplate('/CustomerPayment')" class="list-group-item" style="margin-left:0;margin-right:0; border-left:none;font-size:18px;border-right:none">Search Bills</a>
+                    <a ng-click="logout()" class="list-group-item" style="margin-left:0;margin-right:0; border-left:none;font-size:18px;border-right:none">Logout</a>
                   </div>
                 </div>
               </div>

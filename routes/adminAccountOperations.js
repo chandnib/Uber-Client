@@ -48,6 +48,14 @@ module.exports = {
 		rejectAllDriver : function(user,req,res){
 			var MQConnection = require('./mongoDBRequestBroker');
 			MQConnection.handleDBRequest("rejectAllDriver",user,req,res,rpc);
+		},
+		loadCustomerDetail : function(user,req,res){
+			var MQConnection = require('./mongoDBRequestBroker');
+			MQConnection.handleDBRequest("loadCustomerDetail",user,req,res,rpc);
+		},
+		loadDriverDetail : function(user,req,res){
+			var MQConnection = require('./mongoDBRequestBroker');
+			MQConnection.handleDBRequest("loadDriverDetail",user,req,res,rpc);
 		}
 };
 

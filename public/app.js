@@ -42,6 +42,7 @@ UberPrototypeCustomer.config(['$locationProvider', '$routeProvider', function($l
   });
 }]);
 
+//Admin Routing
 var UberPrototypeAdmin = angular.module('UberPrototypeAdmin', ['ngRoute','ui.bootstrap']);
 UberPrototypeAdmin.config(['$locationProvider', '$routeProvider', function($locationProvider,$routeProvider) {
 	$locationProvider.html5Mode({
@@ -49,14 +50,16 @@ UberPrototypeAdmin.config(['$locationProvider', '$routeProvider', function($loca
 	  requireBase: false
 	});
 	$routeProvider
-	/*
-	.when('/CustomerTripSummary', {
-	  templateUrl: '/templates/CustomerTripSummary.html',
-	  controller: 'CustomerController'
-	})*/
-	//Admin Related Routing
 	 .when('/adminHome', {
 	  templateUrl: '/templates/adminreview.html',
+	  controller: 'AdminReviewController'
+	}) 
+	 .when('/customerDetailReview/:custid', {
+	  templateUrl: '/templates/AdminReviewCustomer.html',
+	  controller: 'AdminReviewController'
+	}) 
+	 .when('/driverDetailReview/:driverid', {
+	  templateUrl: '/templates/AdminReviewDriver.html',
 	  controller: 'AdminReviewController'
 	}) 
 	.otherwise({

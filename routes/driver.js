@@ -3,6 +3,23 @@ var amqp = require('amqp');
 var connection = amqp.createConnection({host:'127.0.0.1'});
 var rpc = new (require('../rpc/amqprpc'))(connection);
 
+exports.driverHome = function(req, res){
+	console.log("Session Set by Passport !!! ==>  " + JSON.stringify(req.session));
+	if(req.session.passport != null && req.session.passport != ""){
+		if(req.session.passport.user.EMAIL != "" && req.session.passport.user.EMAIL != null){
+			res.render('driverHome', {user:JSON.stringify(req.session.passport.user)});
+		}
+		else
+			res.redirect("/invalidSessionDriverLogin");
+	}
+	else
+		res.redirect("/invalidSessionDriverLogin");
+}
+
+exports.signUpDriver = function(req, res){
+	res.render('Sign_up_Driver', { title: 'HOME' });
+}
+
 exports.driverLoginPage = function(req, res){
 	if(req.session.passport != null && req.session.passport != ""){
 		console.log("Existing Session on Passport !!! ==>  " + JSON.stringify(req.session));
@@ -23,16 +40,17 @@ exports.adminHome = function(req, res){
 			res.render('driverHome', {user:JSON.stringify(req.session.passport.user)});
 		}
 		else
-			res.redirect("/invalidAdminLogin");
+			res.redirect("/invalidDriverLogin");
 	}
 	else
-		res.redirect("/invalidAdminLogin");
+		res.redirect("/invalidDriverLogin");
 };
 
 exports.driverSignUp = function(req, res){
+	console.log("Request body for signup driver ==> " + JSON.stringify(req.body));
 	var data = {};
 	if(req.param("email") && req.param("password") && req.param("firstName") && req.param("lastName") && req.param("mobileNumber") && req.param("carModel") && req.param("carColor") && req.param("carYear") && req.param("address") && req.param("city") && req.param("state") && req.param("zipCode"))
-		{
+	{
 	data.EMAIL = req.param("email");
 	data.PASSWORD = req.param("password");
 	data.FIRSTNAME = req.param("firstName");
@@ -138,17 +156,72 @@ exports.infoDriver = function(req, res) {
 	});
 };
 
-exports.invalidAdminLogin = function(req, res){
+exports.invalidDriverLogin = function(req, res){
 	var user = {};
 	user.errorInloginForm = true;
 	user.errorMessage = "Invalid Username or password!! Please Try again.."
-	res.render('loginadmin', {user:JSON.stringify(user)});
+	res.render('loginDriver', {user:JSON.stringify(user)});
 };
 
-exports.invalidSessionAdminLogin = function(req, res){
+exports.invalidSessionDriverLogin = function(req, res){
 	var user = {};
 	user.errorInloginForm = true;
 	user.errorMessage = "Invalid Session!! Please login again to proceed!!"
-	res.render('loginadmin', {user:JSON.stringify(user)});
+	res.render('loginDriver', {user:JSON.stringify(user)});
+};
+
+exports.uploadProfilePicDriver = function(req,res){
+	if (req.session.passport != null && req.session.passport != "") {
+		if (req.session.passport.user.EMAIL != ""	&& req.session.passport.user.EMAIL != null) {
+			console.log(req);
+			var fs = require('fs');
+			fs.readFile(req.files.pofilepic.path, function (err, data) {
+				fs.exists(req.files.pofilepic.path)
+				var newPath = "/home/rakshithk/workspace/UberServer/public/uploads/"+req.files.pofilepic.name;
+				console.log("File newPath " + "");
+				fs.writeFile(newPath, data, function (err) {
+					data = {IMAGE_URL: "/public/uploads/"+req.files.pofilepic.name,ROW_ID:req.session.passport.user.ROW_ID}
+					console.log("File Uploaded" + err);
+					rpc.makeRequest("uploadProfilePicDriver", data, function(err, user) {
+						console.log("User : " + JSON.stringify(user));
+						if (err) {
+							console.log("There is an error: " + err);
+							res.redirect('/driverHome');
+						} else {
+							if (user.code == "200") {
+								req.session.passport.user.IMAGE_URL = "/public/uploads/"+req.files.pofilepic.name;
+								console.log("Everthing is fine!!!");
+								res.redirect('/driverHome');
+							} else {
+								console.log("Did not Upload. Try again");
+								res.redirect('/driverHome');
+							}
+						}
+					});
+				});
+			});
+
+		} else
+			res.redirect("/invalidSessionDriverLogin");
+	} else
+		res.redirect("/invalidSessionDriverLogin");
+};
+
+exports.CreateDrivers = function(req,res){
+	var data = req.body;
+	rpc.makeRequest("CreateDrivers", data, function(err, user) {
+		console.log("User : " + JSON.stringify(user));
+		if (err) {
+			console.log("There is an error: " + err);
+		} else {
+			if (user.code == "200") {
+				console.log("Everthing is fine!!!");
+				res.status(200).send(user);
+			} else {
+				console.log("Did not delete. Try again");
+				res.status(404).send("Error");
+			}
+		}
+	});
 };
 

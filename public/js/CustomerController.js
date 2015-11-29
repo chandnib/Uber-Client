@@ -37,6 +37,8 @@ UberPrototypeCustomer.directive('googledestination', function() {
 });
 
 UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$location,$window){
+	
+	$scope.curuser = {};
 	 
 	$http.get('http://localhost:3000/CustomerEditProfile').success(function(data) {
 		//checking the response data for statusCode

@@ -168,3 +168,27 @@ exports.rejectAllDriver = function(req,res){
 		res.redirect("/invalidSessionAdminLogin");
 };
 
+exports.loadCustomerDetail = function(req,res){
+	if(req.session.passport != null && req.session.passport != ""){
+		if(req.session.passport.user.EMAIL != "" && req.session.passport.user.EMAIL != null){
+			adminAccountOperations.loadCustomerDetail(req.body,req,res);
+		}
+		else
+			res.redirect("/invalidSessionAdminLogin");
+	}
+	else
+		res.redirect("/invalidSessionAdminLogin");
+};
+
+exports.loadDriverDetail = function(req,res){
+	if(req.session.passport != null && req.session.passport != ""){
+		if(req.session.passport.user.EMAIL != "" && req.session.passport.user.EMAIL != null){
+			adminAccountOperations.loadDriverDetail(req.body,req,res);
+		}
+		else
+			res.redirect("/invalidSessionAdminLogin");
+	}
+	else
+		res.redirect("/invalidSessionAdminLogin");
+};
+

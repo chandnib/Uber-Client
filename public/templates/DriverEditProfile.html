@@ -16,6 +16,24 @@
     margin-left: -300px;
 }
 </style>
+<script type="text/javascript">
+function checkFileType(){
+	var file = document.getElementById('pofilepic');
+    var ext = file.value.match(/\.([^\.]+)$/)[1];
+    switch(ext)
+    {
+        case 'jpg':
+        case 'bmp':
+        case 'png':
+        case 'tif':
+            //alert('allowed');
+            break;
+        default:
+            alert('Profile Pictures should be images, Please check the Extension of the File.');
+        	file.value='';
+    }
+};
+</script>
 
 <div class="row">
 	<div class="col-xs-10 col-xs-offset-1" style="border-bottom: 1px solid #ccc; text-align:center;">
@@ -29,6 +47,27 @@
         <h4>General Information</h4>
       </div>
     </div>
+    <div class="row">
+	<form action="/uploadProfilePicDriver" method="post"
+		, enctype="multipart/form-data" role="search" name="ProfileImageForm"
+		ng-submit="uploadProfilePic()" novalidate>
+		<div class="col-xs-10 col-xs-offset-1">
+			<div class="row" style="padding-top: 10px; padding-bottom: 10px;">
+				<div class="col-xs-2 col-xs-offset-6">
+					<input type="file" multiple accept='image/*' ng-model="pofilepic"
+						id="pofilepic" name="pofilepic" style="padding: 1px 1px;"
+						onchange="checkFileType()">
+				</div>
+				<div class="col-xs- col-xs-offset-6">
+					<button type="submit" 
+						class="btn btn-primary" name="submit"
+						style="padding: 1px 1px;">Upload
+						Picture</button>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
     <div class="row">
       <div class="col-xs-10 col-xs-offset-1">
         <form class="form" method = "POST" ng-submit="editProfile(firstName, lastName, address, city, state, zip, carModel, carColor, carYear, email, language, phoneNumber, password)">

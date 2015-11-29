@@ -227,7 +227,30 @@ function deligateMQAccessRequest(operation,data,req,res,requestId,rpc){
 							res.status(404).send(response.err);
 						}
 					}else{
-						res.status(404).send("error in Executin																																																																																																																																																																		g the operation!!");
+						res.status(404).send("error in Executing the operation!!");																																																																																																																																																																
+					}
+				});
+			}
+			else{
+				adminAccountOperations.userUnverified(res,"Your Session is no Longer Valid!! Please login again to Proceed.",{},req);
+			}
+			break;
+			
+		case "loadCustomerDetail" :
+			console.log("loadCustomerDetail ==> " + operation);	
+			if(req.session.passport.user.EMAIL != "" && req.session.passport.user.EMAIL != null){						
+				//data ==> contains Driver Info
+				rpc.makeRequest("loadCustomerDetail", data, function(err, response) {
+					console.log("loadCustomerDetail Response from RabbitMQ Server ==> " + JSON.stringify(response));
+					if (response){
+						if(response.code == 200) {
+							console.log(response);
+							res.status(200).send(response.data);
+						}else{
+							res.status(404).send(response.err);
+						}
+					}else{
+						res.status(404).send("error in Executing the operation!!");																																																																																																						
 					}
 				});
 			}
@@ -236,14 +259,34 @@ function deligateMQAccessRequest(operation,data,req,res,requestId,rpc){
 			}
 			break;
 
+		case "loadDriverDetail" :
+			console.log("loadDriverDetail ==> " + operation);	
+			if(req.session.passport.user.EMAIL != "" && req.session.passport.user.EMAIL != null){						
+				//data ==> contains Driver Info
+				rpc.makeRequest("loadDriverDetail", data, function(err, response) {
+					console.log("loadDriverDetail Response from RabbitMQ Server ==> " + JSON.stringify(response));
+					if (response){
+						if(response.code == 200) {
+							console.log(response);
+							res.status(200).send(response.data);
+						}else{
+							res.status(404).send(response.err);
+						}
+					}else{
+						res.status(404).send("error in Executing the operation!!");																																																																																																						
+					}
+				});
+			}
+			else{
+				adminAccountOperations.userUnverified(res,"Your Session is no Longer Valid!! Please login again to Proceed.",{},req);
+			}
+			break;
 
-
-	default:
-		break;
+			
+		default:
+			break;
 	}
 }
-
-
 
 module.exports = {
 	handleDBRequest : function(operation,data,req,res,rpc){

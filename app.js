@@ -6,7 +6,8 @@ var express = require('express')
 , admin= require('./routes/admin')
 , customer = require('./routes/customer')
 , driver = require ('./routes/driver')
-, rides = require ('./routes/rides');
+, rides = require ('./routes/rides')
+, index = require('./routes/index');
 
 //Passport login for 
 var amqp = require('amqp');
@@ -66,19 +67,15 @@ passport.deserializeUser(function(user, done) {
 	done(null, user);
 });
 
-//Passport Login for admin
-
-//Passport Login Local Strategy
+//Passport Admin Local Strategy
 passport.use('admin-local',new LocalStrategy({ usernameField: 'username',
-    passwordField: 'password'},
-		function(username, password, done) {
-	console.log("username : "+ username + "  password :  " + password);
-	process.nextTick(function () {
-		//UserDetails.findOne({'EMAIL':username},
-		//connection.query("select * from ADMIN where EMAIL = '"+username+"'",
-		var data = {};
-		data.EMAIL = username;
-		data.PASSWORD = password;
+	passwordField: 'password'},
+	function(username, password, done) {
+		console.log("username : "+ username + "  password :  " + password);
+		process.nextTick(function () {
+			var data = {};
+			data.EMAIL = username;
+			data.PASSWORD = password;
 			rpc.makeRequest("verifyAdmin", data,
 					function(err, user) {
 				console.log("User : "+ JSON.stringify(user));
@@ -101,22 +98,20 @@ passport.use('admin-local',new LocalStrategy({ usernameField: 'username',
 				}
 			});
 
-	});
-}
+		});
+	}
 ));
-//END
 
-//customer
+
+//Passport Customer Local Strategy
 passport.use('customer-local', new LocalStrategy({ usernameField: 'username',
-    passwordField: 'password'},
-		function(username, password, done) {
-	console.log("customer ==> username : "+ username + "  password :  " + password);
-	process.nextTick(function () {
-		//UserDetails.findOne({'EMAIL':username},
-		//connection.query("select * from ADMIN where EMAIL = '"+username+"'",
-		var data = {};
-		data.EMAIL = username;
-		data.PASSWORD = password;
+	passwordField: 'password'},
+	function(username, password, done) {
+		console.log("customer ==> username : "+ username + "  password :  " + password);
+		process.nextTick(function () {
+			var data = {};
+			data.EMAIL = username;
+			data.PASSWORD = password;
 			rpc.makeRequest("verifyCustomer", data,
 					function(err, user) {
 				console.log("User : "+ JSON.stringify(user));
@@ -138,21 +133,19 @@ passport.use('customer-local', new LocalStrategy({ usernameField: 'username',
 					}
 				}
 			});
-	});
-}
+		});
+	}
 ));
 
-//Passport Login for driver
+//Passport Driver Local Strategy
 passport.use('driver-local',new LocalStrategy({ usernameField: 'username',
-    passwordField: 'password'},
-		function(username, password, done) {
-	console.log("username : "+ username + "  password :  " + password);
-	process.nextTick(function () {
-		//UserDetails.findOne({'EMAIL':username},
-		//connection.query("select * from ADMIN where EMAIL = '"+username+"'",
-		var data = {};
-		data.EMAIL = username;
-		data.PASSWORD = password;
+	passwordField: 'password'},
+	function(username, password, done) {
+		console.log("username : "+ username + "  password :  " + password);
+		process.nextTick(function () {
+			var data = {};
+			data.EMAIL = username;
+			data.PASSWORD = password;
 			rpc.makeRequest("verifyDriver", data,
 					function(err, user) {
 				console.log("User : "+ JSON.stringify(user));
@@ -168,7 +161,7 @@ passport.use('driver-local',new LocalStrategy({ usernameField: 'username',
 							console.log("Everthing is fine!!!")
 							return done(null, user);
 						}else{
-							alert(user.err);
+							console.log("Login Failed !!!!!!")
 							return done(null, false);
 						}
 
@@ -176,93 +169,93 @@ passport.use('driver-local',new LocalStrategy({ usernameField: 'username',
 				}
 			});
 
-	});
-}
+		});
+	}
 ));
-//END
 
+//passport Login Functions
+app.post('/loginAdmin', 
+		passport.authenticate('admin-local', {
+			successRedirect: '/adminHome',
+			failureRedirect: '/invalidAdminLogin'}));
+app.post('/loginCustomer', 
+		passport.authenticate('customer-local', {
+			successRedirect: '/customerHome',
+			failureRedirect: '/invalidCustomerLogin'}));
+app.post('/loginDriver', 
+		passport.authenticate('driver-local', {
+			successRedirect: '/driverHome',
+			failureRedirect: '/invalidDriverLogin'}));
 
-//Admin Related
-//Passport Login function
+//General
+app.get('/', index.home);
+app.get('/Log_In', index.login);
+app.get('/Log_Out', index.logout);
+
+//Admin
 app.get('/adminLoginPage',admin.adminLoginPage);
 app.get('/customerLoginPage',customer.customerLoginPage);
 app.get('/driverLoginPage',driver.driverLoginPage);
 app.get('/adminHome',admin.adminHome);
 app.get('/invalidAdminLogin',admin.invalidAdminLogin);
 app.get('/invalidSessionAdminLogin',admin.invalidSessionAdminLogin);
-
-//Changes
 app.post('/loadUnverifiedCustomers', admin.loadUnverifiedCustomers);
 app.post('/approveCustomer',admin.approveCustomer);
 app.post('/rejectCustomer',admin.rejectCustomer);
 app.post('/approveAllCustomer',admin.approveAllCustomer);
 app.post('/rejectAllCustomer',admin.rejectAllCustomer);
-
 app.post('/loadUnverifiedDrivers', admin.loadUnverifiedDrivers);
 app.post('/approveDriver',admin.approveDriver);
 app.post('/rejectDriver',admin.rejectDriver);
 app.post('/approveAllDriver',admin.approveAllDriver);
 app.post('/rejectAllDriver',admin.rejectAllDriver);
+app.post('/loadCustomerDetail',admin.loadCustomerDetail);
+app.post('/loadDriverDetail',admin.loadDriverDetail);
 
-
-app.post('/loginAdmin', 
-passport.authenticate('admin-local', {
-	successRedirect: '/adminHome',
-	failureRedirect: '/invalidAdminLogin'
-}));
-app.post('/loginCustomer', 
-passport.authenticate('customer-local', {
-	successRedirect: '/customerHome',
-	failureRedirect: '/invalidCustomerLogin'
-}));
-
-app.post('/loginDriver', 
-passport.authenticate('driver-local', {
-successRedirect: '/driverHome',
-failureRedirect: '/invalidDriverLogin'
-}));
-
-app.get('/', function(req, res){
-	res.render('home', { title: 'HOME' });
-});
-app.get('/Log_In', function(req, res){
-	res.render('Log_In', { title: 'HOME' });
-});
-app.get('/Log_Out', function(req, res){
-	req.logout();
-	req.session.destroy();
-	res.render('home', { title: 'HOME' });
-});
-app.get('/signUpCustomer', function(req, res){
-	res.render('Sign_Up_Customer', { title: 'HOME' });
-});
-app.get('/signUpDriver', function(req, res){
-	res.render('Sign_Up_Driver', { title: 'HOME' });
-});
-app.get('/customerHome', function(req, res){
-	res.render('customerHome', { title: 'HOME' });
-});
-app.get('/driverHome', function(req, res){
-	res.render('driverHome', { title: 'HOME' });
-});
+//Customer
+app.get('/invalidCustomerLogin',customer.invalidCustomerLogin);
+app.get('/invalidSessionCustomerLogin',customer.invalidSessionCustomerLogin);
+app.get('/signUpCustomer', customer.signUpCustomer);
+app.get('/customerHome', customer.customerHome);
 app.get('/CustomerEditProfile', customer.infoCustomer)
-app.get('/DriverEditProfile', driver.infoDriver)
 app.get('/deleteCustomer', customer.deleteCustomer);
-app.get('/deleteDriver', driver.deleteDriver);
-
-
 app.post('/addCustomer', customer.customerSignUp);
-app.post('/addDriver', driver.driverSignUp);
 app.post('/updateProfile', customer.updateProfile);
+app.post('/uploadProfilePic',customer.uploadProfilePic);
+app.post('/CreateCustomer',customer.CreateCustomer);
+
+//Driver
+app.get('/invalidSessionDriverLogin',driver.invalidSessionDriverLogin);
+app.get('/invalidDriverLogin',driver.invalidDriverLogin);
+app.get('/signUpDriver', driver.signUpDriver);
+app.get('/driverHome', driver.driverHome);
+app.get('/deleteDriver', driver.deleteDriver);
+app.get('/DriverEditProfile', driver.infoDriver);
+app.post('/addDriver', driver.driverSignUp);
 app.post('/updateDriverProfile', driver.updateProfile);
+app.post('/uploadProfilePicDriver',driver.uploadProfilePicDriver);
 
+app.post('/CreateDrivers',driver.CreateDrivers);
 
+//Rides
 app.post('/createRide',rides.createRide);
 app.post('/editRide',rides.editRide);
 app.post('/deleteRide',rides.deleteRide);
 
-mongo.connect(mongoSessionConnectURL, function() {
+//Server
+/*mongo.connect(mongoSessionConnectURL, function() {
 	http.createServer(app).listen(app.get('port'), function(){
 		console.log('Uber server listening on port ' + app.get('port'));
 	});
-});
+});*/
+
+//Clustering
+	mongo.connect(mongoSessionConnectURL, function() { 
+		app.listen(app.get('port'), function() {
+			process.send({ cmd: 'notifyRequest' });
+	console.log("Uber Cluster Server running at PORT ==> " + app.get('port'));
+	});
+})
+
+
+
