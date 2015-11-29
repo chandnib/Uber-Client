@@ -129,6 +129,8 @@ UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$loc
 		            $scope.distance = Math.round($scope.distance, -2);
 		            $scope.time = $scope.time.split(" ",1);
 		            $scope.time = Number($scope.time);
+		            $window.localStorage.distance = $scope.distance;
+		            $window.localStorage.time = $scope.time;
 		        } else {
 		            console.log("Unable to find the distance via road.");
 		        }
@@ -339,6 +341,8 @@ UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$loc
 			   var pickupLng = $window.localStorage.pickupLng;
 			   var dropoffLat = $window.localStorage.dropoffLat;
 			   var dropoffLng = $window.localStorage.dropoffLng;
+			   $window.localStorage.driverId = 1;
+			   $window.localStorage.category ="C";
 			   
 			   $http({
 					method : "POST",
