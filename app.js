@@ -7,7 +7,8 @@ var express = require('express')
 , customer = require('./routes/customer')
 , driver = require ('./routes/driver')
 , billing = require ('./routes/billing')
-, rides = require ('./routes/rides');
+, rides = require ('./routes/rides')
+, rating = require ('./routes/rating');
 
 //Passport login for 
 var amqp = require('amqp');
@@ -260,6 +261,12 @@ app.get('/getCustomerTripSummary',rides.getCustomerTripSummary);
 //Billing call by Parteek
 app.get('/getBillSummary',billing.generateBill);
 app.get('/getFareEstimate',billing.getFareEstimate);
+
+//Rating call by Parteek
+app.post('/saveCustomerRating',rating.saveCustomerRating);
+app.post('/saveDriverRating',rating.saveDriverRating);
+app.get('/getDriverRating',rating.getDriverRating);
+app.get('/getCustomerRating',rating.getCustomerRating);
 
 mongo.connect(mongoSessionConnectURL, function() {
 	http.createServer(app).listen(app.get('port'), function(){
