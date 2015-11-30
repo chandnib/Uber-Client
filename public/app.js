@@ -49,6 +49,10 @@ UberPrototypeCustomer.config(['$locationProvider', '$routeProvider', function($l
 	    templateUrl: '/templates/DriverBillSummary.html',
 	    controller: 'CustBillSumController'
   })
+	 .when('/driverHome', {
+	  templateUrl: '/templates/DriverTrips.html',
+	  controller: 'DriverTripsController'
+	}) 
   /*.when('/BookaRide', {
     templateUrl: '/templates/BookaRide.html',
     controller: 'CustomerController'
@@ -94,3 +98,20 @@ UberPrototypeAdmin.config(['$locationProvider', '$routeProvider', function($loca
 	  redirectTo: '/'
 	});
 }]);
+
+
+//var UberPrototypeDriver = angular.module('UberPrototypeDriver', ['ngRoute','ui.bootstrap']);
+//UberPrototypeDriver.config(['$locationProvider', '$routeProvider', function($locationProvider,$routeProvider) {
+//	$locationProvider.html5Mode({
+//	  enabled: true,
+//	  requireBase: false
+//	});
+//	$routeProvider
+//	 .when('/driverHome', {
+//	  templateUrl: '/templates/DriverTrips.html',
+//	  controller: 'DriverTripsController'
+//	}) 
+//	.otherwise({
+//	  redirectTo: '/'
+//	});
+//}]);
