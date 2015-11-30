@@ -120,20 +120,15 @@ exports.updateProfile = function(req, res) {
 
 exports.deleteDriver = function(req, res) {
 	var data = {};
-	data.EMAIL = req.session.passport.user.EMAIL
-	rpc.makeRequest("deleteDriver", data, function(err, user) {
-		console.log("User : " + JSON.stringify(user));
+	data.latitude = req.param.latitude;
+	data.longitude = req.param.longitude;
+	rpc.makeRequest("deleteDriver", data, function(err, result) {
+		console.log("User : " + JSON.stringify(result));
 		if (err) {
-			alert("There is an error: " + err);
+			res.code = 401;
+			res.err = err;
 		} else {
-			if (user.code == "200") {
-				console.log("Everthing is fine!!!");
-				req.logout();
-				req.session.destroy();
-				res.redirect("/");
-			} else {
-				alert("Did not delete. Try again");
-			}
+				res.send(result);
 		}
 	});
 };
@@ -156,6 +151,9 @@ exports.infoDriver = function(req, res) {
 	});
 };
 
+<<<<<<< HEAD
+exports.invalidDriverLogin = function(req, res){
+=======
 exports.showDriverin10Mile = function(req, res) {
 	var data = {
 			latitude: req.param("latitude"),
@@ -171,8 +169,8 @@ exports.showDriverin10Mile = function(req, res) {
 	});
 };
 
-
-exports.invalidDriverLogin = function(req, res){
+exports.invalidAdminLogin = function(req, res){
+>>>>>>> c557bfde480c10e544bbe208a1a6390ab3d015ec
 	var user = {};
 	user.errorInloginForm = true;
 	user.errorMessage = "Invalid Username or password!! Please Try again.."

@@ -38,6 +38,13 @@ UberPrototypeCustomer.directive('googledestination', function() {
 
 UberPrototypeCustomer.controller('DriverController',function($scope,$http,$location,$window){
 	$scope.curuser = {};
+	$window.localStorage.category = "D";
+	
+	$scope.initData = function(){
+		$window.localStorage.category = "D";
+		$window.localStorage.driverId =  $scope.curuser.ROW_ID;
+	};
+	
 	$http.get('http://localhost:3000/DriverEditProfile').success(function(data) {
 		//checking the response data for statusCode
 		if (data.statusCode == 401) {

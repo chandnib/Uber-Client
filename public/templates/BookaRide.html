@@ -2,6 +2,7 @@
 <form class="form" novalidate="">
 		  <br>
 		  <br>
+		  <br>
           <div class="row" style="padding-top:10px; padding-bottom:10px;">
             <div class="col-xs-1" style="padding-top:5px;">
               <label><font size="4" color="#808080">Source</font></label>
@@ -34,41 +35,27 @@
            
            <div ng-hide="HideFareEstimate">
            <br>
-           		<div class="row">
-      			<div class="col-xs-10 col-xs-offset-1" style="border-bottom: 1px solid #ccc; padding-top:10px; padding-bottom:10px;">
-        			<h4 align="center"><font color="#808080">Fare Estimate</font></h4>
-      			</div>
-    			</div>
-    			<div class="row">
-      			<div class="col-xs-10 col-xs-offset-1">
-          		<div class="row" style="padding-top:10px; padding-bottom:10px;">
-            	<div class="col-xs-1" style="padding-top:5px;">
-                <label><font color="#808080">Distance</font></label>
-                </div>
-                <div class="col-xs-2 col-xs-offset-1" ng-model="distanceinmiles">
-                <p>{{distanceinmiles}}</p>
-                </div>
-                <div class="col-xs-1 col-xs-offset-2" style="padding-top:5px;">
-                <label><font color="#808080">Time</font></label>
-                </div>
-                <div class="col-xs-2" ng-model="time">
-                <p>{{time}}</p>
-                </div>
-                </div>
-                </div>
-                </div>
-                
-                <div class="row">
-      			<div class="col-xs-7 col-xs-offset-1">
-          		<div class="row" style="padding-top:10px; padding-bottom:10px;">
-            	<div class="col-xs-3" style="padding-top:5px;">
-                <label><font color="#808080">Fare Estimate</font></label>
-                </div>
-                <div class="col-xs-1" ng-model="fareestimate">
-                <p>{{fareestimate}}</p>
-                </div>
-                </div>
-                </div>
-                </div>
+           <div class="row">
+           <div class="col-xs-12">
+           <div class="col-xs-10 col-xs-offset-1" style="border-bottom: 1px solid #ccc; padding-top:10px; padding-bottom:10px;">
+           <div class="row">
+           <div class="col-xs-4">Distance</div>
+           <div class="col-xs-4">Time</div>
+           <div class="col-xs-4">Fare Estimate</div>
+           </div>
+           </div>
+           </div>
+           </div>
+           <div class="row">
+           <div class="col-xs-12">
+           <div class="col-xs-10 col-xs-offset-1" style="border-bottom: 1px solid #ccc; padding-top:10px; padding-bottom:10px;">
+           <div class="row">
+           <div class="col-xs-4">{{distance}} miles</div>
+           <div class="col-xs-4">{{time}} mins</div>
+           <div class="col-xs-4">${{fareestimate}}</div>
+           </div>
+           </div>
+          </div>
+          </div>
            </div>
 </div>

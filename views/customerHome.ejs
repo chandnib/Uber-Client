@@ -21,79 +21,20 @@
 	  
 	  <link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
       <link href="http://pingendo.github.io/pingendo-bootstrap/themes/default/bootstrap.css" rel="stylesheet" type="text/css">
+     
+      <script src="http://maps.googleapis.com/maps/api/js?sensor=false&language=en&libraries=places&v=3.exp"></script>
+      <script src="http://rawgit.com/allenhwkim/angularjs-google-maps/master/build/scripts/ng-map.min.js"></script>
       <script type="text/javascript" src="../app.js"></script>
       <script type="text/javascript" src="../js/CustomerController.js"></script>
 		
 	  <script type="text/javascript" src="../js/CustRideStartedController.js"></script>
-	  
-		
-      <script src="http://maps.googleapis.com/maps/api/js?sensor=false&language=en&libraries=places&v=3.exp"></script>
-   <!-- <link href="main.css" rel="stylesheet" type="text/css">-->
-   
-      <script type="text/javascript">
- var source, destination;
-	var directionsDisplay;
-	var directionsService = new google.maps.DirectionsService();
-	   google.maps.event.addDomListener(window, 'load', function () {
-	    new google.maps.places.SearchBox(document.getElementById('sourceLocation'));
-	    new google.maps.places.SearchBox(document.getElementById('destLocation'));
-	    directionsDisplay = new google.maps.DirectionsRenderer({ 'draggable': true });
-	});   
-	 
-	 function getRoute(){
-		   // var mumbai = new google.maps.LatLng(18.9750, 72.8258);
-		    var mapOptions = {
-		        zoom: 15,
-		        //center: mumbai
-		    };
-		    map = new google.maps.Map(document.getElementById('dvMap'), mapOptions);
-		    directionsDisplay.setMap(map);
-		    //directionsDisplay.setPanel(document.getElementById('dvPanel'));
-		 
-		    //*********DIRECTIONS AND ROUTE**********************//
-		    source = document.getElementById("sourceLocation").value;
-		    //source = new google.maps.LatLng(37.3357807, -121.8821639);
-		    destination = document.getElementById("destLocation").value;
-		 
-		    var request = {
-		        origin: source,
-		        destination: destination,
-		        travelMode: google.maps.TravelMode.DRIVING
-		    };
-		    directionsService.route(request, function (response, status) {
-		        if (status == google.maps.DirectionsStatus.OK) {
-		            directionsDisplay.setDirections(response);
-		        }
-		    });
-		 
-		    //*********DISTANCE AND DURATION**********************//
-		     var service = new google.maps.DistanceMatrixService();
-		    service.getDistanceMatrix({
-		        origins: [source],
-		        destinations: [destination],
-		        travelMode: google.maps.TravelMode.DRIVING,
-		        unitSystem: google.maps.UnitSystem.METRIC,
-		        avoidHighways: false,
-		        avoidTolls: false
-		    }, function (response, status) {
-		        if (status == google.maps.DistanceMatrixStatus.OK && response.rows[0].elements[0].status != "ZERO_RESULTS") {
-		            var distance = response.rows[0].elements[0].distance.text;
-		            var duration = response.rows[0].elements[0].duration.text;
-		            var dvDistance = document.getElementById("dvDistance");
-		           dvDistance.innerHTML = "";
-		            dvDistance.innerHTML += "Distance: " + distance + "<br />";
-		            dvDistance.innerHTML += "Duration:" + duration;
-		 
-		        } else {
-		            alert("Unable to find the distance via road.");
-		        }
-		    }); 
-		}
-</script>
+	  <script type="text/javascript" src="../js/CustBillSumController.js"></script>
+	  <script type="text/javascript" src="../js/CustRideCreatedController.js"></script>
+
    
   </head>
   
-  <body style="padding-top: 80px; padding-bottom: 70px;" ng-controller="CustomerController" ng-init="curuser=<%=user%>;">
+  <body style="padding-top: 80px; padding-bottom: 70px;" ng-controller="CustomerController" ng-init="curuser=<%=user%>;initData();">
   <nav class="navbar navbar-default navbar-fixed-top col-lg-offset-0 col-lg-12"
     style="background-color: #000000; min-height: 95">
       <div class="container-fluid">
@@ -115,11 +56,7 @@
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" style="color:#FFFFFF">{{curuser.FIRST_NAME}} {{curuser.LAST_NAME}}<span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
                 <li>
-                  <a ng-click="routeToTemplate('/customerHome')" data-toggle="tab" role="tab">My Trips</a>
-                </li>
-                <li class="divider"></li>
-                <li>
-                  <a ng-click="routeToTemplate('/BookaRide')" data-toggle="tab" role="tab">Book a Ride</a>
+                  <a href="" ng-click="routeToTemplate('/customerHome')" data-toggle="tab" role="tab">My Trips</a>
                 </li>
                 <li class="divider"></li>
                 <li>
@@ -127,11 +64,11 @@
                 </li>
                 <li class="divider"></li>
                 <li>
-                  <a ng-click="routeToTemplate('/CustomerPayment')" data-toggle="tab" role="tab">Payment</a>
+                  <a href="" ng-click="routeToTemplate('/CustomerPayment')" data-toggle="tab" role="tab">Payment</a>
                 </li>
                 <li class="divider"></li>
                 <li>
-                  <a ng-click="logout()" data-toggle="tab" role="tab">Logout</a>
+                  <a href="#logout" data-toggle="tab" role="tab">Logout</a>
                 </li>
               </ul>
             </li>
@@ -142,7 +79,7 @@
       <!-- /.container-fluid -->
     </nav>
 
-      <div class="container">
+      <div class="container" style="overflow-x:hidden;overflow-y:auto;height:85%;width:100%;">
       <div class="row" >
       <div class="col-xs-10 col-xs-offset-1" >
         <div class="row" style="border-right: 1px solid #ccc; ">

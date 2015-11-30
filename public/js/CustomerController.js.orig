@@ -36,13 +36,14 @@ UberPrototypeCustomer.directive('googledestination', function() {
     };
 });
 
+<<<<<<< HEAD
+UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$location,$window){
+	
+	$scope.curuser = {};
+=======
 UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$location,$window,$sce){
-	 $scope.curuser = {};
+>>>>>>> c557bfde480c10e544bbe208a1a6390ab3d015ec
 	 
-	 $scope.initData = function(){
-		 console.log("The Current Customer is " + JSON.stringify($scope.curuser));
-		 $window.localStorage.customerId =  $scope.curuser.ROW_ID;
-	 }
 	$http.get('http://localhost:3000/CustomerEditProfile').success(function(data) {
 		//checking the response data for statusCode
 		if (data.statusCode == 401) {
@@ -325,7 +326,7 @@ UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$loc
 								google.maps.event.addListener(marker, "click", function(e) {
 									//infoWindow.setContent(data.toString());
 								  //  infoWindow.setContent(sample);
-									 driverid = data.DRIVER_ID;
+									 var driverid = data.DRIVER_ID;
 									 console.log("driver id"+driverid);
 								     infoWindow.open(map, marker);
 									//$scope.loadreview(data);
@@ -347,15 +348,15 @@ UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$loc
 			   var pickupLng = $window.localStorage.pickupLng;
 			   var dropoffLat = $window.localStorage.dropoffLat;
 			   var dropoffLng = $window.localStorage.dropoffLng;
-			   $window.localStorage.driverId = driverid;
+			   $window.localStorage.driverId = 1;
 			   $window.localStorage.category ="C";
 			   
 			   console.log(pickupLat);
 			   console.log(pickupLng);
 			   console.log(dropoffLat);
 			   console.log(dropoffLng);
-			   console.log($window.localStorage.driverId);
-			   console.log($window.localStorage.customerId);
+			   
+			   
 			   
 			   $http({
 					method : "POST",
@@ -363,8 +364,8 @@ UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$loc
 					data : {
 						"pickup_address" : $window.localStorage.pickup_address,
 						"dropoff_address" : $window.localStorage.dropoff_address,
-						"customer_id" : $window.localStorage.customerId,
-						"driver_id" : $window.localStorage.driverId,
+						"customer_id" : 35,
+						"driver_id" : 1,
 						"pickupLat" : pickupLat,
 						"pickupLng" : pickupLng,
 						"dropoffLat" : dropoffLat,
@@ -419,13 +420,13 @@ UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$loc
 	  };
 	  
 	  $scope.initMyTrips = function(){
-		  console.log("Current Customer is " + $window.localStorage.customerId);
+		  
 		 $scope.TripDetails = true;
 		 $http({
 				method : "GET",
 				url : '/getCustomerTripSummary',
 				params : {
-					"customer_id" :$window.localStorage.customerId
+					"customer_id" : 35
 				}
 			}).success(function(data) {
 				if (data.code == 200) {
@@ -442,6 +443,8 @@ UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$loc
 		 $scope.toggleMyTrips = function(){
 			 $scope.TripDetails = $scope.TripDetails === false ? true: false;
 		 };
+		 
+		 
 		 
 	  };
 });

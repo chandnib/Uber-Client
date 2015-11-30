@@ -1,4 +1,4 @@
-var UberPrototypeCustomer = angular.module('UberPrototypeCustomer', ['ngRoute','ui.bootstrap']);
+var UberPrototypeCustomer = angular.module('UberPrototypeCustomer', ['ngRoute','ui.bootstrap','ngMap']);
 UberPrototypeCustomer.config(['$locationProvider', '$routeProvider', function($locationProvider,$routeProvider) {
 	  $locationProvider.html5Mode({
 		  enabled: true,
@@ -6,6 +6,10 @@ UberPrototypeCustomer.config(['$locationProvider', '$routeProvider', function($l
 		});
   $routeProvider
   .when('/customerHome', {
+    templateUrl: '/templates/MyTrips.html',
+    controller: 'CustomerController'
+  }) 
+  .when('/BookaRide', {
     templateUrl: '/templates/BookaRide.html',
     controller: 'CustomerController'
   }) 
@@ -17,9 +21,33 @@ UberPrototypeCustomer.config(['$locationProvider', '$routeProvider', function($l
 	    templateUrl: '/templates/DriverEditProfile.html'
 	    //controller: 'CustomerController'
   })
+  .when('/CustomerRideCreated', {
+	    templateUrl: '/templates/CustomerRideCreated.html',
+	    controller: 'CustRideCreatedController'
+  })
+  .when('/DriverRideCreated', {
+	    templateUrl: '/templates/DriverRideCreated.html',
+	    controller: 'CustRideCreatedController'
+  })
   .when('/CustomerRideStarted', {
 	    templateUrl: '/templates/CustomerRideStarted.html',
 	    controller: 'CustRideStartedController'
+  })
+  .when('/DriverRideStarted', {
+	    templateUrl: '/templates/DriverRideStarted.html',
+	    controller: 'CustRideStartedController'
+  })
+  .when('/RequestUber', {
+	    templateUrl: '/templates/RequestUber.html',
+	    controller: 'CustomerController'
+})
+ .when('/CustomerBillSummary', {
+	    templateUrl: '/templates/CustomerBillSummary.html',
+	    controller: 'CustBillSumController'
+  })
+  .when('/DriverBillSummary', {
+	    templateUrl: '/templates/DriverBillSummary.html',
+	    controller: 'CustBillSumController'
   })
   /*.when('/BookaRide', {
     templateUrl: '/templates/BookaRide.html',

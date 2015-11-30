@@ -2,53 +2,35 @@
 <div class="row" style="padding-top: 20px; padding-bottom: 20px;"
 	ng-init="getPageData()">
 	<div class="col-xs-4 col-xs-offset-4" style="text-align: center;">
-		<h3>Your Ride Has Started</h3>
+		<h3>Your New Ride Requests</h3>
 	</div>
 </div>
-<div class="row">
+<div ng-if="canceled == true" class="row" style="padding-top: 20px; padding-bottom: 20px;">
+	<div class="col-xs-4 col-xs-offset-4" style="text-align: center;">
+		<h4>Your Ride Has Been Canceled</h4>
+	</div>
+</div>
+<div ng-if="rideStarted == true" class="row">
 			<div class="col-xs-8 col-xs-offset-2"
 				style="border-top: 1px solid #ccc; text-align: center; padding-top: 10px;">
 				<div id="dvDistance" ng-model="distance">Distance {{ distance }}</div>
 				<div id="dvDuration" ng-model="duration">Time {{ duration }}</div>
+				<div id="customerId" ng-model="customerId">Passenger Name: {{ customerId }}</div>
 			</div>
 		</div>
-<div class="row">
+<div ng-if="rideStarted == true" class="row">
 	<div class="row">
-	<div ng-if="editRide == false" class="col-xs-10 col-xs-offset-1"
+	<div class="col-xs-10 col-xs-offset-1"
 		style="padding-top: 30px; padding-bottom: 30px;">
-		<div class="col-xs-4 col-xs-offset-4" style="text-align: center;">
-			<input type="button" value="Edit Ride" ng-click="editTheRide()" class="btn btn-primary btn-md"
-				style="min-width: 150px;">
+		<div class="col-xs-3 col-xs-offset-3" style="text-align: center;">
+			<input type="button" value="Start Ride" ng-click="startTheRide()" class="btn btn-primary btn-md"
+				style="min-width: 100px;">
+		</div>
+		<div class="col-xs-3" style="text-align: center;">
+			<input type="button" value="Reject Ride" ng-click="cancelTheRide()" class="btn btn-primary btn-md"
+				style="min-width: 100px;">
 		</div>
 	</div>
-	</div>
-	<div class="row" ng-if="editRide == true">
-		<div class="col-xs-8 col-xs-offset-2" style="text-align: center;">
-			<div class="row">
-				<div class="col-xs-4 "
-					style="text-align: center; padding-top: 5px;">
-					<label>Destination Location</label>
-				</div>
-				<div class="col-xs-8">
-					<input type="text" class="form-control" id="destLocation"
-						name="destLocation" ng-model="destLocation" googledestination />
-				</div>
-			</div>
-			<div class="row" style="padding-top: 10px;">
-				<div class="col-xs-3 col-xs-offset-3">
-					<input type="button" value="Submit" ng-click="getNewRoute()" 
-						class="btn btn-primary btn-md" style="min-width: 100px;">
-				</div>
-				<!-- <div class="col-xs-3">
-					<input type="button" value="Re-Route" ng-click="submitNewRoute()" 
-						class="btn btn-primary btn-md" style="min-width: 100px;">
-				</div> -->
-				<div class="col-xs-3">
-					<input type="button" value="Cancel" ng-click="cancelEditRide()" class="btn btn-primary btn-md"
-						style="min-width: 100px;">
-				</div>
-			</div>
-		</div>
 	</div>
 	<div class="row" style="padding-top: 10px; padding-bottom: 30px;">
 		 <div class="col-xs-8 col-xs-offset-2"

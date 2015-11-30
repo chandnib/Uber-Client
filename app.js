@@ -6,7 +6,9 @@ var express = require('express')
 , admin= require('./routes/admin')
 , customer = require('./routes/customer')
 , driver = require ('./routes/driver')
+, billing = require ('./routes/billing')
 , rides = require ('./routes/rides')
+, rating = require ('./routes/rating')
 , index = require('./routes/index');
 
 //Passport login for 
@@ -101,6 +103,7 @@ passport.use('admin-local',new LocalStrategy({ usernameField: 'username',
 		});
 	}
 ));
+//END
 
 
 //Passport Customer Local Strategy
@@ -172,6 +175,7 @@ passport.use('driver-local',new LocalStrategy({ usernameField: 'username',
 		});
 	}
 ));
+//END
 
 //passport Login Functions
 app.post('/loginAdmin', 
@@ -232,15 +236,36 @@ app.get('/driverHome', driver.driverHome);
 app.get('/deleteDriver', driver.deleteDriver);
 app.get('/DriverEditProfile', driver.infoDriver);
 app.post('/addDriver', driver.driverSignUp);
+app.post('/updateProfile', customer.updateProfile);
 app.post('/updateDriverProfile', driver.updateProfile);
 app.post('/uploadProfilePicDriver',driver.uploadProfilePicDriver);
 
 app.post('/CreateDrivers',driver.CreateDrivers);
+//Rekha
+app.post('/showDriverin10Mile', driver.showDriverin10Mile);
+
 
 //Rides
 app.post('/createRide',rides.createRide);
 app.post('/editRide',rides.editRide);
 app.post('/deleteRide',rides.deleteRide);
+app.post('/startRide',rides.startRide);
+app.post('/cancelRide',rides.cancelRide);
+app.post('/endRide',rides.endRide);
+app.get('/fetchRideStatus',rides.fetchRideStatus);
+app.get('/getRideCreated',rides.getRideCreated);
+app.get('/getCustomerTripSummary',rides.getCustomerTripSummary);
+
+
+//Billing call by Parteek
+app.get('/getBillSummary',billing.generateBill);
+app.get('/getFareEstimate',billing.getFareEstimate);
+
+//Rating call by Parteek
+app.post('/saveCustomerRating',rating.saveCustomerRating);
+app.post('/saveDriverRating',rating.saveDriverRating);
+app.get('/getDriverRating',rating.getDriverRating);
+app.get('/getCustomerRating',rating.getCustomerRating);
 
 //Server
 /*mongo.connect(mongoSessionConnectURL, function() {
@@ -256,6 +281,3 @@ app.post('/deleteRide',rides.deleteRide);
 	console.log("Uber Cluster Server running at PORT ==> " + app.get('port'));
 	});
 })
-
-
-
