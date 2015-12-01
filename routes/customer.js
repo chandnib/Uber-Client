@@ -240,3 +240,41 @@ exports.CreateCustomer = function(req,res){
 		}
 	});
 };
+
+
+exports.uploadEventRidePic = function(req,res){
+	if (req.session.passport != null && req.session.passport != "") {
+		if (req.session.passport.user.EMAIL != ""	&& req.session.passport.user.EMAIL != null) {
+			console.log(req);
+			var fs = require('fs');
+			fs.readFile(req.files.eventRidepic.path, function (err, data) {
+				fs.exists(req.files.eventRidepic.path)
+				var newPath = "/home/rakshithk/workspace/UberServer/public/uploads/"+req.files.eventRidepic.name;
+				console.log("File newPath " + "");
+				fs.writeFile(newPath, data, function (err) {
+					data = {IMAGE_URL: "/public/uploads/"+req.files.eventRidepic.name,ROW_ID:req.session.passport.user.ROW_ID}
+					console.log("File Uploaded" + err);
+					rpc.makeRequest("uploadEventRidePic", data, function(err, user) {
+						console.log("User : " + JSON.stringify(user));
+						if (err) {
+							console.log("There is an error: " + err);
+							res.redirect('/customerHome');
+						} else {
+							if (user.code == "200") {
+								req.session.passport.user.IMAGE_URL = "/public/uploads/"+req.files.eventRidepic.name;
+								console.log("Everthing is fine!!!");
+								res.redirect('/customerHome');
+							} else {
+								console.log("Did not Upload. Try again");
+								res.redirect('/customerHome');
+							}
+						}
+					});
+				});
+			});
+
+		} else
+			res.redirect("/invalidSessionCustomerLogin");
+	} else
+		res.redirect("/invalidSessionCustomerLogin");
+};

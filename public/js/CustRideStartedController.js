@@ -29,15 +29,15 @@ UberPrototypeCustomer.controller('CustRideStartedController' ,function($scope,$h
 	 var getTimeDest = function(){
 		 console.log("inside time n dist calculation " + $scope.source + $scope.destination);
 		    var request = {
-		        origin: $scope.source,
-		        destination: $scope.destination,
+		        origin: $window.localStorage.pickup_address,
+		        destination: $window.localStorage.dropoff_address,
 		        travelMode: google.maps.TravelMode.DRIVING
 		    };
 		    //Calculate distance and time needed to travel form source to destination
 		    var service = new google.maps.DistanceMatrixService();
 		    service.getDistanceMatrix({
-		        origins: [$scope.source],
-		        destinations: [$scope.destination],
+		        origins: [$window.localStorage.pickup_address],
+		        destinations: [$window.localStorage.dropoff_address],
 		        travelMode: google.maps.TravelMode.DRIVING,
 		        unitSystem: google.maps.UnitSystem.METRIC,
 		        avoidHighways: false,
@@ -48,8 +48,13 @@ UberPrototypeCustomer.controller('CustRideStartedController' ,function($scope,$h
 		            $scope.duration = response.rows[0].elements[0].duration.text;
 		            
 		            var dist = $scope.distance.split(" ",1);
-		            dist = dist * 0.62 + " miles";
+		            dist = dist * 0.62;
 		            $scope.distance = dist.toFixed(2)+ " miles";
+		            $window.localStorage.distance = dist.toFixed(2);
+		            
+		            var time = $scope.duration.split(" ",1);
+		            $scope.duration = time + " mins";
+		            $window.localStorage.time = $scope.duration;
 		            console.log("distance : " + $scope.distance);
 		            console.log("duration : " + $scope.duration);
 		            //$scope.time = $scope.time.split(" ",1);
@@ -71,7 +76,7 @@ UberPrototypeCustomer.controller('CustRideStartedController' ,function($scope,$h
 		 getTimeDest();
 		 if($window.localStorage.category.localeCompare("C") == 0){
 			 $scope.rideId = $window.localStorage.rideId;
-			//RideStatus = setInterval(function(){ getRideStatus() }, 5000);
+			RideStatus = setInterval(function(){ getRideStatus() }, 5000);
 			 //clearInterval(RideStatus);
 		 }
 		 
@@ -88,9 +93,9 @@ UberPrototypeCustomer.controller('CustRideStartedController' ,function($scope,$h
 		 $scope.destination = document.getElementById("destLocation").value;
 		 console.log("check "+ document.getElementById("destLocation").value);
 		 $window.localStorage.dropoff_address = $scope.destination;
-		// $scope.destination = "1 Polk Street, San Francisco, CA, United States";
+		 getTimeDest();
 		 console.log("$scope.destination" + $scope.destination);
-		 var dropoff_location = $scope.destination;
+		 var dropoff_location = $window.localStorage.dropoff_address;
 			geocoder = new google.maps.Geocoder();
 			geocoder.geocode({'address' : dropoff_location},
 					function(results, status)
@@ -121,13 +126,15 @@ UberPrototypeCustomer.controller('CustRideStartedController' ,function($scope,$h
 											data : {
 												"newdropoffLat" : $scope.dropoffLat,
 												"newdropoffLng" : $scope.dropoffLng,
-												"newdropoff_location": $scope.destination,
-												"ride_id" : $scope.rideId
+												"newdropoff_location": $window.localStorage.dropoff_address,
+												"ride_id" :$window.localStorage.rideId, //changed
+												"total_time" : $window.localStorage.time.split(" ",1),
+												"distance_covered" : $window.localStorage.distance
 											}
 										}).success(function(data) {
 											//checking the response data for statusCode
 											if (data.code == 200) {
-												getTimeDest();
+												//getTimeDest();
 												//$scope.isDisabled = false;
 											}
 											else{
@@ -156,12 +163,12 @@ UberPrototypeCustomer.controller('CustRideStartedController' ,function($scope,$h
 	 };
 	 
 	 $scope.endTheRide = function(){
-		 console.log("inside ride started controller "+ $scope.rideId);
+		 console.log("inside ride started controller "+ $window.localStorage.rideId);//chnanged
 		 $http({
 				method : "POST",
 				url : '/endRide',
 				data : {
-					"ride_id" : $scope.rideId
+					"ride_id" : $window.localStorage.rideId//changed
 				}
 			}).success(function(data) {
 				//checking the response data for statusCode
@@ -181,7 +188,7 @@ UberPrototypeCustomer.controller('CustRideStartedController' ,function($scope,$h
 				method : "GET",
 				url : '/fetchRideStatus',
 				params : {
-					"ride_id" : $scope.rideId
+					"ride_id" : $window.localStorage.rideId//changed
 				}
 			}).success(function(data) {
 				//checking the response data for statusCode

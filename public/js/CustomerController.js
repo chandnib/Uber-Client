@@ -42,6 +42,7 @@ UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$loc
 	 $scope.initData = function(){
 		 console.log("The Current Customer is " + JSON.stringify($scope.curuser));
 		 $window.localStorage.customerId =  $scope.curuser.ROW_ID;
+		 $window.localStorage.custName = $scope.curuser.FIRST_NAME + " " + $scope.curuser.LAST_NAME;
 	 }
 	$http.get('http://localhost:3000/CustomerEditProfile').success(function(data) {
 		//checking the response data for statusCode

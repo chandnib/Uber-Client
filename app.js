@@ -246,6 +246,7 @@ app.post('/addCustomer', customer.customerSignUp);
 app.post('/updateProfile', customer.updateProfile);
 app.post('/uploadProfilePic',customer.uploadProfilePic);
 app.post('/CreateCustomer',customer.CreateCustomer);
+app.post('/uploadRideEventPic',customer.uploadEventRidePic);
 
 //Driver
 app.get('/invalidSessionDriverLogin',driver.invalidSessionDriverLogin);

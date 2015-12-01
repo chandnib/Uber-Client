@@ -41,8 +41,10 @@ UberPrototypeCustomer.controller('DriverController',function($scope,$http,$locat
 	$window.localStorage.category = "D";
 	
 	$scope.initData = function(){
+		console.log("The Current Driver is " + JSON.stringify($scope.curuser));
 		$window.localStorage.category = "D";
 		$window.localStorage.driverId =  $scope.curuser.ROW_ID;
+		$window.localStorage.driverName = $scope.curuser.FIRST_NAME + " " + $scope.curuser.LAST_NAME;
 	};
 	
 	$http.get('http://localhost:3000/DriverEditProfile').success(function(data) {
