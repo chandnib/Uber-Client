@@ -49,6 +49,8 @@ UberPrototypeAdmin.controller('AdminReviewController',function($scope,$http,$loc
 		});
 	};
 
+	
+	
 	$scope.loadCustomerDetail = function(){
 		$scope.profile = {};
 		$scope.detailview.customerid = $routeParams.custid;
@@ -62,13 +64,16 @@ UberPrototypeAdmin.controller('AdminReviewController',function($scope,$http,$loc
 			data: JSON.stringify({'ROW_ID' : $routeParams.custid})
 		}).then(function successCallback(response) {
 			$scope.profile = response.data[0];
-			console.log("loadCustomerDetail ==> Response from Server ++ " + JSON.stringify($scope.profile));	
+			//console.log("loadCustomerDetail ==> Response from Server ++ " + JSON.stringify($scope.profile));	
 		}, function errorCallback(response) {
 			$scope.profile.errorMessage = "There was an error retrieving the Customer Accounts Details";
 			$scope.profile.error = true;
 			console.log("customers Error In request" + JSON.stringify(response));		
 		});
 	};
+	
+	$scope.currentRow = 0;
+	$scope.customers = [];
 
 	//Customer Admin Operations
 	$scope.loadUnverifiedCustomers = function(){
@@ -81,16 +86,24 @@ UberPrototypeAdmin.controller('AdminReviewController',function($scope,$http,$loc
 			headers: {
 				'Content-Type': 'application/json'
 			},
-			data: {}
+			data: JSON.stringify({currentRow:$scope.currentRow})
 		}).then(function successCallback(response) {
-			$scope.customers = response.data;
-			console.log("loadUnverifiedCustomers ==> Response from Server ++ " + JSON.stringify($scope.customers));	
+			for(var i in response.data){
+				$scope.customers.push(response.data[i]) ;
+			}
+			//console.log("loadUnverifiedCustomers ==> Response from Server ++ " + JSON.stringify($scope.customers));	
 		}, function errorCallback(response) {
 			$scope.customers.errorMessage = "There was an error retrieving the Customer Accounts";
 			$scope.customers.error = true;
-			console.log("customers Error In request" + JSON.stringify(response));		
+			//console.log("customers Error In request" + JSON.stringify(response));		
 		});
 	};
+	
+	$scope.loadMoreCustomers = function(){
+		$scope.currentRow += 100;
+		$scope.loadUnverifiedCustomers();
+	}
+
 
 	$scope.approveCustomer = function(customer){
 		console.log("approveCustomer ==> ");
@@ -104,7 +117,7 @@ UberPrototypeAdmin.controller('AdminReviewController',function($scope,$http,$loc
 		}).then(function successCallback(response) {
 			//$scope.customers = response.data;
 			console.log("approveCustomer ==> Response from Server ++ " + JSON.stringify(response.data));
-			$scope.loadUnverifiedCustomers();
+			//$scope.loadUnverifiedCustomers();
 		}, function errorCallback(response) {
 			console.log("approveCustomer Error In request" + JSON.stringify(response));		
 		});
@@ -122,7 +135,7 @@ UberPrototypeAdmin.controller('AdminReviewController',function($scope,$http,$loc
 		}).then(function successCallback(response) {
 			//$scope.customers = response.data;
 			console.log("approveCustomer ==> Response from Server ++ " + JSON.stringify(response.data));
-			$scope.loadUnverifiedCustomers();
+			//$scope.loadUnverifiedCustomers();
 		}, function errorCallback(response) {
 			console.log("approveCustomer Error In request" + JSON.stringify(response));		
 		});
@@ -139,7 +152,7 @@ UberPrototypeAdmin.controller('AdminReviewController',function($scope,$http,$loc
 			data: {}
 		}).then(function successCallback(response) {
 			console.log("approveAllCustomer ==> Response from Server ++ " + JSON.stringify(response.data));
-			$scope.loadUnverifiedCustomers();
+			//$scope.loadUnverifiedCustomers();
 		}, function errorCallback(response) {
 			console.log("approveAllCustomer Error In request" + JSON.stringify(response));		
 		});
@@ -156,11 +169,14 @@ UberPrototypeAdmin.controller('AdminReviewController',function($scope,$http,$loc
 			data: {}
 		}).then(function successCallback(response) {
 			console.log("rejectAllCustomer ==> Response from Server ++ " + JSON.stringify(response.data));
-			$scope.loadUnverifiedCustomers();
+			//$scope.loadUnverifiedCustomers();
 		}, function errorCallback(response) {
 			console.log("rejectAllCustomer Error In request" + JSON.stringify(response));		
 		});
 	};
+	
+	$scope.currentDriverRow = 0;
+	$scope.drivers = [];
 
 	//Driver Admin Operations
 	$scope.loadUnverifiedDrivers = function(){
@@ -173,16 +189,24 @@ UberPrototypeAdmin.controller('AdminReviewController',function($scope,$http,$loc
 			headers: {
 				'Content-Type': 'application/json'
 			},
-			data: {}
+			data: JSON.stringify({currentDriverRow:$scope.currentDriverRow})
 		}).then(function successCallback(response) {
-			$scope.drivers = response.data;
-			console.log("loadUnverifiedDrivers ==> Response from Server ++ " + JSON.stringify($scope.drivers));	
+			for(var i in response.data){
+				$scope.drivers.push(response.data[i]) ;
+			}
+			//$scope.drivers = response.data;
+			//console.log("loadUnverifiedDrivers ==> Response from Server ++ " + JSON.stringify($scope.drivers));	
 		}, function errorCallback(response) {
 			$scope.drivers.errorMessage = "There was an error retrieving the Driver Accounts";
 			$scope.drivers.error = true;
-			console.log("drivers Error In request" + JSON.stringify(response));		
+			//console.log("drivers Error In request" + JSON.stringify(response));		
 		});
 	};
+	
+	$scope.loadMoreDrivers= function(){
+		$scope.currentDriverRow += 100;
+		$scope.loadUnverifiedDrivers();
+	}
 
 	$scope.approveDriver = function(customer){
 		console.log("approveDriver ==> ");
@@ -196,7 +220,7 @@ UberPrototypeAdmin.controller('AdminReviewController',function($scope,$http,$loc
 		}).then(function successCallback(response) {
 			//$scope.drivers = response.data;
 			console.log("approveDriver ==> Response from Server ++ " + JSON.stringify(response.data));
-			$scope.loadUnverifiedDrivers();
+			//$scope.loadUnverifiedDrivers();
 		}, function errorCallback(response) {
 			console.log("approveDriver Error In request" + JSON.stringify(response));		
 		});
@@ -214,7 +238,7 @@ UberPrototypeAdmin.controller('AdminReviewController',function($scope,$http,$loc
 		}).then(function successCallback(response) {
 			//$scope.drivers = response.data;
 			console.log("approveDriver ==> Response from Server ++ " + JSON.stringify(response.data));
-			$scope.loadUnverifiedDrivers();
+			//$scope.loadUnverifiedDrivers();
 		}, function errorCallback(response) {
 			console.log("approveDriver Error In request" + JSON.stringify(response));		
 		});
@@ -231,7 +255,7 @@ UberPrototypeAdmin.controller('AdminReviewController',function($scope,$http,$loc
 			data: {}
 		}).then(function successCallback(response) {
 			console.log("approveAllDriver ==> Response from Server ++ " + JSON.stringify(response.data));
-			$scope.loadUnverifiedDrivers();
+			//$scope.loadUnverifiedDrivers();
 		}, function errorCallback(response) {
 			console.log("approveAllDriver Error In request" + JSON.stringify(response));		
 		});
@@ -248,7 +272,7 @@ UberPrototypeAdmin.controller('AdminReviewController',function($scope,$http,$loc
 			data: {}
 		}).then(function successCallback(response) {
 			console.log("rejectAllDriver ==> Response from Server ++ " + JSON.stringify(response.data));
-			$scope.loadUnverifiedDrivers();
+			//$scope.loadUnverifiedDrivers();
 		}, function errorCallback(response) {
 			console.log("rejectAllDriver Error In request" + JSON.stringify(response));		
 		});

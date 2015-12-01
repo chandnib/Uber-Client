@@ -15,7 +15,8 @@
 				style="border-top: 1px solid #ccc; text-align: center; padding-top: 10px;">
 				<div id="dvDistance" ng-model="distance">Distance {{ distance }}</div>
 				<div id="dvDuration" ng-model="duration">Time {{ duration }}</div>
-				<div id="customerId" ng-model="customerId">Passenger Name: {{ customerId }}</div>
+				<div id="customerId" ng-model="customerId">Passenger Name: {{ customerName }}</div>
+				<div id="customerRating" ng-model="custRating">Passenger Rating: {{ custRating }}</div>
 			</div>
 		</div>
 <div ng-if="rideStarted == true" class="row">
@@ -32,7 +33,7 @@
 		</div>
 	</div>
 	</div>
-	<div class="row" style="padding-top: 10px; padding-bottom: 30px;">
+	<div class="row" style="padding-top: 10px; padding-bottom: 70px;">
 		 <div class="col-xs-8 col-xs-offset-2"
 			style="text-align: center;">
 			<map center="current-position" zoom-to-include-markers='true'">

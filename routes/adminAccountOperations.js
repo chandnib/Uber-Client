@@ -53,6 +53,10 @@ module.exports = {
 			var MQConnection = require('./mongoDBRequestBroker');
 			MQConnection.handleDBRequest("loadCustomerDetail",user,req,res,rpc);
 		},
+		searchBill : function(user,req,res){
+			var MQConnection = require('./mongoDBRequestBroker');
+			MQConnection.handleDBRequest("searchBill",user,req,res,rpc);
+		},
 		loadDriverDetail : function(user,req,res){
 			var MQConnection = require('./mongoDBRequestBroker');
 			MQConnection.handleDBRequest("loadDriverDetail",user,req,res,rpc);
