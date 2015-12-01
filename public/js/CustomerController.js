@@ -193,7 +193,9 @@ UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$loc
 																										url : '/getFareEstimate',
 																										params : {
 																											"distance" : $scope.distance,
-																											"time" : $scope.time
+																											"time" : $scope.time,
+																											"latitude" : $window.localStorage.pickupLat,
+																											"longitude" : $window.localStorage.pickupLng
 																										}
 																									}).success(function(data) {
 																										console.log(data.fare);

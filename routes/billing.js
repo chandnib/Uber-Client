@@ -37,6 +37,9 @@ exports.getFareEstimate = function(req, res) {
 	var longitude = req.param("longitude");
 	var latitude = req.param("latitude");
 	console.log("distance :  "+ distance);
+	console.log("longitude :  "+ longitude);
+	console.log("latitude :  "+ latitude);
+	
 	console.log("time :  "+ time);
 
 	var msg_payload = {"distance" : distance,"time" : time,"latitude":latitude,"longitude":longitude};
