@@ -23,6 +23,9 @@
       <link href="http://pingendo.github.io/pingendo-bootstrap/themes/default/bootstrap.css" rel="stylesheet" type="text/css">
       <script type="text/javascript" src="../app.js"></script>
       <script type="text/javascript" src="../js/DriverController.js"></script>
+      <script type="text/javascript" src="../js/CustomerController.js"></script>
+      
+      
 		
 	  <script type="text/javascript" src="../js/CustRideStartedController.js"></script>
 	  <script type="text/javascript" src="../js/CustBillSumController.js"></script>
@@ -31,7 +34,6 @@
       <script src="http://rawgit.com/allenhwkim/angularjs-google-maps/master/build/scripts/ng-map.min.js"></script>
 		
    <!-- <link href="main.css" rel="stylesheet" type="text/css">-->
-   
   </head>
   
   <body style="padding-top: 80px; padding-bottom: 70px; height="100%" ng-controller="DriverController" ng-init = "curuser=<%=user%>;initData();">
@@ -57,11 +59,11 @@
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" style="color:#FFFFFF">{{curuser.FIRST_NAME}} {{curuser.LAST_NAME}}<span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
                 <li>
-                  <a ng-click="routeToTemplate('/driverHome')" data-toggle="tab" role="tab">My Trips</a>
+                  <a href="" ng-click="routeToTemplate('/driverHome')" data-toggle="tab" role="tab">My Trips</a>
                 </li>
                 <li class="divider"></li>
                 <li>
-                  <a ng-click="routeToTemplate('/DriverEditProfile')" data-toggle="tab" role="tab">Profile</a>
+                  <a href="" ng-click="routeToTemplate('/DriverEditProfile')" data-toggle="tab" role="tab">Profile</a>
                 </li>
                 <li class="divider"></li>
                 <li>
@@ -69,7 +71,7 @@
                 </li>
                 <li class="divider"></li>
                 <li>
-                  <a  ng-click="logout()" data-toggle="tab" role="tab">Logout</a>
+                  <a href="" ng-click="logout()" data-toggle="tab" role="tab">Logout</a>
                 </li>
               </ul>
             </li>
@@ -80,7 +82,7 @@
       <!-- /.container-fluid -->
     </nav>
 
-      <div class="container">
+      <div class="container" style="overflow-x:hidden;overflow-y:auto;height:85%;width:100%;">
       <div class="row" >
       <div class="col-xs-10 col-xs-offset-1" >
         <div class="row" style="border-right: 1px solid #ccc; ">

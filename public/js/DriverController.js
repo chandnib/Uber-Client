@@ -52,12 +52,53 @@ UberPrototypeCustomer.controller('DriverController',function($scope,$http,$locat
 		else
 			{
 			$scope.profile = data;
+			$scope.year = data.YEAR.toString();
 			}
 	}).error(function(error) {
 		$scope.invalid_login = true;
 	});
 	
+//	$http.get('http://localhost:3000/getDriverVideoLink').success(function(data) {
+//		//checking the response data for statusCode
+//		if (data.statusCode == 401) {
+//		}
+//		else
+//			{
+//			$scope.videoLink=data.VIDEO_URL
+//			}
+//	}).error(function(error) {
+//		$scope.invalid_login = true;
+//	});
+	
+	$scope.uploadDriverVideo = function(video)
+	{
+		$http({
+			method : "POST",
+			url : '/uploadDriverVideo',
+			data: {	
+				"video" : video
+				  }
+		}).success(function(data) {
+			//checking the response data for statusCode
+			if (data.statusCode == 401) {
+			}
+			else if(data.statusCode==402)
+			{
+			alert("Driver Video not uploaded successfully");
+			}
+			else{
+				console.log("after everything checking if i made it here");
+				//Making a get call to the '/about' API
+				$scope.videoLink=data.videoLink
+				window.location.assign('/driverHome');
+			}
+		}).error(function(error) {
+			$scope.invalid_login = true;
+		});	
+	};
+	
 	$scope.editProfile = function(firstName,lastName,address,city,state,zip,carModel,carColor,carYear,email,language,phoneNumber,password) {
+		console.log("Made it to updateprofile");
 		$http({
 			method : "POST",
 			url : '/updateDriverProfile',
@@ -78,6 +119,10 @@ UberPrototypeCustomer.controller('DriverController',function($scope,$http,$locat
 		}).success(function(data) {
 			//checking the response data for statusCode
 			if (data.statusCode == 401) {
+			}
+			else if(data.statusCode==402)
+			{
+			alert(data.errorMessage);
 			}
 			else{
 				console.log("after everything checking if i made it here");

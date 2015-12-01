@@ -29,7 +29,7 @@ UberPrototype.controller('loginController', function($scope, $http) {
 		}).success(function(data) {
 			//checking the response data for statusCode
 			if (data.statusCode == 401) {
-				alert("Did not fill in all the fields");
+				alert(data.errorMessage);
 				$scope.invalid_login = false;
 			}
 			else
