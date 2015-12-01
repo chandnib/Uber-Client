@@ -69,7 +69,7 @@ UberPrototypeCustomer.controller('CustRideCreatedController' ,function($scope,$h
 		 
 		 if($window.localStorage.category.localeCompare("C") == 0){
 			 $scope.rideId = $window.localStorage.rideId
-			 RideStatus = setInterval(function(){ getRideStatus() }, 5000);
+			 //RideStatus = setInterval(function(){ getRideStatus() }, 5000);
 			// clearInterval(RideStatus);
 			 $scope.source = $window.localStorage.pickup_address;
 			 $scope.destination = $window.localStorage.dropoff_address;
@@ -100,7 +100,7 @@ UberPrototypeCustomer.controller('CustRideCreatedController' ,function($scope,$h
 							$scope.source = data.value[0].PICKUP_LOCATION;
 							 $scope.destination = data.value[0].DROPOFF_LOCATION;
 							// var directionsService = new google.maps.DirectionsService();
-							RideStatus = setInterval(function(){ getRideStatus() }, 5000);
+							//RideStatus = setInterval(function(){ getRideStatus() }, 5000);
 							 //clearInterval(RideStatus);
 							 getTimeDest();
 						}

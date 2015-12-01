@@ -9,7 +9,8 @@ var express = require('express')
 , billing = require ('./routes/billing')
 , rides = require ('./routes/rides')
 , rating = require ('./routes/rating')
-, index = require('./routes/index');
+, index = require('./routes/index')
+, dynamicPricingAlgo = require('./routes/dynamicPricingAlgo');
 
 //Passport login for 
 var amqp = require('amqp');
@@ -19,11 +20,14 @@ var rpc = new (require('./rpc/amqprpc'))(connection);
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
+var mongoRequests = "mongodb://localhost:27017/requests";
+
 //MongoSession
 var mongoSessionConnectURL = "mongodb://localhost:27017/sessions";
 var expressSession = require("express-session");
 var mongoStore = require("connect-mongo")(expressSession);
 var mongo = require("./routes/mongo"); // Database configuration file
+
 
 var app = express();
 
@@ -105,11 +109,24 @@ passport.use('admin-local',new LocalStrategy({ usernameField: 'username',
 ));
 //END
 
+global.requestId = 0;
 
 //Passport Customer Local Strategy
 passport.use('customer-local', new LocalStrategy({ usernameField: 'username',
 	passwordField: 'password'},
 	function(username, password, done) {
+		try{
+			mongo.connect(mongoRequests, function() {
+				var coll = mongo.collection('requests');
+				coll.insertOne({requestId : global.requestId,requestTime : new Date()},function(err,result){
+					global.requestId = global.requestId + 1;
+					console.log(result.insertedId);
+				});
+			});
+		}catch(e){
+			console.log(e);
+		}
+		
 		console.log("customer ==> username : "+ username + "  password :  " + password);
 		process.nextTick(function () {
 			var data = {};
@@ -195,6 +212,7 @@ app.post('/loginDriver',
 app.get('/', index.home);
 app.get('/Log_In', index.login);
 app.get('/Log_Out', index.logout);
+app.get('/getPricingSurcharge',dynamicPricingAlgo.getPricingSurcharge);
 
 //Admin
 app.get('/adminLoginPage',admin.adminLoginPage);

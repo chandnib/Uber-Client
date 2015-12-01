@@ -71,7 +71,7 @@ UberPrototypeCustomer.controller('CustRideStartedController' ,function($scope,$h
 		 getTimeDest();
 		 if($window.localStorage.category.localeCompare("C") == 0){
 			 $scope.rideId = $window.localStorage.rideId;
-			RideStatus = setInterval(function(){ getRideStatus() }, 5000);
+			//RideStatus = setInterval(function(){ getRideStatus() }, 5000);
 			 //clearInterval(RideStatus);
 		 }
 		 

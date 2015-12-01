@@ -48,7 +48,7 @@ exports.invalidSessionAdminLogin = function(req, res){
 exports.loadUnverifiedCustomers = function(req,res){
 	if(req.session.passport != null && req.session.passport != ""){
 		if(req.session.passport.user.EMAIL != "" && req.session.passport.user.EMAIL != null){
-			adminAccountOperations.loadUnverifiedCustomers({},req,res);
+			adminAccountOperations.loadUnverifiedCustomers(req.body,req,res);
 		}
 		else
 			res.redirect("/invalidSessionAdminLogin");
@@ -110,7 +110,7 @@ exports.rejectAllCustomer = function(req,res){
 exports.loadUnverifiedDrivers = function(req,res){
 	if(req.session.passport != null && req.session.passport != ""){
 		if(req.session.passport.user.EMAIL != "" && req.session.passport.user.EMAIL != null){
-			adminAccountOperations.loadUnverifiedDrivers({},req,res);
+			adminAccountOperations.loadUnverifiedDrivers(req.body,req,res);
 		}
 		else
 			res.redirect("/invalidSessionAdminLogin");
