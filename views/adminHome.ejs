@@ -10,15 +10,23 @@
 	  <script src="https://code.angularjs.org/1.4.2/angular.js"></script>
 	  <script src="https://code.angularjs.org/1.4.2/angular-route.js"></script>
 	  <script src="https://code.angularjs.org/1.4.2/angular-route.js"></script>
-	  <script type="text/javascript" src="../app.js"></script>
-      <script type="text/javascript" src="../js/AdminReviewController.js"></script>
+	  
       <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.12.1/ui-bootstrap.js"></script>
 	  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.12.1/ui-bootstrap.min.js"></script>
 	  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.12.1/ui-bootstrap-tpls.min.js"></script>
 	  
 	  <link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="http://pingendo.github.io/pingendo-bootstrap/themes/default/bootstrap.css" rel="stylesheet" type="text/css">
+    
+    <script src="http://maps.googleapis.com/maps/api/js?sensor=false&language=en&libraries=places&v=3.exp"></script>
+    
+      
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript" src="../js/ng-google-chart.js"></script>
+    <script type="text/javascript" src="../app.js"></script>
+      <script type="text/javascript" src="../js/AdminReviewController.js"></script>
     <link href="adminstyle.css" rel="stylesheet" type="text/css">
+  <script type="text/javascript" src="../js/searchBillController.js"></script>
   </head>
   
 <body style="padding-top: 80px; padding-bottom: 70px;" ng-controller="AdminReviewController" ng-init="curuser=<%= user %>;">
@@ -47,11 +55,11 @@
                 </li>
                 <li class="divider"></li>
                 <li>
-                  <a ng-click="routeToTemplate('/BookaRide')"  data-toggle="tab" role="tab">Ride Statistics</a>
+                  <a ng-click="routeToTemplate('/RideStatistics')"  data-toggle="tab" role="tab">Ride Statistics</a>
                 </li>
                 <li class="divider"></li>
                 <li>
-                  <a ng-click="routeToTemplate('/EditProfile')" data-toggle="tab" role="tab">Ride Graphs</a>
+                  <a ng-click="routeToTemplate('/RideGraphs')" data-toggle="tab" role="tab">Ride Graphs</a>
                 </li>
                 <li class="divider"></li>
                 <li>
@@ -81,8 +89,12 @@
                 <div class="col-xs-12">
                   <div class="list-group" style="padding:0px 0px;margin-left:0;margin-right:0;">
                     <a href="" ng-click="routeToTemplate('/adminHome')" class="list-group-item" style="margin-left:0;margin-right:0; border-left:none;font-size:18px;border-right:none">Review Accounts</a>
-                    <a href="" ng-click="routeToTemplate('/BookaRide')" class="list-group-item" style="margin-left:0;margin-right:0; border-left:none;font-size:18px;border-right:none">Ride Statistics</a>
-                    <a href="" ng-click="routeToTemplate('/EditProfile')" class="list-group-item" style="margin-left:0;margin-right:0; border-left:none;font-size:18px;border-right:none">Ride Graphs</a>
+                    <a href="" ng-click="routeToTemplate('/RideStatistics')" class="list-group-item" style="margin-left:0;margin-right:0; border-left:none;font-size:18px;border-right:none">Ride Statistics</a>
+                    <a href="" ng-click="routeToTemplate('/RideGraphs')" class="list-group-item" style="margin-left:0;margin-right:0; border-left:none;font-size:18px;border-right:none">Ride Graphs</a>
+                     <a href="" ng-click="routeToTemplate('/SearchBill')"
+											class="list-group-item"
+											style="margin-left: 0; margin-right: 0; border-left: none; font-size: 18px; border-right: none">Search
+											Bills</a> 
                     <a href="" ng-click="routeToTemplate('/CustomerPayment')" class="list-group-item" style="margin-left:0;margin-right:0; border-left:none;font-size:18px;border-right:none">Search Bills</a>
                     <a ng-click="logout()" class="list-group-item" style="margin-left:0;margin-right:0; border-left:none;font-size:18px;border-right:none">Logout</a>
                   </div>
@@ -105,7 +117,7 @@
           </div>
         </div>
       </div>
-  <nav class="navbar navbar-default navbar-fixed-bottom" style="background-color: #000000;min-height: 150">
+ <nav class="navbar navbar-default navbar-fixed-bottom" style="background-color: #000000;min-height: 100">
       <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
@@ -119,7 +131,7 @@
        	  <a class="navbar-brand" href="#" style="position: absolute;top:20%;left:58%;margin-left: -120px !important; display: block; color:#FFFFFF">CITIES</a>
           <a class="navbar-brand" href="#" style="position: absolute;top:20%;left:62%;margin-left: -120px !important; display: block; color:#FFFFFF;font-size:24px">.</a>
           <a class="navbar-brand" href="#" style="position: absolute;top:20%;left:63%;margin-left: -120px !important; display: block; color:#FFFFFF;">DRIVERS</a>
-         </div>
+          </div>
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bottomFixedNavbar1">
         </div>

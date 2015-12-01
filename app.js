@@ -9,7 +9,8 @@ var express = require('express')
 , billing = require ('./routes/billing')
 , rides = require ('./routes/rides')
 , rating = require ('./routes/rating')
-, index = require('./routes/index');
+, index = require('./routes/index')
+, dynamicPricingAlgo = require('./routes/dynamicPricingAlgo');
 
 //Passport login for 
 var amqp = require('amqp');
@@ -105,11 +106,24 @@ passport.use('admin-local',new LocalStrategy({ usernameField: 'username',
 ));
 //END
 
+global.requestId = 0;
 
 //Passport Customer Local Strategy
 passport.use('customer-local', new LocalStrategy({ usernameField: 'username',
 	passwordField: 'password'},
 	function(username, password, done) {
+		try{
+			mongo.connect(mongoRequests, function() {
+				var coll = mongo.collection('requests');
+				coll.insertOne({requestId : global.requestId,requestTime : new Date()},function(err,result){
+					global.requestId = global.requestId + 1;
+					console.log(result.insertedId);
+				});
+			});
+		}catch(e){
+			console.log(e);
+		}
+		
 		console.log("customer ==> username : "+ username + "  password :  " + password);
 		process.nextTick(function () {
 			var data = {};
@@ -195,6 +209,7 @@ app.post('/loginDriver',
 app.get('/', index.home);
 app.get('/Log_In', index.login);
 app.get('/Log_Out', index.logout);
+app.get('/getPricingSurcharge',dynamicPricingAlgo.getPricingSurcharge);
 
 //Admin
 app.get('/adminLoginPage',admin.adminLoginPage);
@@ -203,6 +218,7 @@ app.get('/driverLoginPage',driver.driverLoginPage);
 app.get('/adminHome',admin.adminHome);
 app.get('/invalidAdminLogin',admin.invalidAdminLogin);
 app.get('/invalidSessionAdminLogin',admin.invalidSessionAdminLogin);
+app.post('/searchBill',admin.searchBill);
 app.post('/loadUnverifiedCustomers', admin.loadUnverifiedCustomers);
 app.post('/approveCustomer',admin.approveCustomer);
 app.post('/rejectCustomer',admin.rejectCustomer);
@@ -227,6 +243,7 @@ app.post('/addCustomer', customer.customerSignUp);
 app.post('/updateProfile', customer.updateProfile);
 app.post('/uploadProfilePic',customer.uploadProfilePic);
 app.post('/CreateCustomer',customer.CreateCustomer);
+app.post('/uploadRideEventPic',customer.uploadEventRidePic);
 
 //Driver
 app.get('/invalidSessionDriverLogin',driver.invalidSessionDriverLogin);
@@ -256,6 +273,8 @@ app.post('/endRide',rides.endRide);
 app.get('/fetchRideStatus',rides.fetchRideStatus);
 app.get('/getRideCreated',rides.getRideCreated);
 app.get('/getCustomerTripSummary',rides.getCustomerTripSummary);
+app.get('/getDriverTripSummary',rides.getDriverTripSummary);
+///-----------------------------------------------------------Rides---------------------------------------------
 
 
 //Billing call by Parteek
@@ -268,6 +287,12 @@ app.post('/saveDriverRating',rating.saveDriverRating);
 app.get('/getDriverRating',rating.getDriverRating);
 app.get('/getCustomerRating',rating.getCustomerRating);
 
+//Rekha Admin API
+app.post('/totalrideStats',admin.totalrideStats);
+app.post('/cutomerrideStats',admin.cutomerrideStats);
+app.post('/driverrideStats',admin.driverrideStats);
+app.post('/revenueStats',admin.revenueStats);
+
 //Server
 /*mongo.connect(mongoSessionConnectURL, function() {
 	http.createServer(app).listen(app.get('port'), function(){
@@ -278,7 +303,7 @@ app.get('/getCustomerRating',rating.getCustomerRating);
 //Clustering
 	mongo.connect(mongoSessionConnectURL, function() { 
 		app.listen(app.get('port'), function() {
-			process.send({ cmd: 'notifyRequest' });
+		//	process.send({ cmd: 'notifyRequest' });
 	console.log("Uber Cluster Server running at PORT ==> " + app.get('port'));
 	});
 })

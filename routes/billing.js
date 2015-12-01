@@ -18,7 +18,7 @@ exports.generateBill = function(req, res) {
 						console.log(results);
 						if (err) 
 						{
-							throw err;
+							return results;
 						} 
 						else 
 						{
@@ -44,7 +44,7 @@ exports.getFareEstimate = function(req, res) {
 						//console.log(results);
 						if (err) 
 						{
-							throw err;
+							res.send(results);
 						} 
 						else 
 						{

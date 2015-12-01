@@ -1,5 +1,6 @@
+//CHANDNI
+
 var ejs = require("ejs");
-// var mysql = require('./mysql');
 var mq_client = require('../rpc/client');
 
 
@@ -12,7 +13,10 @@ exports.createRide = function(req, res) {
 	var dropoff_longitude = req.param("dropoffLng");
 	var customer_id = req.param("customer_id");
 	var driver_id = req.param("driver_id");
+	var distance_covered = req.param("distance_covered");
+	var total_time = req.param("total_time");
 	var pickup_location, dropoff_location;
+	var driver_status = 'U';
 	
 //	var pickup_address = "190 Street, San Jose, CA, 95110";
 //	var dropoff_address = "San Jose Stae University, San Jose , CA 95110";
@@ -25,15 +29,7 @@ exports.createRide = function(req, res) {
 	console.log(JSON.stringify(pickup_address));
 	console.log(JSON.stringify(dropoff_address));
 	console.log(pickup_latitude + pickup_longitude +dropoff_latitude + dropoff_longitude );
-//	console.log("pickup address" + pickup_address[0]);
-//	console.log("Street :  "+ pickup_address[0].address_components[0].long_name);
-//	console.log("Route :  "+ pickup_address[0].address_components[1].long_name);
-//	console.log("Locality :  "+ pickup_address[0].address_components[2].long_name);
-//	console.log("State :  "+ pickup_address[0].address_components[4].long_name);
-//	console.log("State :  "+ pickup_address[0].address_components[3].long_name);
-//	console.log("Country :  "+ pickup_address[0].address_components[5].long_name);
-//	console.log("Zip Code :  "+ pickup_address[0].address_components[6].long_name);
-// 
+	console.log(distance_covered + " ," + total_time);
 	
 
 		var msg_payload = {
@@ -44,16 +40,19 @@ exports.createRide = function(req, res) {
 		"pickup_latitude" : pickup_latitude,
 		"pickup_longitude" : pickup_longitude,
 		"dropoff_latitude" : dropoff_latitude,
-		"dropoff_longitude" : dropoff_longitude
-	};
+		"dropoff_longitude" : dropoff_longitude,
+		"distance_covered" : distance_covered,
+		"total_time" : total_time,
+		"driver_status" : driver_status
+	}; 
 
 	mq_client.make_request('uber_createRide_queue', msg_payload, function(err,
 			results) {
 		console.log(results);
-		if (err) {
-			throw err;
+		if (results.code == 401) {
+			console.log(results.err);
 		} else {
-			console.log("i'm here");
+			console.log("i'm in createRide");
 			if (results.code == 200) {
 				console.log("back to node: ride inserted successful");
 				res.send(results);
@@ -71,6 +70,9 @@ exports.editRide = function(req, res) {
 	var newdropoff_latitude = req.param("newdropoffLat");
 	var newdropoff_longitude = req.param("newdropoffLng");
 	var ride_id = req.param("ride_id");
+	var distance_covered = req.param("distance_covered");
+	var total_time = req.param("total_time");
+
 	
 //	var ride_id = 10;
 //	var newdropoff_address = "St James Station, San Jose, CA, United States";
@@ -80,34 +82,28 @@ exports.editRide = function(req, res) {
 	var customer_id = req.session.passport.user.ROW_ID;
 	var msg_payload, newdropoff_location;
 
-	console.log(newdropoff_address + "," + newdropoff_latitude + "," + newdropoff_longitude);
+	console.log(newdropoff_address + "," + newdropoff_latitude + "," + newdropoff_longitude + "," + distance_covered + "," + total_time);
 
 	console.log(JSON.stringify(newdropoff_address));
-//	console.log("newdrop off address");
-//	console.log("Street :  "+ newdropoff_address[0].address_components[0].long_name);
-//	console.log("Route :  "+ newdropoff_address[0].address_components[1].long_name);
-//	console.log("Locality :  "+ newdropoff_address[0].address_components[2].long_name);
-//	console.log("Admin area :  "+ newdropoff_address[0].address_components[3].long_name);
-//	console.log("State :  "+ newdropoff_address[0].address_components[4].long_name);
-//	console.log("Country :  "+ newdropoff_address[0].address_components[5].long_name);
-//	console.log("Zip Code :  "+ newdropoff_address[0].address_components[6].long_name);
 
 	msg_payload = {
 		"newdropoff_address" : newdropoff_address,
 		"newdropoff_latitude" : newdropoff_latitude,
 		"newdropoff_longitude" : newdropoff_longitude,
 		"customer_id" : customer_id,
-		"ride_id" : ride_id
+		"ride_id" : ride_id,
+		"distance_covered" : distance_covered,
+		"total_time" : total_time
 	};
 	
 
 
 			mq_client.make_request('uber_editRide_queue', msg_payload, function(err,results) {
 				console.log(results);
-				if (err) {
-					throw err;
+				if (results.code == 401) {
+					console.log(results.err);
 				} else {
-					console.log("i'm here");
+					console.log("i'm in editRide");
 					if (results.code == 200) {
 						console.log("back to node: ride updated successful");
 						res.send(results);
@@ -120,7 +116,7 @@ exports.editRide = function(req, res) {
 							
 };
 
-
+//----------------------not being used-------------------------------------
 exports.deleteRide = function(req,res)
 {
 	console.log("inside delete ride");
@@ -132,10 +128,9 @@ exports.deleteRide = function(req,res)
 	mq_client.make_request('uber_deleteRide_queue',msg_payload,function(err, results) 
 			{
 				console.log(results);
-				if (err)
-				{
-					throw err;
-				} 
+				if (results.code == 401) {
+					console.log(results.err);
+				}
 				else 
 				{
 					console.log("i'm here");
@@ -152,54 +147,7 @@ exports.deleteRide = function(req,res)
 	
 };
 
-exports.showAllRides = function(req,res)
-{
-	var searchSpec = req.param("searchSpec");
-	var newSearchSpec;
-	console.log("inside showallrides : "+searchSpec);
-	var AND = 0, OR = 0;
-	
-	searchSpec = searchSpec.substring(0,searchSpec.length - 1);
-	
-	console.log(searchSpec);
-	if(searchSpec.contains(','))
-		{
-			AND = 1;
-			newSearchSpec = searchSpec.split(",");
-		}
-	else if(searchSpec.contains('|'))
-		{
-			OR = 1;
-			newSearchSpec = searchSpec.split("|");
-		}
-	
-	var msg_payload =  {
-			"searchSpec" : newSearchSpec, "and" : AND, "or" : OR
-		};
-	mq_client.make_request('uber_searchRides_queue',msg_payload,function(err, results) 
-			{
-				console.log(results);
-				if (err) 
-				{
-					throw err;
-				} 
-				else 
-				{
-					console.log("i'm here");
-					if (results.code == 200) {
-						console.log("back to node: search successful");
-						res.send(results);
-					} 
-					else 
-					{
-						console.log("back to node: search failed");
-						res.send("failed");
-					}
-				}
-			});
-	
-};
-
+//----------------------not being used-------------------------------------
 
 exports.startRide = function(req,res)
 {
@@ -214,13 +162,12 @@ exports.startRide = function(req,res)
 	mq_client.make_request('uber_startRide_queue',msg_payload,function(err, results) 
 			{
 				console.log(results);
-				if (err)
-				{
-					throw err;
-				} 
+				if (results.code == 401) {
+					console.log(results.err);
+				}
 				else 
 				{
-					console.log("i'm here");
+					console.log("i'm in startRide");
 					if (results.code == 200) {
 						console.log("back to node: ride started successful");
 						res.send(results);
@@ -238,21 +185,24 @@ exports.cancelRide = function(req,res)
 	console.log("inside cancel ride");
 	var ride_id = req.param("ride_id");
 	console.log(ride_id);
+	var driver_status = 'A';
+	var driver_id = req.param("driver_id");
 	
 	var msg_payload = {
-			"ride_id" : ride_id
+			"ride_id" : ride_id,
+			"driver_status":driver_status,
+			"driver_id" : driver_id
 		};
 	
 	mq_client.make_request('uber_cancelRide_queue',msg_payload,function(err, results) 
 			{
 				console.log(results);
-				if (err)
-				{
-					throw err;
-				} 
+				if (results.code == 401) {
+					console.log(results.err);
+				}
 				else 
 				{
-					console.log("i'm here");
+					console.log("i'm in cancel ride");
 					if (results.code == 200) {
 						console.log("back to node: ride cancel successful");
 						res.send(results);
@@ -270,21 +220,24 @@ exports.endRide = function(req,res)
 	console.log("inside end ride");
 	var ride_id = req.param("ride_id");
 	console.log(ride_id);
+	var driver_status = 'A';
+	var driver_id = req.param("driver_id");
 	
 	var msg_payload = {
-			"ride_id" : ride_id
+			"ride_id" : ride_id,
+			"driver_status":driver_status,
+			"driver_id" : driver_id
 		};
 	
 	mq_client.make_request('uber_endRide_queue',msg_payload,function(err, results) 
 			{
 				console.log(results);
-				if (err)
-				{
-					throw err;
-				} 
+				if (results.code == 401) {
+					console.log(results.err);
+				}
 				else 
 				{
-					console.log("i'm here");
+					console.log("i'm in end ride");
 					if (results.code == 200) {
 						console.log("back to node: ride end successful");
 						res.send(results);
@@ -310,13 +263,12 @@ exports.fetchRideStatus = function(req,res)
 	mq_client.make_request('uber_fetchRideStatus_queue',msg_payload,function(err, results) 
 			{
 				console.log(results);
-				if (err)
-				{
-					throw err;
-				} 
+				if (results.code == 401) {
+					console.log(results.err);
+				}
 				else 
 				{
-					console.log("i'm here");
+					console.log("i'm in fetch ride status");
 					if (results.code == 200) {
 						console.log("back to node: ride fetch successful");
 						res.send(results);
@@ -342,14 +294,12 @@ exports.getRideCreated = function(req,res)
 	
 	mq_client.make_request('uber_getRideCreated_queue',msg_payload,function(err, results) 
 			{
-				console.log(results);
-				if (err)
-				{
-					throw err;
-				} 
+		if (results.code == 401) {
+			console.log(results.err);
+		}
 				else 
 				{
-					console.log("i'm here");
+					console.log("i'm in getRideCreated ");
 					if (results.code == 200) {
 						console.log("back to node: get Details successful");
 						res.send(results);
@@ -376,13 +326,12 @@ exports.getCustomerTripSummary = function(req,res)
 	mq_client.make_request('uber_getCustomerTripSummary_queue',msg_payload,function(err, results) 
 			{
 				console.log(results);
-				if (err)
-				{
-					throw err;
+				if (results.code == 401) {
+					console.log(results.err);
 				} 
 				else 
 				{
-					console.log("i'm here");
+					console.log("i'm in getCustomerTripSummary");
 					if (results.code == 200) {
 						console.log("back to node: getCustomerTripSummary successful");
 						res.send(results);
@@ -394,3 +343,70 @@ exports.getCustomerTripSummary = function(req,res)
 			});
 	
 };
+
+
+exports.getDriverTripSummary = function(req,res)
+{
+	console.log("inside getDriverTripSummary");
+	
+	var driver_id = req.param("driver_id");
+	console.log (driver_id);
+	
+	var msg_payload = {
+			"driver_id" : driver_id
+		};
+	
+	mq_client.make_request('uber_getDriverTripSummary_queue',msg_payload,function(err, results) 
+			{
+				console.log(results);
+				if (results.code == 401) {
+					console.log(results.err);
+				}
+				else 
+				{
+					console.log("i'm in getDriverTripSummary");
+					if (results.code == 200) {
+						console.log("back to node: getDriverTripSummary successful");
+						res.send(results);
+					} else {
+						console.log("back to node: getDriverTripSummary failed");
+						res.send("failed");
+					}
+				}
+			});
+	
+};
+
+
+//exports.getDriverTripSummary = function(req,res)
+//{
+//	console.log("inside getDriverTripSummary");
+//	
+//	var driver_id = req.param("driver_id");
+//	console.log (driver_id);
+//	
+//	var msg_payload = {
+//			"driver_id" : driver_id
+//		};
+//	
+//	mq_client.make_request('uber_getDriverTripSummary_queue',msg_payload,function(err, results) 
+//			{
+//				console.log(results);
+//				if (err)
+//				{
+//					throw err;
+//				} 
+//				else 
+//				{
+//					console.log("i'm here");
+//					if (results.code == 200) {
+//						console.log("back to node: getDriverTripSummary successful");
+//						res.send(results);
+//					} else {
+//						console.log("back to node: getDriverTripSummary failed");
+//						res.send("failed");
+//					}
+//				}
+//			});
+//	
+//};

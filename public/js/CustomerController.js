@@ -42,6 +42,7 @@ UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$loc
 	 $scope.initData = function(){
 		 console.log("The Current Customer is " + JSON.stringify($scope.curuser));
 		 $window.localStorage.customerId =  $scope.curuser.ROW_ID;
+		 $window.localStorage.custName = $scope.curuser.FIRST_NAME + " " + $scope.curuser.LAST_NAME;
 	 }
 	$http.get('http://localhost:3000/CustomerEditProfile').success(function(data) {
 		//checking the response data for statusCode
@@ -372,7 +373,9 @@ UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$loc
 						"pickupLat" : pickupLat,
 						"pickupLng" : pickupLng,
 						"dropoffLat" : dropoffLat,
-						"dropoffLng" : dropoffLng
+						"dropoffLng" : dropoffLng,
+						"distance_covered" : $window.localStorage.distance,
+						"total_time" : $window.localStorage.time
 					}
 				}).success(function(data) {
 					if (data.code == 200) {

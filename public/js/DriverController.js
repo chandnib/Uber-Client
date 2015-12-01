@@ -41,8 +41,10 @@ UberPrototypeCustomer.controller('DriverController',function($scope,$http,$locat
 	$window.localStorage.category = "D";
 	
 	$scope.initData = function(){
+		console.log("The Current Driver is " + JSON.stringify($scope.curuser));
 		$window.localStorage.category = "D";
 		$window.localStorage.driverId =  $scope.curuser.ROW_ID;
+		$window.localStorage.driverName = $scope.curuser.FIRST_NAME + " " + $scope.curuser.LAST_NAME;
 	};
 	
 	$http.get('http://localhost:3000/DriverEditProfile').success(function(data) {
@@ -140,6 +142,7 @@ UberPrototypeCustomer.controller('DriverController',function($scope,$http,$locat
 	 
 	 $scope.logout = function()
 	 {
+		 console.log("logout");
 		 $http.get('http://localhost:3000/Log_Out').success(function(data) {
 				//checking the response data for statusCode
 				window.location.assign("/"); 
@@ -155,6 +158,11 @@ UberPrototypeCustomer.controller('DriverController',function($scope,$http,$locat
 		 $scope.hideinvaliddestination = true;
 		 $scope.hideinvalidsource = true;
 	 };
+	 
+	 $scope.initData = function(){
+		 console.log("The Current Driver is " + JSON.stringify($scope.curuser));
+		 $window.localStorage.driverId =  $scope.curuser.ROW_ID;
+	 }
 	 
 	 $scope.FareEstimate = function(){	
 		 
@@ -180,7 +188,6 @@ UberPrototypeCustomer.controller('DriverController',function($scope,$http,$locat
 		        if (status == google.maps.DistanceMatrixStatus.OK && response.rows[0].elements[0].status != "ZERO_RESULTS") {
 		            $scope.distance = response.rows[0].elements[0].distance.text;
 		            $scope.time = response.rows[0].elements[0].duration.text;
-		            
 		            $scope.distance = $scope.distance.split(" ",1);
 		            $scope.distance = $scope.distance * 0.62;
 		            //$scope.time = $scope.time.split(" ",1);
@@ -259,5 +266,7 @@ UberPrototypeCustomer.controller('DriverController',function($scope,$http,$locat
 	  $scope.RequestUberX = function(){
 		  
 	  };
+	  
+	 
+	  
 });
-

@@ -49,6 +49,10 @@ UberPrototypeCustomer.config(['$locationProvider', '$routeProvider', function($l
 	    templateUrl: '/templates/DriverBillSummary.html',
 	    controller: 'CustBillSumController'
   })
+	 .when('/driverHome', {
+	  templateUrl: '/templates/DriverTrips.html',
+	  controller: 'DriverTripsController'
+	}) 
   /*.when('/BookaRide', {
     templateUrl: '/templates/BookaRide.html',
     controller: 'CustomerController'
@@ -71,7 +75,7 @@ UberPrototypeCustomer.config(['$locationProvider', '$routeProvider', function($l
 }]);
 
 //Admin Routing
-var UberPrototypeAdmin = angular.module('UberPrototypeAdmin', ['ngRoute','ui.bootstrap']);
+var UberPrototypeAdmin = angular.module('UberPrototypeAdmin', ['ngRoute','ui.bootstrap','googlechart']);
 UberPrototypeAdmin.config(['$locationProvider', '$routeProvider', function($locationProvider,$routeProvider) {
 	$locationProvider.html5Mode({
 	  enabled: true,
@@ -88,6 +92,18 @@ UberPrototypeAdmin.config(['$locationProvider', '$routeProvider', function($loca
 	}) 
 	 .when('/driverDetailReview/:driverid', {
 	  templateUrl: '/templates/AdminReviewDriver.html',
+	  controller: 'AdminReviewController'
+	})
+	.when('/SearchBill', {
+	  templateUrl: '/templates/SearchBill.html',
+	  controller: 'searchBillController'
+	})
+	  .when('/RideStatistics', {
+	  templateUrl: '/templates/RideStatistics.html',
+	  controller: 'AdminReviewController'
+	}) 
+	  .when('/RideGraphs', {
+	  templateUrl: '/templates/RideGraphs.html',
 	  controller: 'AdminReviewController'
 	}) 
 	.otherwise({
