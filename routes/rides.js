@@ -16,7 +16,7 @@ exports.createRide = function(req, res) {
 	var distance_covered = req.param("distance_covered");
 	var total_time = req.param("total_time");
 	var pickup_location, dropoff_location;
-	
+	var driver_status = 'U';
 	
 //	var pickup_address = "190 Street, San Jose, CA, 95110";
 //	var dropoff_address = "San Jose Stae University, San Jose , CA 95110";
@@ -42,8 +42,9 @@ exports.createRide = function(req, res) {
 		"dropoff_latitude" : dropoff_latitude,
 		"dropoff_longitude" : dropoff_longitude,
 		"distance_covered" : distance_covered,
-		"total_time" : total_time
-	};
+		"total_time" : total_time,
+		"driver_status" : driver_status
+	}; 
 
 	mq_client.make_request('uber_createRide_queue', msg_payload, function(err,
 			results) {
@@ -71,6 +72,7 @@ exports.editRide = function(req, res) {
 	var ride_id = req.param("ride_id");
 	var distance_covered = req.param("distance_covered");
 	var total_time = req.param("total_time");
+
 	
 //	var ride_id = 10;
 //	var newdropoff_address = "St James Station, San Jose, CA, United States";
@@ -183,9 +185,13 @@ exports.cancelRide = function(req,res)
 	console.log("inside cancel ride");
 	var ride_id = req.param("ride_id");
 	console.log(ride_id);
+	var driver_status = 'A';
+	var driver_id = req.param("driver_id");
 	
 	var msg_payload = {
-			"ride_id" : ride_id
+			"ride_id" : ride_id,
+			"driver_status":driver_status,
+			"driver_id" : driver_id
 		};
 	
 	mq_client.make_request('uber_cancelRide_queue',msg_payload,function(err, results) 
@@ -214,9 +220,13 @@ exports.endRide = function(req,res)
 	console.log("inside end ride");
 	var ride_id = req.param("ride_id");
 	console.log(ride_id);
+	var driver_status = 'A';
+	var driver_id = req.param("driver_id");
 	
 	var msg_payload = {
-			"ride_id" : ride_id
+			"ride_id" : ride_id,
+			"driver_status":driver_status,
+			"driver_id" : driver_id
 		};
 	
 	mq_client.make_request('uber_endRide_queue',msg_payload,function(err, results) 
