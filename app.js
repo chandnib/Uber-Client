@@ -221,6 +221,7 @@ app.get('/driverLoginPage',driver.driverLoginPage);
 app.get('/adminHome',admin.adminHome);
 app.get('/invalidAdminLogin',admin.invalidAdminLogin);
 app.get('/invalidSessionAdminLogin',admin.invalidSessionAdminLogin);
+app.post('/searchBill',admin.searchBill);
 app.post('/loadUnverifiedCustomers', admin.loadUnverifiedCustomers);
 app.post('/approveCustomer',admin.approveCustomer);
 app.post('/rejectCustomer',admin.rejectCustomer);
@@ -263,7 +264,7 @@ app.post('/CreateDrivers',driver.CreateDrivers);
 app.post('/showDriverin10Mile', driver.showDriverin10Mile);
 
 
-//Rides
+//-----------------------------------------------------------Rides---------------------------------------------
 app.post('/createRide',rides.createRide);
 app.post('/editRide',rides.editRide);
 app.post('/deleteRide',rides.deleteRide);
@@ -273,6 +274,8 @@ app.post('/endRide',rides.endRide);
 app.get('/fetchRideStatus',rides.fetchRideStatus);
 app.get('/getRideCreated',rides.getRideCreated);
 app.get('/getCustomerTripSummary',rides.getCustomerTripSummary);
+app.get('/getDriverTripSummary',rides.getDriverTripSummary);
+///-----------------------------------------------------------Rides---------------------------------------------
 
 
 //Billing call by Parteek
@@ -286,16 +289,16 @@ app.get('/getDriverRating',rating.getDriverRating);
 app.get('/getCustomerRating',rating.getCustomerRating);
 
 //Server
-/*mongo.connect(mongoSessionConnectURL, function() {
+mongo.connect(mongoSessionConnectURL, function() {
 	http.createServer(app).listen(app.get('port'), function(){
 		console.log('Uber server listening on port ' + app.get('port'));
 	});
-});*/
+});
 
 //Clustering
-	mongo.connect(mongoSessionConnectURL, function() { 
-		app.listen(app.get('port'), function() {
-			process.send({ cmd: 'notifyRequest' });
-	console.log("Uber Cluster Server running at PORT ==> " + app.get('port'));
-	});
-})
+//	mongo.connect(mongoSessionConnectURL, function() { 
+//		app.listen(app.get('port'), function() {
+//			process.send({ cmd: 'notifyRequest' });
+//	console.log("Uber Cluster Server running at PORT ==> " + app.get('port'));
+//	});
+//})
