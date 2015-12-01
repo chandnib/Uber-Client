@@ -34,10 +34,12 @@ exports.generateBill = function(req, res) {
 exports.getFareEstimate = function(req, res) {
 	var distance = req.param("distance");
 	var time = req.param("time");
+	var longitude = req.param("longitude");
+	var latitude = req.param("latitude");
 	console.log("distance :  "+ distance);
 	console.log("time :  "+ time);
 
-	var msg_payload = {"distance" : distance,"time" : time};
+	var msg_payload = {"distance" : distance,"time" : time,"latitude":latitude,"longitude":longitude};
 
 	mq_client.make_request('uber_getFareEstimate_queue',msg_payload,function(err, results) 
 			{

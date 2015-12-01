@@ -73,6 +73,10 @@ UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$loc
 			//checking the response data for statusCode
 			if (data.statusCode == 401) {
 			}
+			else if(data.statusCode==402)
+				{
+				alert(data.errorMessage);
+				}
 			else{
 				console.log("after everything checking if i made it here");
 				//Making a get call to the '/about' API

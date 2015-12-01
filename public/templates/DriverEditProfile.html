@@ -15,6 +15,17 @@
     border-color: #2e6fa7;
     margin-left: -300px;
 }
+
+#videoUpload
+{
+margin-left:15px;
+}
+
+#video
+{
+margin-left:35px;
+}
+
 </style>
 <script type="text/javascript">
 function checkFileType(){
@@ -71,6 +82,22 @@ function checkFileType(){
 		</div>
 	</form>
 </div>
+
+<div class="row">
+	<form  method="POST" ng-submit="uploadDriverVideo(video);">
+	<div class="col-xs-1" style="padding-top:6px; padding-left:90px;">
+            <label>Youtube Link</label>
+            </div>
+            <div class="col-xs-4">
+              <input type="text" class="form-control" id="video" name="video" ng-model="video" placeholder="{{profile.VIDEO_URL}}">
+            </div>
+				<div class="col-xs- col-xs-offset-6">
+					<input type="submit" class="btn btn-primary" id = "videoUpload" value= "Upload Video">
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
     <div class="row">
       <div class="col-xs-10 col-xs-offset-1">
         <form class="form" method = "POST" ng-submit="editProfile(firstName, lastName, address, city, state, zip, carModel, carColor, carYear, email, language, phoneNumber, password)">
@@ -113,7 +140,7 @@ function checkFileType(){
  			<input type="text" class="form-control" id="carColor" name="carColor" ng-model="carColor" placeholder="{{profile.COLOR}}">
             </div>
    			<div class="col-xs-2">
- 			<input type="text" class="form-control" id="carYear" name="carYear" ng-model="carYear" placeholder="{{profile.YEAR}}">
+ 			<input type="number" class="form-control" id="carYear" name="carYear" ng-model="carYear" placeholder="{{year}}">
             </div>
             </div>
           <div class="row" style="border-top: 1px solid #ccc; padding-top:10px; padding-bottom:10px;">

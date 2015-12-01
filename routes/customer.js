@@ -55,6 +55,12 @@ exports.adminHome = function(req, res) {
 exports.customerSignUp = function(req, res) {
 	console.log("Request for Account Creation ==> " + JSON.stringify(req.body));
 	var data = {};
+	var zipCheck = false;
+	var creditCheck = false;
+	var stateAbrevCheck = false;
+	var stateCheck = false;
+	var mobileCheck = false;
+	var errorMessage = "";
 	if (req.param("email") && req.param("password") && req.param("firstName")
 			&& req.param("lastName") && req.param("mobileNumber")
 			&& req.param("language") && req.param("creditCardNumber")
@@ -62,7 +68,34 @@ exports.customerSignUp = function(req, res) {
 			&& req.param("address") && req.param("city") && req.param("state")
 			&& req.param("zipCode")) {
 		var zipCodeCheck = /^\d{5}(?:[-]\d{4})?$/;	
+		//Regular expression check for valid visa card
+		var CreditCardCheck = /^4[0-9]{12}(?:[0-9]{3})?$/;
+		//Regular expression check for valid state abbreviations and full state names
+		var stateAbbrevCheck = /^(AK|AL|AR|AZ|CA|CO|CT|DC|DE|FL|GA|HI|IA|ID|IL|IN|KS|KY|LA|MA|MD|ME|MI|MN|MO|MS|MT|NB|NC|ND|NH|NJ|NM|NV|NY|OH|OK|OR|PA|RI|SC|SD|TN|TX|UT|VA|VT|WA|WI|WV|WY)$/i;	
+        var stateFullCheck = /^(Alabama|Alaska|Arizona|Arkansas|California|Colorado|Connecticut|Delaware|Florida|Georgia|Hawaii|Idaho|Illinois|Indiana|Iowa|Kansas|Kentucky|Louisiana|Maine|Maryland|Massachusetts|Michigan|Minnesota|Mississippi|Missouri|Montana|Nebraska|Nevada|New\sHampshire|New\sJersey|New\sMexico|New\sYork|North\sCarolina|North\sDakota|Ohio|Oklahoma|Oregon|Pennsylvania|Rhode\sIsland|South\sCarolina|South\sDakota|Tennessee|Texas|Utah|Vermont|Virginia|Washington|West\sVirginia|Wisconsin|Wyoming)/;
+		var mobileNumberCheck = /\(?\d{3}\)?-? *\d{3}-? *-?\d{4}/;
 		if(zipCodeCheck.test(req.param("zipCode")))
+			{
+			zipCheck = true;
+			}
+		if(CreditCardCheck.test(req.param("creditCardNumber")))
+		{
+			creditCheck = true;
+		}
+		if(stateAbbrevCheck.test(req.param("state")))
+		{
+			stateAbrevCheck = true;
+		}
+		if(stateFullCheck.test(req.param("state")))
+		{
+			stateCheck = true;
+		}
+		if(mobileNumberCheck.test(req.param("mobileNumber")))
+		{
+			mobileCheck = true;
+		}
+
+		if(zipCheck && creditCheck && (stateAbrevCheck||stateCheck) && mobileCheck)
 			{
 		data.EMAIL = req.param("email");
 		data.PASSWORD = req.param("password");
@@ -93,13 +126,35 @@ exports.customerSignUp = function(req, res) {
 		});
 	}
 	else {
+		if(!zipCheck)
+			{
+		    errorMessage+="Zip Code is incorrect format. Please try again\n";
+			}
+		if (!creditCheck)
+			{
+		    errorMessage+="Credit Card is incorrect format. Needs to be Visa Format\n";
+			}
+		if (!stateAbrevCheck)
+		{
+	    errorMessage+="Not a valid State Abbreviation\n";
+		}
+		if (!stateCheck)
+		{
+	    errorMessage+="Not a valid State\n";
+		}
+		if (!mobileCheck)
+		{
+	    errorMessage+="Not a valid US phone number\n";
+		}
 		res.send({
-			"statusCode" : 401
+			"statusCode" : 401,
+			"errorMessage": errorMessage
 		});
 	}
 	} else {
 		res.send({
-			"statusCode" : 401
+			"statusCode" : 401,
+			"errorMessage": "Not all Fields are filled"
 		});
 	}
 };
@@ -115,6 +170,49 @@ exports.updateProfile = function(req, res) {
 	data.CITY = req.param("city");
 	data.ZIPCODE = req.param("zip");
 	data.PHONENUMBER = req.param("phoneNumber");
+	var zipCheck = true;
+	var stateAbrevCheck = true;
+	var stateCheck = true;
+	var phoneCheck = true;
+	var errorMessage = "";
+	
+	var zipCodeCheck = /^\d{5}(?:[-]\d{4})?$/;	
+	//Regular expression check for valid state abbreviations and full state names
+	var stateAbbrevCheck = /^(AK|AL|AR|AZ|CA|CO|CT|DC|DE|FL|GA|HI|IA|ID|IL|IN|KS|KY|LA|MA|MD|ME|MI|MN|MO|MS|MT|NB|NC|ND|NH|NJ|NM|NV|NY|OH|OK|OR|PA|RI|SC|SD|TN|TX|UT|VA|VT|WA|WI|WV|WY)$/i;	
+    var stateFullCheck = /^(Alabama|Alaska|Arizona|Arkansas|California|Colorado|Connecticut|Delaware|Florida|Georgia|Hawaii|Idaho|Illinois|Indiana|Iowa|Kansas|Kentucky|Louisiana|Maine|Maryland|Massachusetts|Michigan|Minnesota|Mississippi|Missouri|Montana|Nebraska|Nevada|New\sHampshire|New\sJersey|New\sMexico|New\sYork|North\sCarolina|North\sDakota|Ohio|Oklahoma|Oregon|Pennsylvania|Rhode\sIsland|South\sCarolina|South\sDakota|Tennessee|Texas|Utah|Vermont|Virginia|Washington|West\sVirginia|Wisconsin|Wyoming)/;
+	var mobileNumberCheck = /\(?\d{3}\)?-? *\d{3}-? *-?\d{4}/;
+
+	if(req.param("zip"))
+		{
+		if(!zipCodeCheck.test(req.param("zip")))
+			{
+			zipCheck = false;
+			}
+		}
+	if(req.param("state"))
+	{
+	if(!stateAbbrevCheck.test(req.param("state")))
+	{
+		stateAbrevCheck = false;
+	}
+	}
+	if(req.param("state"))
+	{
+	if(!stateFullCheck.test(req.param("state")))
+	{
+		stateCheck = false;
+	}
+	}
+	if(req.param("phoneNumber"))
+	{
+
+	if(!mobileNumberCheck.test(req.param("phoneNumber")))
+	{
+		phoneCheck = false;
+	}
+	}
+	if(zipCheck && stateAbrevCheck && stateCheck && phoneCheck)
+		{
 	rpc.makeRequest("updateCustomer", data, function(err, user) {
 		console.log("User : " + JSON.stringify(user));
 		if (err) {
@@ -128,6 +226,28 @@ exports.updateProfile = function(req, res) {
 			}
 		}
 	});
+		}
+		else
+			{
+			if(!zipCheck)
+			{
+		    errorMessage+="Zip Code is incorrect format. Please try again\n";
+			}
+			if (!stateAbrevCheck)
+			{
+		    errorMessage+="Not a valid State Abbreviation\n";
+			}
+			if (!stateCheck)
+			{
+		    errorMessage+="Not a valid State\n";
+			}
+			if (!phoneCheck)
+			{
+		    errorMessage+="Not a valid US phone Number\n";
+			}
+			res.send({"statusCode" : 402,
+				"errorMessage": errorMessage});
+			}
 
 };
 

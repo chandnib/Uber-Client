@@ -252,10 +252,11 @@ app.get('/signUpDriver', driver.signUpDriver);
 app.get('/driverHome', driver.driverHome);
 app.get('/deleteDriver', driver.deleteDriver);
 app.get('/DriverEditProfile', driver.infoDriver);
+app.get('/getDriverVideoLink', driver.getDriverVideoLink);
 app.post('/addDriver', driver.driverSignUp);
-app.post('/updateProfile', customer.updateProfile);
 app.post('/updateDriverProfile', driver.updateProfile);
 app.post('/uploadProfilePicDriver',driver.uploadProfilePicDriver);
+app.post('/uploadDriverVideo',driver.uploadDriverVideo);
 
 app.post('/CreateDrivers',driver.CreateDrivers);
 //Rekha
