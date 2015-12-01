@@ -282,6 +282,28 @@ function deligateMQAccessRequest(operation,data,req,res,requestId,rpc){
 			}
 			break;
 
+		case "searchBill" :
+			console.log("searchBill ==> " + operation);	
+			if(req.session.passport.user.EMAIL != "" && req.session.passport.user.EMAIL != null){						
+				//data ==> contains Driver Info
+				rpc.makeRequest("searchBill", data, function(err, response) {
+					console.log("searchBill Response from RabbitMQ Server ==> " + JSON.stringify(response));
+					if (response){
+						if(response.code == 200) {
+							console.log(response);
+							res.status(200).send(response);
+						}else{
+							res.status(404).send(response.err);
+						}
+					}else{
+						res.status(404).send("error in Executing the operation!!");																																																																																																						
+					}
+				});
+			}
+			else{
+				adminAccountOperations.userUnverified(res,"Your Session is no Longer Valid!! Please login again to Proceed.",{},req);
+			}
+			break;
 			
 		default:
 			break;

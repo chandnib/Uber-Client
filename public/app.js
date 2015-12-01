@@ -93,7 +93,11 @@ UberPrototypeAdmin.config(['$locationProvider', '$routeProvider', function($loca
 	 .when('/driverDetailReview/:driverid', {
 	  templateUrl: '/templates/AdminReviewDriver.html',
 	  controller: 'AdminReviewController'
-	}) 
+	})
+	.when('/SearchBill', {
+	  templateUrl: '/templates/SearchBill.html',
+	  controller: 'searchBillController'
+	})
 	.otherwise({
 	  redirectTo: '/'
 	});

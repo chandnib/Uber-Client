@@ -203,6 +203,7 @@ app.get('/driverLoginPage',driver.driverLoginPage);
 app.get('/adminHome',admin.adminHome);
 app.get('/invalidAdminLogin',admin.invalidAdminLogin);
 app.get('/invalidSessionAdminLogin',admin.invalidSessionAdminLogin);
+app.post('/searchBill',admin.searchBill);
 app.post('/loadUnverifiedCustomers', admin.loadUnverifiedCustomers);
 app.post('/approveCustomer',admin.approveCustomer);
 app.post('/rejectCustomer',admin.rejectCustomer);
