@@ -12,7 +12,14 @@ UberPrototypeAdmin.controller('searchBillController',function($scope,$http,$loca
     	 console.log("driverEmailId"+$scope.driverEmailId);
     	 var fromDate1 = new Date($scope.fromdate);
     	 var toDate1 = new Date($scope.toDate);
-    	 if(fromDate1.getTime()-toDate1.getTime())
+    	 console.log(fromDate1.getTime());
+    	 console.log(toDate1.getTime());
+    	 if(fromDate1.getTime()-toDate1.getTime()<0){
+    	 /*if(fromDate1.getTime()-toDate1.getTime()<0)
+    		 {
+    		 $scope.showValid=true;
+    		 console.log("fromDate1.getTime()-toDate1.getTime()"+fromDate1.getTime()-toDate1.getTime());
+    		 }*/
     	 $http({
 				method : "POST",
 				url : '/searchBill',
@@ -32,6 +39,11 @@ UberPrototypeAdmin.controller('searchBillController',function($scope,$http,$loca
 					console.log("data"+data.data[0].ROW_ID);
 					$scope.BillList = data.data;
 					$scope.showTable=true;
+					$scope.fromdate="";
+					$scope.toDate="";
+					$scope.custEmailId="";
+    	            $scope.driverEmailId="";
+					
 				}
 				else{
 					console.log("Error in getting the bills");
@@ -39,6 +51,12 @@ UberPrototypeAdmin.controller('searchBillController',function($scope,$http,$loca
 			}).error(function(error) {
 				console.log("Error in getting the bills");
 			});
+     }
+     else{
+    	 $scope.showValid=true;
+    	 $scope.BillList = null;
+			$scope.showTable=false;
+     }
      };
      });
 	

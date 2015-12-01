@@ -8,17 +8,24 @@
 		</div>
 	</div>
 </div>
+<div ng-show="showValid" class="row">
+	<div class="col-md-2"></div>
+	<div class="col-md-4">
+		<h2>
+			<span class="label label-danger">From date cannot be prior to
+				To date.</span>
+		</h2>
+	</div>
+</div>
 <div class="row">
 	<div class="col-md-1"></div>
 	<div class="col-md-4">
 		<div class="form-group">
 			<label for="usr">From</label> <input class="form-control input-lg"
-				type="date" class="form-control" name="fromdate"
-				ng-model="fromdate" required>
-			<p
-				ng-show=""
-				class="help-block" style="padding: 0px 0px">Please Select From Date 
-				Date.</p>
+				type="date" class="form-control" name="fromdate" ng-model="fromdate"
+				required>
+			<p ng-show="" class="help-block" style="padding: 0px 0px">Please
+				Select From Date Date.</p>
 		</div>
 	</div>
 	<div class="col-md-4">
@@ -33,9 +40,9 @@
 	<div class="col-md-4">
 		<div class="form-group">
 			<label for="usr">To</label> <input class="form-control input-lg"
-				type="date" class="form-control" name="todate"
-				ng-model="toDate" required>
-			
+				type="date" class="form-control" name="todate" ng-model="toDate"
+				required>
+
 		</div>
 	</div>
 	<div class="col-md-4">
@@ -53,12 +60,9 @@
 	</div>
 </div>
 <br>
-<p
-ng-show="showValid"
-				class="help-block" style="padding: 0px 0px">From date cannot be prior to To date.</p>
 <br>
 <div class="row" ng-show="showTable">
-<div class="col-md-1"></div>
+	<div class="col-md-1"></div>
 	<div class="col-md-5">
 
 		<h2>Bills Table</h2>
@@ -68,10 +72,10 @@ ng-show="showValid"
 					<th>Bill Id</th>
 					<th>Bill Date</th>
 					<th>Distance Covered</th>
-					<th>Source </th>
-					<th>Destination </th>
+					<th>Source</th>
+					<th>Destination</th>
 					<th>Driver Name</th>
-					<th>Customer Name </th>
+					<th>Customer Name</th>
 					<th>Total Fare</th>
 				</tr>
 			</thead>
@@ -89,5 +93,5 @@ ng-show="showValid"
 			</tbody>
 		</table>
 
-</div>
+	</div>
 </div>
