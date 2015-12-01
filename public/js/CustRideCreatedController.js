@@ -221,7 +221,8 @@ UberPrototypeCustomer.controller('CustRideCreatedController' ,function($scope,$h
 				method : "POST",
 				url : '/cancelRide',
 				data : {
-					"ride_id" : $window.localStorage.rideId//changed
+					"ride_id" : $window.localStorage.rideId,//changed
+					"driver_id" : $window.localStorage.driverId
 				}
 			}).success(function(data) {
 				//checking the response data for statusCode
@@ -281,9 +282,11 @@ UberPrototypeCustomer.controller('CustRideCreatedController' ,function($scope,$h
 				}
 				else{
 					console.log("The ride not started or canceled yet");
+					clearInterval(RideStatus);
 				}
 			}).error(function(error) {
 				console.log("The ride not started or canceled yet");
+				clearInterval(RideStatus);
 			});
 	 };
 });

@@ -168,7 +168,8 @@ UberPrototypeCustomer.controller('CustRideStartedController' ,function($scope,$h
 				method : "POST",
 				url : '/endRide',
 				data : {
-					"ride_id" : $window.localStorage.rideId//changed
+					"ride_id" : $window.localStorage.rideId,//changed
+					"driver_id" : $window.localStorage.driverId
 				}
 			}).success(function(data) {
 				//checking the response data for statusCode
@@ -201,9 +202,11 @@ UberPrototypeCustomer.controller('CustRideStartedController' ,function($scope,$h
 				else{
 					//Making a get call to the '/CustomerBillSummary' page
 					console.log("The ride not completed yet");
+					clearInterval(RideStatus);
 				}
 			}).error(function(error) {
 				console.log("The ride not completed yet");
+				clearInterval(RideStatus);
 			});
 	 };
 });
