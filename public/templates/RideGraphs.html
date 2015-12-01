@@ -1,0 +1,60 @@
+<div class="col-xs-12" ng-init="initRideGraphs()">
+<form class="form" novalidate="">
+		  <br>
+		  <div class="row">
+		  <div class="col-xs-10 col-xs-offset-1">
+		  <div class="row" style="padding-top:10px; padding-bottom:10px;">
+            <div class="col-xs-4">
+              <label><font size="3" color="#808080">Area</font></label>
+            </div>
+            <div class="col-xs-8">
+              <input type="text" class="form-control" id="area1" name="area1" ng-model="area1" placeholder="Enter the location" googlearea/>
+            </div>
+		  </div>
+		  <div class="row" style="padding-top:10px; padding-bottom:10px;">
+            <div class="col-xs-4">
+              <label><font size="3" color="#808080">Customer Id</font></label>
+            </div>
+            <div class="col-xs-8">
+              <input type="text" class="form-control" id="Customerid" name="Customerid" ng-model="Customerid" placeholder="Enter Customer ID" />
+            </div>
+           </div>
+           <div class="row" style="padding-top:10px; padding-bottom:10px;">
+            <div class="col-xs-4">
+              <label><font size="3" color="#808080">Driver Id</font></label>
+            </div>
+            <div class="col-xs-8">
+              <input type="text" class="form-control" id="Driverid" name="Driverid" ng-model="Driverid" placeholder="Enter Driver ID" />
+            </div>
+           </div>
+           <div class="row" style="padding-top:10px; padding-bottom:10px;">
+            <div class="col-xs-4">
+              <label><font size="3" color="#808080">Date</font></label>
+            </div>
+            <div class="col-xs-8">
+              <input type="text" class="form-control" id="datereq" name="datereq" ng-model="datereq" placeholder="%yyyy-%mm-%dd" />
+            </div>
+           </div>
+           
+           <div class="row" style="padding-top: 20px; padding-bottom: 20px;">
+           <div class="col-xs-4 col-xs-offset-1">
+  		   <button type="button" class="btn btn-primary custom" ng-click="RideGraphs()">Ride Statistics</button>
+  		   </div>
+  		   <div class="col-xs-4 col-xs-offset-1">
+  		   <button type="button" class="btn btn-primary btn-sm custom" ng-click="CancelRideGraphs()">Cancel</button>
+           </div>
+           </div>
+           </div>
+		  </div>
+		 	
+		  <div class="col-xs-12">
+		  <div class="row" ng-hide="HideRideStats">
+           <div class="col-xs-8 col-xs-offset-2" style="">
+                <div google-chart chart="chart" style="{{chart.cssStyle}}"/>
+           </div>
+           </div>
+		  </div>
+		  
+		  </form>
+		  </div>
+           

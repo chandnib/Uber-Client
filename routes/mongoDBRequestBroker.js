@@ -281,7 +281,103 @@ function deligateMQAccessRequest(operation,data,req,res,requestId,rpc){
 				adminAccountOperations.userUnverified(res,"Your Session is no Longer Valid!! Please login again to Proceed.",{},req);
 			}
 			break;
+			
+		case "revenueStats" :
+			console.log("revenueStats ==> " + operation);	
+			if(req.session.passport.user.EMAIL != "" && req.session.passport.user.EMAIL != null){						
+				//data ==> contains Driver Info
+				rpc.makeRequest("revenueStats", data, function(err, response) {
+					console.log("revenueStats Response from RabbitMQ Server ==> " + JSON.stringify(response));
+					if (response){
+						if (response.code == 200) {
+							console.log("Everthing is fine!!!");
+							res.send(response);
+						} else {
+							console.log("Did not delete. Try again");
+							res.send("Error");
+						}
+					}else{
+						res.status(404).send("error in Executing the operation!!");																																																																																																						
+					}
+				});
+			}
+			else{
+				adminAccountOperations.userUnverified(res,"Your Session is no Longer Valid!! Please login again to Proceed.",{},req);
+			}
+			break;
 
+		case "totalrideStats" :
+			console.log("totalrideStats ==> " + operation);	
+			if(req.session.passport.user.EMAIL != "" && req.session.passport.user.EMAIL != null){						
+				//data ==> contains Driver Info
+				rpc.makeRequest("totalrideStats", data, function(err, response) {
+					console.log("totalrideStats Response from RabbitMQ Server ==> " + JSON.stringify(response));
+					if (response){
+						if (response.code == 200) {
+							console.log("Everthing is fine!!!");
+							res.send(response);
+						} else {
+							console.log("Did not delete. Try again");
+							res.send("Error");
+						}
+					}else{
+						res.status(404).send("error in Executing the operation!!");																																																																																																						
+					}
+				});
+			}
+			else{
+				adminAccountOperations.userUnverified(res,"Your Session is no Longer Valid!! Please login again to Proceed.",{},req);
+			}
+			break;
+			
+		case "cutomerrideStats" :
+			console.log("cutomerrideStats ==> " + operation);	
+			if(req.session.passport.user.EMAIL != "" && req.session.passport.user.EMAIL != null){						
+				//data ==> contains Driver Info
+				rpc.makeRequest("cutomerrideStats", data, function(err, response) {
+					console.log("cutomerrideStats Response from RabbitMQ Server ==> " + JSON.stringify(response));
+					if (response){
+						if (response.code == 200) {
+							console.log("cutomerrideStats Everthing is fine!!!");
+							res.send(response);
+						} else {
+							console.log(" cutomerrideStats Did not delete. Try again");
+							res.send("Error");
+						}
+					}else{
+						res.status(404).send("error in Executing the operation!!");																																																																																																						
+					}
+				});
+			}
+			else{
+				adminAccountOperations.userUnverified(res,"Your Session is no Longer Valid!! Please login again to Proceed.",{},req);
+			}
+			break;
+			
+		case "driverrideStats" :
+			console.log("driverrideStats ==> " + operation);	
+			if(req.session.passport.user.EMAIL != "" && req.session.passport.user.EMAIL != null){						
+				//data ==> contains Driver Info
+				rpc.makeRequest("driverrideStats", data, function(err, response) {
+					console.log("driverrideStats Response from RabbitMQ Server ==> " + JSON.stringify(response));
+					if (response){
+						if (response.code == 200) {
+							console.log("Everthing is fine!!!");
+							res.send(response);
+						} else {
+							console.log("Did not delete. Try again");
+							res.send("Error");
+						}
+					}else{
+						res.status(404).send("error in Executing the operation!!");																																																																																																						
+					}
+				});
+			}
+			else{
+				adminAccountOperations.userUnverified(res,"Your Session is no Longer Valid!! Please login again to Proceed.",{},req);
+			}
+			break;
+			
 			
 		default:
 			break;

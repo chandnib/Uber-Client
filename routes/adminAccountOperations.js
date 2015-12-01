@@ -56,6 +56,22 @@ module.exports = {
 		loadDriverDetail : function(user,req,res){
 			var MQConnection = require('./mongoDBRequestBroker');
 			MQConnection.handleDBRequest("loadDriverDetail",user,req,res,rpc);
+		},
+		revenueStats : function(user,req,res){
+			var MQConnection = require('./mongoDBRequestBroker');
+			MQConnection.handleDBRequest("revenueStats",user,req,res,rpc);
+		},
+		totalrideStats : function(user,req,res){
+			var MQConnection = require('./mongoDBRequestBroker');
+			MQConnection.handleDBRequest("totalrideStats",user,req,res,rpc);
+		},
+		cutomerrideStats : function(user,req,res){
+			var MQConnection = require('./mongoDBRequestBroker');
+			MQConnection.handleDBRequest("cutomerrideStats",user,req,res,rpc);
+		},
+		driverrideStats : function(user,req,res){
+			var MQConnection = require('./mongoDBRequestBroker');
+			MQConnection.handleDBRequest("driverrideStats",user,req,res,rpc);
 		}
 };
 

@@ -1,3 +1,22 @@
+UberPrototypeAdmin.directive('googlearea', function() {
+	//directive for Google Auto complete option for source
+    return {
+        require: 'ngModel',
+        link: function(scope, element, attrs, model) {
+            var options = {
+                types: [],
+                componentRestrictions: {}
+            };
+            scope.ara = new google.maps.places.Autocomplete(element[0], options);
+            google.maps.event.addListener(scope.ara, 'place_changed', function() {
+                scope.$apply(function() {
+                    model.$setViewValue(element.val());                
+                });
+            });
+        }
+    };
+});
+
 UberPrototypeAdmin.controller('AdminReviewController',function($scope,$http,$location,$window,$routeParams){
 	$scope.detailview = {};
 	$scope.customers ={};
@@ -254,5 +273,593 @@ UberPrototypeAdmin.controller('AdminReviewController',function($scope,$http,$loc
 
 	$scope.routeToTemplate = function(routepath){
 		$location.path(routepath); 
+	};
+	
+	
+	$scope.initRideStatistics = function(){
+		$scope.hideinvaliddate = true;
+		$scope.ara;
+		var directionsService = new google.maps.DirectionsService();
+	};
+	$scope.CancelRideStatistics = function(){
+		$scope.startdate = "";
+		$scope.enddate = "";
+		$scope.area = "";
+	};
+	$scope.RideStatistics = function(){
+		
+		var directionsService = new google.maps.DirectionsService();
+	    var pickup_location = $scope.area;
+		var startdate = $scope.startdate;
+		var enddate = $scope.enddate;
+		
+		geocoder = new google.maps.Geocoder();
+		geocoder.geocode({'address' : pickup_location},
+						function(results, status)
+						{
+							if (status == google.maps.GeocoderStatus.OK) 
+							{
+								pickupLat = results[0].geometry.location.lat();
+								pickupLng = results[0].geometry.location.lng();
+								
+								$http({
+									method : "POST",
+									url : '/revenueStats',
+									data : {
+										"lat" : pickupLat,
+										"long" : pickupLng,
+										"startdate" :startdate,
+										"enddate" : enddate
+									}
+								}).success(function(res) {
+									if (res.code == 200) {
+										
+										var chart1 = {};
+									    chart1.type = "BarChart";
+									    chart1.cssStyle = "height:400px; width:550px;";
+									    
+									    switch(res.data.length) {
+									    case 1:
+									    	chart1.data = {"cols": [
+							                                        {id: "t", label: "Date", type: "string"},
+							                                        {id: "s", label: "Revenue/day", type: "number"}
+							                                    ], "rows": [
+							                                        {c: [
+							                                            {v: res.data[0].RDATE},
+							                                            {v: res.data[0].BILL},
+							                                        ]}
+							                                    ]};
+									        break;
+									    case 2:
+									    	chart1.data = {"cols": [
+							                                        {id: "t", label: "Date", type: "string"},
+							                                        {id: "s", label: "Revenue/day", type: "number"}
+							                                    ], "rows": [
+							                                        {c: [
+							                                            {v: res.data[0].RDATE},
+							                                            {v: res.data[0].BILL},
+							                                        ]},
+							                                        {c: [
+								                                            {v: res.data[1].RDATE},
+								                                            {v: res.data[1].BILL},
+								                                    ]}
+							                                    ]};
+									        break;
+									    case 3:
+									    	chart1.data = {"cols": [
+							                                        {id: "t", label: "Date", type: "string"},
+							                                        {id: "s", label: "Revenue/day", type: "number"}
+							                                    ], "rows": [
+							                                        {c: [
+							                                            {v: res.data[0].RDATE},
+							                                            {v: res.data[0].BILL},
+							                                        ]},
+							                                        {c: [
+								                                            {v: res.data[1].RDATE},
+								                                            {v: res.data[1].BILL},
+								                                    ]},
+								                                    {c: [
+								                                            {v: res.data[2].RDATE},
+								                                            {v: res.data[2].BILL},
+								                                    ]}
+							                                    ]};
+									        break;
+									    case 4:
+									    	chart1.data = {"cols": [
+							                                        {id: "t", label: "Date", type: "string"},
+							                                        {id: "s", label: "Revenue/day", type: "number"}
+							                                    ], "rows": [
+							                                        {c: [
+							                                            {v: res.data[0].RDATE},
+							                                            {v: res.data[0].BILL},
+							                                        ]},
+							                                        {c: [
+								                                            {v: res.data[1].RDATE},
+								                                            {v: res.data[1].BILL},
+								                                    ]},
+								                                    {c: [
+								                                            {v: res.data[2].RDATE},
+								                                            {v: res.data[2].BILL},
+								                                    ]},
+								                                    {c: [
+								                                            {v: res.data[3].RDATE},
+								                                            {v: res.data[3].BILL},
+								                                    ]}
+							                                    ]};
+									        break;
+									    case 5:
+									    	chart1.data = {"cols": [
+							                                        {id: "t", label: "Date", type: "string"},
+							                                        {id: "s", label: "Revenue/day", type: "number"}
+							                                    ], "rows": [
+							                                        {c: [
+							                                            {v: res.data[0].RDATE},
+							                                            {v: res.data[0].BILL},
+							                                        ]},
+							                                        {c: [
+								                                            {v: res.data[1].RDATE},
+								                                            {v: res.data[1].BILL},
+								                                    ]},
+								                                    {c: [
+								                                            {v: res.data[2].RDATE},
+								                                            {v: res.data[2].BILL},
+								                                    ]},
+								                                    {c: [
+								                                            {v: res.data[3].RDATE},
+								                                            {v: res.data[3].BILL},
+								                                    ]},
+								                                    {c: [
+								                                            {v: res.data[4].RDATE},
+								                                            {v: res.data[4].BILL},
+								                                    ]}
+							                                    ]};
+									        break;
+									    case 6:
+									    	chart1.data = {"cols": [
+							                                        {id: "t", label: "Date", type: "string"},
+							                                        {id: "s", label: "Revenue/day", type: "number"}
+							                                    ], "rows": [
+							                                        {c: [
+							                                            {v: res.data[0].RDATE},
+							                                            {v: res.data[0].BILL},
+							                                        ]},
+							                                        {c: [
+								                                            {v: res.data[1].RDATE},
+								                                            {v: res.data[1].BILL},
+								                                    ]},
+								                                    {c: [
+								                                            {v: res.data[2].RDATE},
+								                                            {v: res.data[2].BILL},
+								                                    ]},
+								                                    {c: [
+								                                            {v: res.data[3].RDATE},
+								                                            {v: res.data[3].BILL},
+								                                    ]},
+								                                    {c: [
+								                                            {v: res.data[4].RDATE},
+								                                            {v: res.data[4].BILL},
+								                                    ]},
+								                                    {c: [
+								                                            {v: res.data[5].RDATE},
+								                                            {v: res.data[5].BILL},
+								                                    ]}
+							                                    ]};
+									        break;
+									    case 7:
+									    	chart1.data = {"cols": [
+							                                        {id: "t", label: "Date", type: "string"},
+							                                        {id: "s", label: "Revenue/day", type: "number"}
+							                                    ], "rows": [
+							                                        {c: [
+							                                            {v: res.data[0].RDATE},
+							                                            {v: res.data[0].BILL},
+							                                        ]},
+							                                        {c: [
+								                                            {v: res.data[1].RDATE},
+								                                            {v: res.data[1].BILL},
+								                                    ]},
+								                                    {c: [
+								                                            {v: res.data[2].RDATE},
+								                                            {v: res.data[2].BILL},
+								                                    ]},
+								                                    {c: [
+								                                            {v: res.data[3].RDATE},
+								                                            {v: res.data[3].BILL},
+								                                    ]},
+								                                    {c: [
+								                                            {v: res.data[4].RDATE},
+								                                            {v: res.data[4].BILL},
+								                                    ]},
+								                                    {c: [
+								                                            {v: res.data[5].RDATE},
+								                                            {v: res.data[5].BILL},
+								                                    ]},
+								                                    {c: [
+								                                            {v: res.data[6].RDATE},
+								                                            {v: res.data[6].BILL},
+								                                    ]}
+							                                    ]};
+									        break;
+									    default:
+									    	console.log("No data to load");
+									    }
+									    
+									    console.log("chart data: "+JSON.stringify(chart1.data));
+
+									    chart1.options = {
+									        "title": "Ride Statistics",
+									        "isStacked": "true",
+									        "fill": 20,
+									        
+									        "displayExactValues": true,
+									        "vAxis": {
+									            "title": "Date", "gridlines": {"count": 6}
+									        },
+									        "hAxis": {
+									            "title": "Revenue/day"
+									        }
+									    };
+
+									    chart1.formatters = {};
+
+									    $scope.chart = chart1;
+									    
+									    
+									    var chart2 = {};
+									    chart2.type = "BarChart";
+									    chart2.cssStyle = "height:400px; width:550px;";
+									    
+									    switch(res.data.length) {
+									    case 1:
+									    	chart2.data = {"cols": [
+							                                        {id: "t", label: "Date", type: "string"},
+							                                        {id: "s", label: "TotalRides/Area", type: "number"}
+							                                    ], "rows": [
+							                                        {c: [
+							                                            {v: res.data[0].RDATE},
+							                                            {v: res.data[0].RIDE},
+							                                        ]}
+							                                    ]};
+									        break;
+									    case 2:
+									    	chart2.data = {"cols": [
+							                                        {id: "t", label: "Date", type: "string"},
+							                                        {id: "s", label: "TotalRides/Area", type: "number"}
+							                                    ], "rows": [
+							                                        {c: [
+							                                            {v: res.data[0].RDATE},
+							                                            {v: res.data[0].RIDE},
+							                                        ]},
+							                                        {c: [
+								                                            {v: res.data[1].RDATE},
+								                                            {v: res.data[1].RIDE},
+								                                    ]}
+							                                    ]};
+									        break;
+									    case 3:
+									    	chart2.data = {"cols": [
+							                                        {id: "t", label: "Date", type: "string"},
+							                                        {id: "s", label: "TotalRides/Area", type: "number"}
+							                                    ], "rows": [
+							                                        {c: [
+							                                            {v: res.data[0].RDATE},
+							                                            {v: res.data[0].RIDE},
+							                                        ]},
+							                                        {c: [
+								                                            {v: res.data[1].RDATE},
+								                                            {v: res.data[1].RIDE},
+								                                    ]},
+								                                    {c: [
+								                                            {v: res.data[2].RDATE},
+								                                            {v: res.data[2].RIDE},
+								                                    ]}
+							                                    ]};
+									        break;
+									    case 4:
+									    	chart2.data = {"cols": [
+							                                        {id: "t", label: "Date", type: "string"},
+							                                        {id: "s", label: "TotalRides/Area", type: "number"}
+							                                    ], "rows": [
+							                                        {c: [
+							                                            {v: res.data[0].RDATE},
+							                                            {v: res.data[0].RIDE},
+							                                        ]},
+							                                        {c: [
+								                                            {v: res.data[1].RDATE},
+								                                            {v: res.data[1].RIDE},
+								                                    ]},
+								                                    {c: [
+								                                            {v: res.data[2].RDATE},
+								                                            {v: res.data[2].RIDE},
+								                                    ]},
+								                                    {c: [
+								                                            {v: res.data[3].RDATE},
+								                                            {v: res.data[3].RIDE},
+								                                    ]}
+							                                    ]};
+									        break;
+									    case 5:
+									    	chart2.data = {"cols": [
+							                                        {id: "t", label: "Date", type: "string"},
+							                                        {id: "s", label: "TotalRides/Area", type: "number"}
+							                                    ], "rows": [
+							                                        {c: [
+							                                            {v: res.data[0].RDATE},
+							                                            {v: res.data[0].RIDE},
+							                                        ]},
+							                                        {c: [
+								                                            {v: res.data[1].RDATE},
+								                                            {v: res.data[1].RIDE},
+								                                    ]},
+								                                    {c: [
+								                                            {v: res.data[2].RDATE},
+								                                            {v: res.data[2].RIDE},
+								                                    ]},
+								                                    {c: [
+								                                            {v: res.data[3].RDATE},
+								                                            {v: res.data[3].RIDE},
+								                                    ]},
+								                                    {c: [
+								                                            {v: res.data[4].RDATE},
+								                                            {v: res.data[4].RIDE},
+								                                    ]}
+							                                    ]};
+									        break;
+									    case 6:
+									    	chart2.data = {"cols": [
+							                                        {id: "t", label: "Date", type: "string"},
+							                                        {id: "s", label: "TotalRides/Area", type: "number"}
+							                                    ], "rows": [
+							                                        {c: [
+							                                            {v: res.data[0].RDATE},
+							                                            {v: res.data[0].RIDE},
+							                                        ]},
+							                                        {c: [
+								                                            {v: res.data[1].RDATE},
+								                                            {v: res.data[1].RIDE},
+								                                    ]},
+								                                    {c: [
+								                                            {v: res.data[2].RDATE},
+								                                            {v: res.data[2].RIDE},
+								                                    ]},
+								                                    {c: [
+								                                            {v: res.data[3].RDATE},
+								                                            {v: res.data[3].RIDE},
+								                                    ]},
+								                                    {c: [
+								                                            {v: res.data[4].RDATE},
+								                                            {v: res.data[4].RIDE},
+								                                    ]},
+								                                    {c: [
+								                                            {v: res.data[5].RDATE},
+								                                            {v: res.data[5].RIDE},
+								                                    ]}
+							                                    ]};
+									        break;
+									    case 7:
+									    	chart2.data = {"cols": [
+							                                        {id: "t", label: "Date", type: "string"},
+							                                        {id: "s", label: "TotalRides/Area", type: "number"}
+							                                    ], "rows": [
+							                                        {c: [
+							                                            {v: res.data[0].RDATE},
+							                                            {v: res.data[0].RIDE},
+							                                        ]},
+							                                        {c: [
+								                                            {v: res.data[1].RDATE},
+								                                            {v: res.data[1].RIDE},
+								                                    ]},
+								                                    {c: [
+								                                            {v: res.data[2].RDATE},
+								                                            {v: res.data[2].RIDE},
+								                                    ]},
+								                                    {c: [
+								                                            {v: res.data[3].RDATE},
+								                                            {v: res.data[3].RIDE},
+								                                    ]},
+								                                    {c: [
+								                                            {v: res.data[4].RDATE},
+								                                            {v: res.data[4].RIDE},
+								                                    ]},
+								                                    {c: [
+								                                            {v: res.data[5].RDATE},
+								                                            {v: res.data[5].RIDE},
+								                                    ]},
+								                                    {c: [
+								                                            {v: res.data[6].RDATE},
+								                                            {v: res.data[6].RIDE},
+								                                    ]}
+							                                    ]};
+									        break;
+									    default:
+									    	console.log("No data to load");
+									    }
+									    
+									    console.log("chart data: "+JSON.stringify(chart2.data));
+
+									    chart2.options = {
+									        "title": "Ride Statistics",
+									        "isStacked": "true",
+									        "fill": 20,
+									        "bar": {groupWidth: "25%"},
+									        "displayExactValues": true,
+									        "vAxis": {
+									            "title": "Date", "gridlines": {"count": 6}
+									        },
+									        "hAxis": {
+									            "title": "TotalRides/Area"
+									        }
+									    };
+
+									    chart2.formatters = {};
+
+									    $scope.charttot = chart2;
+									    
+									    $scope.hideinvaliddate = false;
+										
+										
+									}
+									else {
+										console.log("Error in getting statistics");
+									}
+								}).error(function(error) {
+									console.log("Error in getting statistics: ERROR");
+								});
+							   
+							}
+
+							else {
+								console.log("Error in retriving Lat and Long");
+							}
+						});
+	};
+	
+	
+
+	$scope.initRideGraphs = function(){
+		$scope.hideinvaliddate1 = true;
+		$scope.ara;
+		var directionsService = new google.maps.DirectionsService();
+	};
+	$scope.CancelRideGraphs = function(){
+		$scope.Customerid = "";
+		$scope.Driverid = "";
+		$scope.area1 = "";
+		$scope.datereq = "";
+	};
+	$scope.RideGraphs = function(){
+		
+		var directionsService = new google.maps.DirectionsService();
+	    var pickup_location = $scope.area1;
+		var startdate = $scope.datereq;
+		var Customerid = $scope.Customerid;
+		var Driverid = $scope.Driverid;
+		
+		geocoder = new google.maps.Geocoder();
+		geocoder.geocode({'address' : pickup_location},
+						function(results, status)
+						{
+							if (status == google.maps.GeocoderStatus.OK) 
+							{
+								pickupLat = results[0].geometry.location.lat();
+								pickupLng = results[0].geometry.location.lng();
+								
+								$http({
+									method : "POST",
+									url : '/totalrideStats',
+									data : {
+										"lat" : pickupLat,
+										"long" : pickupLng,
+										"startdate" :startdate
+									}
+								}).success(function(res) {
+									if (res.code == 200) {
+										//setup google chart here
+										console.log(JSON.stringify(res.data));
+										$scope.totride = Number(res.data[0].AREACOUNT);
+										console.log("$scope.totride: "+$scope.totride);
+									}
+									else {
+										console.log("Error in getting statistics");
+									}
+								}).error(function(error) {
+									console.log("Error in getting statistics: ERROR");
+								});
+								
+								$http({
+									method : "POST",
+									url : '/cutomerrideStats',
+									data : {
+										"lat" : pickupLat,
+										"long" : pickupLng,
+										"startdate" :startdate,
+										"Customerid" : Customerid
+									}
+								}).success(function(res) {
+									if (res.code == 200) {
+										//setup google chart here
+										//console.log(JSON.stringify(res.data));
+										$scope.custride = parseInt(res.data[0].CUSTOMERCOUNT);
+									}
+									else {
+										console.log("Error in getting statistics");
+									}
+								}).error(function(error) {
+									console.log("Error in getting statistics: ERROR");
+								});
+								
+								$http({
+									method : "POST",
+									url : '/driverrideStats',
+									data : {
+										"lat" : pickupLat,
+										"long" : pickupLng,
+										"startdate" :startdate,
+										"Driverid" : Driverid
+									}
+								}).success(function(res) {
+									if (res.code == 200) {
+										//setup google chart here
+										console.log(JSON.stringify(res.data));
+										$scope.driverride = parseInt(res.data[0].DRIVERCOUNT);
+										console.log("$scope.driverride: "+$scope.driverride);
+										
+										var chart1 = {};
+									    chart1.type = "BarChart";
+									    chart1.cssStyle = "height:400px; width:550px;";
+									    chart1.data = {"cols": [
+									                                        {id: "t", label: "Rides Category", type: "string"},
+									                                        {id: "s", label: "Total Rides", type: "number"}
+									                                    ], "rows": [
+									                                        {c: [
+									                                            {v: "Rides Areawise"},
+									                                            {v: $scope.totride},
+									                                        ]},
+									                                        {c: [
+									                                            {v: "Rides per Customer"},
+									                                            {v: $scope.custride},
+									                                        ]},
+									                                        {c: [
+									                                            {v: "Rides per Driver"},
+									                                            {v: $scope.driverride},
+									                                        ]}
+									                                    ]};
+								
+									    console.log("chart data: "+JSON.stringify(chart1.data));
+
+									    chart1.options = {
+									        "title": "Ride Statistics",
+									        "isStacked": "true",
+									        "fill": 20,
+									        "bar": {groupWidth: "25%"},
+									        "displayExactValues": true,
+									        "vAxis": {
+									            "title": "Ride Category", "gridlines": {"count": 6}
+									        },
+									        "hAxis": {
+									            "title": "Total Rides"
+									        }
+									    };
+
+									    chart1.formatters = {};
+
+									    $scope.chart = chart1;
+									    $scope.hideinvaliddate1 = false;
+										
+									}
+									else {
+										console.log("Error in getting statistics");
+									}
+								}).error(function(error) {
+									console.log("Error in getting statistics: ERROR");
+								});
+							   
+							}
+
+							else {
+								console.log("Error in retriving Lat and Long");
+							}
+						});
+		
 	};
 });

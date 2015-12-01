@@ -368,7 +368,9 @@ UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$loc
 						"pickupLat" : pickupLat,
 						"pickupLng" : pickupLng,
 						"dropoffLat" : dropoffLat,
-						"dropoffLng" : dropoffLng
+						"dropoffLng" : dropoffLng,
+						"distance_covered" : $window.localStorage.distance,
+						"total_time" : $window.localStorage.time
 					}
 				}).success(function(data) {
 					if (data.code == 200) {

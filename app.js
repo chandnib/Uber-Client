@@ -267,6 +267,12 @@ app.post('/saveDriverRating',rating.saveDriverRating);
 app.get('/getDriverRating',rating.getDriverRating);
 app.get('/getCustomerRating',rating.getCustomerRating);
 
+//Rekha Admin API
+app.post('/totalrideStats',admin.totalrideStats);
+app.post('/cutomerrideStats',admin.cutomerrideStats);
+app.post('/driverrideStats',admin.driverrideStats);
+app.post('/revenueStats',admin.revenueStats);
+
 //Server
 /*mongo.connect(mongoSessionConnectURL, function() {
 	http.createServer(app).listen(app.get('port'), function(){
@@ -277,7 +283,7 @@ app.get('/getCustomerRating',rating.getCustomerRating);
 //Clustering
 	mongo.connect(mongoSessionConnectURL, function() { 
 		app.listen(app.get('port'), function() {
-			process.send({ cmd: 'notifyRequest' });
+		//	process.send({ cmd: 'notifyRequest' });
 	console.log("Uber Cluster Server running at PORT ==> " + app.get('port'));
 	});
 })
