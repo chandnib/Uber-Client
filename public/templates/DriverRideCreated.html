@@ -1,10 +1,14 @@
 
 <div class="row" style="padding-top: 20px; padding-bottom: 20px;"
 	ng-init="getPageData()">
-	<div class="col-xs-4 col-xs-offset-4" style="text-align: center;">
-		<h3>Your New Ride Requests</h3>
+</div>
+
+<div ng-if="rideStarted == true" class="row">
+<div class="col-xs-4 col-xs-offset-4" style="text-align: center;">
+		<h4>Your Ride Has Been Created</h4>
 	</div>
 </div>
+
 <div ng-if="canceled == true" class="row" style="padding-top: 20px; padding-bottom: 20px;">
 	<div class="col-xs-4 col-xs-offset-4" style="text-align: center;">
 		<h4>Your Ride Has Been Canceled</h4>
@@ -55,3 +59,11 @@
 			</div>
 		</div> -->
 	</div>
+	</div>
+<div ng-if="rideStarted == true" class="row">
+			<div class="col-xs-8 col-xs-offset-2"
+				style="border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; padding-top: 10px;">
+				<div class="row">Customer Reviews</div>
+				<div ng-repeat="item in reviews" class="row" style="padding-top: 10px; font-weight:normal;">{{ item.review }}</div>
+			</div>
+		</div>

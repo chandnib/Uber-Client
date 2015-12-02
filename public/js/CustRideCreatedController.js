@@ -111,7 +111,7 @@ UberPrototypeCustomer.controller('CustRideCreatedController' ,function($scope,$h
 							RideStatus = setInterval(function(){ getRideStatus() }, 5000);
 							 //clearInterval(RideStatus);
 							 getTimeDest();
-							 /*$http({
+							 $http({
 									method : "GET",
 									url : '/getCustomerRating',
 									params : {
@@ -120,16 +120,24 @@ UberPrototypeCustomer.controller('CustRideCreatedController' ,function($scope,$h
 									}
 								}).success(function(data) {
 									//checking the response data for statusCode
+									$scope.reviews = [];
 									console.log("rating of customer "+JSON.stringify(data));
 									if (data.code == 200) {
-										$scope.custRating = data.rating;
+										$scope.custRating = data.rating.toFixed(1);
+											for(var i=0;i<data.customerReviews.length;i++){
+												console.log(data.customerReviews[i] + " one");
+												$scope.reviews.push(data.customerReviews[i]);
+												if(i>4){
+													break;
+												}
+											}
 									}
 									else{
 										console.log("Error in retrieving the customer rating");
 									}
 								}).error(function(error) {
 									console.log("Error in retrieving the customer rating");
-								});*/
+								});
 						}
 						
 					}
@@ -270,23 +278,35 @@ UberPrototypeCustomer.controller('CustRideCreatedController' ,function($scope,$h
 					console.log("data " +JSON.stringify(data));
 					if (data.value[0].STATUS == "S"){
 						if($window.localStorage.category.localeCompare("C") == 0){
-							clearInterval(RideStatus);
+							if (RideStatus != null){
+								clearInterval(RideStatus);
+								RideStatus == null;
+							}
 							$location.path('/CustomerRideStarted'); 
 						}
 						
 					}else if(data.value[0].STATUS == "CA"){
-						clearInterval(RideStatus);
+						if (RideStatus != null){
+							clearInterval(RideStatus);
+							RideStatus == null;
+						}
 						$scope.canceled = true;
 						$scope.rideStarted = false;
 					}
 				}
 				else{
 					console.log("The ride not started or canceled yet");
-					clearInterval(RideStatus);
+					if (RideStatus != null){
+						clearInterval(RideStatus);
+						RideStatus == null;
+					}
 				}
 			}).error(function(error) {
 				console.log("The ride not started or canceled yet");
-				clearInterval(RideStatus);
+				if (RideStatus != null){
+					clearInterval(RideStatus);
+					RideStatus == null;
+				}
 			});
 	 };
 });

@@ -1,10 +1,13 @@
 
 <div class="row" style="padding-top: 20px; padding-bottom: 20px;"
 	ng-init="getPageData()">
-	<div class="col-xs-4 col-xs-offset-4" style="text-align: center;">
+</div>
+<div ng-if="canceled == false" class="row">
+<div class="col-xs-4 col-xs-offset-4" style="text-align: center;">
 		<h4>Your Ride Has Been Created</h4>
 	</div>
 </div>
+
 <div ng-if="canceled == true" class="row" style="padding-top: 20px; padding-bottom: 20px;">
 	<div class="col-xs-4 col-xs-offset-4" style="text-align: center;">
 		<h4>Your Ride Has Been Cancelled</h4>

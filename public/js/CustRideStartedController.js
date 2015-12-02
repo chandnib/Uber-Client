@@ -195,18 +195,27 @@ UberPrototypeCustomer.controller('CustRideStartedController' ,function($scope,$h
 				//checking the response data for statusCode
 				if (data.code == 200) {
 					if (data.value[0].STATUS == "E"){
-						clearInterval(RideStatus);
+						if (RideStatus != null){
+							clearInterval(RideStatus);
+							RideStatus == null;
+						}
 						$location.path('/CustomerBillSummary'); 
 					}
 				}
 				else{
 					//Making a get call to the '/CustomerBillSummary' page
 					console.log("The ride not completed yet");
-					clearInterval(RideStatus);
+					if (RideStatus != null){
+						clearInterval(RideStatus);
+						RideStatus == null;
+					}
 				}
 			}).error(function(error) {
 				console.log("The ride not completed yet");
-				clearInterval(RideStatus);
+				if (RideStatus != null){
+					clearInterval(RideStatus);
+					RideStatus == null;
+				}
 			});
 	 };
 });

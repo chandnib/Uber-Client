@@ -267,6 +267,35 @@ UberPrototypeCustomer.controller('DriverController',function($scope,$http,$locat
 		  
 	  };
 	  
-	 
+	  $scope.getCurrentTripStatus = function(){
+		  
+		  $http({
+				method : "GET",
+				url : '/getDriverOngoingRides',
+				params : {
+					"driver_id" : $window.localStorage.driverId
+				}
+			}).success(function(data) {
+				//checking the response data for statusCode
+				if (data.code == 200) {
+					  $window.localStorage.rideId = data.value[0].RIDE_ID;
+					  $window.localStorage.pickup_address = data.value[0].SOURCE;
+					  $window.localStorage.dropoff_address = data.value[0].DESTINATION;
+					  $window.localStorage.driverId = data.value[0].DRIVER_ID;
+					  $window.localStorage.rideStatus = data.value[0].STATUS;
+					  
+					  if ($window.localStorage.rideStatus == "S"){
+						  $scope.routeToTemplate('/DriverRideStarted');
+					  }else{
+						  console.log("No Ongoing Rides!!");
+					  }
+				}
+				else{
+					console.log("Error in retrieving the ongoing trips");
+				}
+			}).error(function(error) {
+				console.log("Error in retrieving the ongoing trips");
+			});
+	  };
 	  
 });

@@ -46,6 +46,7 @@ UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$loc
 		 $window.localStorage.customerId =  $scope.curuser.ROW_ID;
 		 $window.localStorage.creCard = $scope.curuser.CREDIT_CARD_ID;
 		 $window.localStorage.custName = $scope.curuser.FIRST_NAME + " " + $scope.curuser.LAST_NAME;
+		 $window.localStorage.category ="C";
 	 }
 	$http.get('http://localhost:3000/CustomerEditProfile').success(function(data) {
 		//checking the response data for statusCode
@@ -552,5 +553,39 @@ UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$loc
 			});
 		  
 	  };
+
+$scope.getCurrentTripStatus = function(){
+		  
+		  $http({
+				method : "GET",
+				url : '/getCustomerOngoingRides',
+				params : {
+					"customer_id" : $window.localStorage.customerId
+				}
+			}).success(function(data) {
+				//checking the response data for statusCode
+				if (data.code == 200) {
+					  $window.localStorage.rideId = data.value[0].RIDE_ID;
+					  $window.localStorage.pickup_address = data.value[0].SOURCE;
+					  $window.localStorage.dropoff_address = data.value[0].DESTINATION;
+					  $window.localStorage.driverId = data.value[0].DRIVER_ID;
+					  $window.localStorage.rideStatus = data.value[0].STATUS;
+					  
+					  if ($window.localStorage.rideStatus == "CR"){
+						  $scope.routeToTemplate('/CustomerRideCreated');
+					  }else if ($window.localStorage.rideStatus == "S"){
+						  $scope.routeToTemplate('/CustomerRideStarted');
+					  }else{
+						  console.log("No Ongoing Rides!!");
+					  }
+				}
+				else{
+					console.log("Error in retrieving the ongoing trips");
+				}
+			}).error(function(error) {
+				console.log("Error in retrieving the ongoing trips");
+			});
+	  };
+
 });
 
