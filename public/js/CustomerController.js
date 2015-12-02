@@ -487,7 +487,7 @@ UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$loc
 	  $scope.initMyTrips = function(){
 		  console.log("Current Customer is " + $window.localStorage.customerId);
 		 $scope.TripDetails = true;
-		/* $http({
+		 $http({
 				method : "GET",
 				url : '/getCustomerTripSummary',
 				params : {
@@ -502,7 +502,7 @@ UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$loc
 				}
 			}).error(function(error) {
 				console.log("Error in getting value");
-			});*/
+			});
 	
 		 
 		 $scope.toggleMyTrips = function(){
