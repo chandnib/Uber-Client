@@ -278,35 +278,39 @@ UberPrototypeCustomer.controller('CustRideCreatedController' ,function($scope,$h
 					console.log("data " +JSON.stringify(data));
 					if (data.value[0].STATUS == "S"){
 						if($window.localStorage.category.localeCompare("C") == 0){
-							if (RideStatus != null){
+							/*if (RideStatus != null){
 								clearInterval(RideStatus);
 								RideStatus == null;
-							}
+							}*/
+							clearInterval(RideStatus);
 							$location.path('/CustomerRideStarted'); 
 						}
 						
 					}else if(data.value[0].STATUS == "CA"){
-						if (RideStatus != null){
+						/*if (RideStatus != null){
 							clearInterval(RideStatus);
 							RideStatus == null;
-						}
+						}*/
+						clearInterval(RideStatus);
 						$scope.canceled = true;
 						$scope.rideStarted = false;
 					}
 				}
 				else{
 					console.log("The ride not started or canceled yet");
-					if (RideStatus != null){
+					/*if (RideStatus != null){
 						clearInterval(RideStatus);
 						RideStatus == null;
-					}
+					}*/
+					clearInterval(RideStatus);
 				}
 			}).error(function(error) {
 				console.log("The ride not started or canceled yet");
-				if (RideStatus != null){
+				/*if (RideStatus != null){
 					clearInterval(RideStatus);
 					RideStatus == null;
-				}
+				}*/
+				clearInterval(RideStatus);
 			});
 	 };
 });

@@ -120,6 +120,8 @@ $scope.clearAll=function(){
 	$scope.showTable=false;
 	$scope.fromdate="";
 	$scope.toDate="";
+	$scope.custEmailId=null;
+	$scope.driverEmailId=null;
     $scope.currentRow=0;
     $scope.loadMore=false;
 };

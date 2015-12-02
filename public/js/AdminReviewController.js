@@ -761,136 +761,345 @@ UberPrototypeAdmin.controller('AdminReviewController',function($scope,$http,$loc
 		var Customerid = $scope.Customerid;
 		var Driverid = $scope.Driverid;
 		
-		geocoder = new google.maps.Geocoder();
-		geocoder.geocode({'address' : pickup_location},
-						function(results, status)
-						{
-							console.log("end date: "+enddate);	
-							if (status == google.maps.GeocoderStatus.OK) 
+		
+		if($scope.Customerid == undefined || $scope.Customerid == ""){
+			geocoder = new google.maps.Geocoder();
+			geocoder.geocode({'address' : pickup_location},
+							function(results, status)
 							{
-								pickupLat = results[0].geometry.location.lat();
-								pickupLng = results[0].geometry.location.lng();
-								
-								$http({
-									method : "POST",
-									url : '/totalrideStats',
-									data : {
-										"lat" : pickupLat,
-										"long" : pickupLng,
-										"startdate" :startdate,
-										"enddate" : enddate
-									}
-								}).success(function(res) {
-									if (res.code == 200) {
-										//setup google chart here
-										console.log(JSON.stringify(res.data));
-										$scope.totride = Number(res.data[0].AREACOUNT);
-										console.log("$scope.totride: "+$scope.totride);
-									}
-									else {
-										console.log("Error in getting statistics");
-									}
-								}).error(function(error) {
-									console.log("Error in getting statistics: ERROR");
-								});
-								
-								$http({
-									method : "POST",
-									url : '/cutomerrideStats',
-									data : {
-										"lat" : pickupLat,
-										"long" : pickupLng,
-										"startdate" :startdate,
-										"enddate" : enddate,
-										"Customerid" : Customerid
-									}
-								}).success(function(res) {
-									if (res.code == 200) {
-										//setup google chart here
-										//console.log(JSON.stringify(res.data));
-										$scope.custride = Number(res.data[0].CUSTOMERCOUNT);
-										console.log("$scope.custride: "+$scope.custride);
-									}
-									else {
-										console.log("Error in getting statistics");
-									}
-								}).error(function(error) {
-									console.log("Error in getting statistics: ERROR");
-								});
-								
-								$http({
-									method : "POST",
-									url : '/driverrideStats',
-									data : {
-										"lat" : pickupLat,
-										"long" : pickupLng,
-										"startdate" :startdate,
-										"enddate" : enddate,
-										"Driverid" : Driverid
-									}
-								}).success(function(res) {
-									if (res.code == 200) {
-										//setup google chart here
-										console.log(JSON.stringify(res.data));
-										$scope.driverride = Number(res.data[0].DRIVERCOUNT);
-										console.log("$scope.driverride: "+$scope.driverride);
-										
-										var chart1 = {};
-									    chart1.type = "BarChart";
-									    chart1.cssStyle = "height:400px; width:550px;";
-									    chart1.data = {"cols": [
-									                                        {id: "t", label: "Rides Category", type: "string"},
-									                                        {id: "s", label: "Total Rides", type: "number"}
-									                                    ], "rows": [
-									                                        {c: [
-									                                            {v: "Rides Areawise"},
-									                                            {v: $scope.totride},
-									                                        ]},
-									                                        {c: [
-									                                            {v: "Rides per Customer"},
-									                                            {v: $scope.custride},
-									                                        ]},
-									                                        {c: [
-									                                            {v: "Rides per Driver"},
-									                                            {v: $scope.driverride},
-									                                        ]}
-									                                    ]};
-								
-									    console.log("chart data: "+JSON.stringify(chart1.data));
+								console.log("end date: "+enddate);	
+								if (status == google.maps.GeocoderStatus.OK) 
+								{
+									pickupLat = results[0].geometry.location.lat();
+									pickupLng = results[0].geometry.location.lng();
+									
+									$http({
+										method : "POST",
+										url : '/totalrideStats',
+										data : {
+											"lat" : pickupLat,
+											"long" : pickupLng,
+											"startdate" :startdate,
+											"enddate" : enddate
+										}
+									}).success(function(res) {
+										if (res.code == 200) {
+											//setup google chart here
+											console.log(JSON.stringify(res.data));
+											$scope.totride = Number(res.data[0].AREACOUNT);
+											console.log("$scope.totride: "+$scope.totride);
+											$http({
+												method : "POST",
+												url : '/driverrideStats',
+												data : {
+													"lat" : pickupLat,
+													"long" : pickupLng,
+													"startdate" :startdate,
+													"enddate" : enddate,
+													"Driverid" : Driverid
+												}
+											}).success(function(res) {
+												if (res.code == 200) {
+													//setup google chart here
+													console.log(JSON.stringify(res.data));
+													$scope.driverride = Number(res.data[0].DRIVERCOUNT);
+													console.log("$scope.driverride: "+$scope.driverride);
+													
+													var chart1 = {};
+												    chart1.type = "BarChart";
+												    chart1.cssStyle = "height:400px; width:550px;";
+												    chart1.data = {"cols": [
+												                                        {id: "t", label: "Rides Category", type: "string"},
+												                                        {id: "s", label: "Total Rides", type: "number"}
+												                                    ], "rows": [
+												                                        {c: [
+												                                            {v: "Rides Areawise"},
+												                                            {v: $scope.totride},
+												                                        ]},
+												                                        {c: [
+												                                            {v: "Rides per Driver"},
+												                                            {v: $scope.driverride},
+												                                        ]}
+												                                    ]};
+											
+												    console.log("chart data: "+JSON.stringify(chart1.data));
 
-									    chart1.options = {
-									        "title": "Ride Statistics",
-									        "isStacked": "true",
-									        "fill": 20,
-									        "bar": {groupWidth: "25%"},
-									        "displayExactValues": true,
-									        "vAxis": {
-									            "title": "Ride Category", "gridlines": {"count": 6}
-									        },
-									        "hAxis": {
-									            "title": "Total Rides"
-									        }
-									    };
+												    chart1.options = {
+												        "title": "Ride Statistics",
+												        "isStacked": "true",
+												        "fill": 20,
+												        "bar": {groupWidth: "25%"},
+												        "displayExactValues": true,
+												        "vAxis": {
+												            "title": "Ride Category", "gridlines": {"count": 6}
+												        },
+												        "hAxis": {
+												            "title": "Total Rides"
+												        }
+												    };
 
-									    chart1.formatters = {};
+												    chart1.formatters = {};
 
-									    $scope.chart = chart1;
-									    $scope.hideinvaliddate1 = false;
-										
-									}
-									else {
-										console.log("Error in getting statistics");
-									}
-								}).error(function(error) {
-									console.log("Error in getting statistics: ERROR");
-								});
-							   
-							}
+												    $scope.chart = chart1;
+												    $scope.hideinvaliddate1 = false;
+													
+												}
+												else {
+													console.log("Error in getting statistics");
+												}
+											}).error(function(error) {
+												console.log("Error in getting statistics: ERROR");
+											});
+										   
+										}
+										else {
+											console.log("Error in getting statistics");
+										}
+									}).error(function(error) {
+										console.log("Error in getting statistics: ERROR");
+									});
+								}
 
-							else {
-								console.log("Error in retriving Lat and Long");
-							}
-						});
+								else {
+									console.log("Error in retriving Lat and Long");
+								}
+							});
+		}
+		else if($scope.Driverid == undefined || $scope.Driverid == ""){
+			geocoder = new google.maps.Geocoder();
+			geocoder.geocode({'address' : pickup_location},
+							function(results, status)
+							{
+								console.log("end date: "+enddate);	
+								if (status == google.maps.GeocoderStatus.OK) 
+								{
+									pickupLat = results[0].geometry.location.lat();
+									pickupLng = results[0].geometry.location.lng();
+									
+									$http({
+										method : "POST",
+										url : '/totalrideStats',
+										data : {
+											"lat" : pickupLat,
+											"long" : pickupLng,
+											"startdate" :startdate,
+											"enddate" : enddate
+										}
+									}).success(function(res) {
+										if (res.code == 200) {
+											//setup google chart here
+											console.log(JSON.stringify(res.data));
+											$scope.totride = Number(res.data[0].AREACOUNT);
+											console.log("$scope.totride: "+$scope.totride);
+											$http({
+												method : "POST",
+												url : '/cutomerrideStats',
+												data : {
+													"lat" : pickupLat,
+													"long" : pickupLng,
+													"startdate" :startdate,
+													"enddate" : enddate,
+													"Customerid" : Customerid
+												}
+											}).success(function(res) {
+												if (res.code == 200) {
+													//setup google chart here
+													console.log(JSON.stringify(res.data));
+													$scope.custride = Number(res.data[0].CUSTOMERCOUNT);
+													
+													var chart1 = {};
+												    chart1.type = "BarChart";
+												    chart1.cssStyle = "height:400px; width:550px;";
+												    chart1.data = {"cols": [
+												                                        {id: "t", label: "Rides Category", type: "string"},
+												                                        {id: "s", label: "Total Rides", type: "number"}
+												                                    ], "rows": [
+												                                        {c: [
+												                                            {v: "Rides Areawise"},
+												                                            {v: $scope.totride},
+												                                        ]},
+												                                        {c: [
+												                                            {v: "Rides per Customer"},
+												                                            {v: $scope.custride},
+												                                        ]}
+												                                    ]};
+											
+												    console.log("chart data: "+JSON.stringify(chart1.data));
+
+												    chart1.options = {
+												        "title": "Ride Statistics",
+												        "isStacked": "true",
+												        "fill": 20,
+												        "bar": {groupWidth: "25%"},
+												        "displayExactValues": true,
+												        "vAxis": {
+												            "title": "Ride Category", "gridlines": {"count": 6}
+												        },
+												        "hAxis": {
+												            "title": "Total Rides"
+												        }
+												    };
+
+												    chart1.formatters = {};
+
+												    $scope.chart = chart1;
+												    $scope.hideinvaliddate1 = false;
+													
+												}
+												else {
+													console.log("Error in getting statistics");
+												}
+											}).error(function(error) {
+												console.log("Error in getting statistics: ERROR");
+											});
+										}
+										else {
+											console.log("Error in getting statistics");
+										}
+									}).error(function(error) {
+										console.log("Error in getting statistics: ERROR");
+									});
+								   
+								}
+
+								else {
+									console.log("Error in retriving Lat and Long");
+								}
+							});
+		}else
+		{
+			geocoder = new google.maps.Geocoder();
+			geocoder.geocode({'address' : pickup_location},
+							function(results, status)
+							{
+								console.log("end date: "+enddate);	
+								if (status == google.maps.GeocoderStatus.OK) 
+								{
+									pickupLat = results[0].geometry.location.lat();
+									pickupLng = results[0].geometry.location.lng();
+									
+									$http({
+										method : "POST",
+										url : '/totalrideStats',
+										data : {
+											"lat" : pickupLat,
+											"long" : pickupLng,
+											"startdate" :startdate,
+											"enddate" : enddate
+										}
+									}).success(function(res) {
+										if (res.code == 200) {
+											//setup google chart here
+											console.log(JSON.stringify(res.data));
+											$scope.totride = Number(res.data[0].AREACOUNT);
+											console.log("$scope.totride: "+$scope.totride);
+											$http({
+												method : "POST",
+												url : '/cutomerrideStats',
+												data : {
+													"lat" : pickupLat,
+													"long" : pickupLng,
+													"startdate" :startdate,
+													"enddate" : enddate,
+													"Customerid" : Customerid
+												}
+											}).success(function(res) {
+												if (res.code == 200) {
+													//setup google chart here
+													//console.log(JSON.stringify(res.data));
+													$scope.custride = Number(res.data[0].CUSTOMERCOUNT);
+													console.log("$scope.custride: "+$scope.custride);
+													$http({
+														method : "POST",
+														url : '/driverrideStats',
+														data : {
+															"lat" : pickupLat,
+															"long" : pickupLng,
+															"startdate" :startdate,
+															"enddate" : enddate,
+															"Driverid" : Driverid
+														}
+													}).success(function(res) {
+														if (res.code == 200) {
+															//setup google chart here
+															console.log(JSON.stringify(res.data));
+															$scope.driverride = Number(res.data[0].DRIVERCOUNT);
+															console.log("$scope.driverride: "+$scope.driverride);
+															
+															var chart1 = {};
+														    chart1.type = "BarChart";
+														    chart1.cssStyle = "height:400px; width:550px;";
+														    chart1.data = {"cols": [
+														                                        {id: "t", label: "Rides Category", type: "string"},
+														                                        {id: "s", label: "Total Rides", type: "number"}
+														                                    ], "rows": [
+														                                        {c: [
+														                                            {v: "Rides Areawise"},
+														                                            {v: $scope.totride},
+														                                        ]},
+														                                        {c: [
+														                                            {v: "Rides per Customer"},
+														                                            {v: $scope.custride},
+														                                        ]},
+														                                        {c: [
+														                                            {v: "Rides per Driver"},
+														                                            {v: $scope.driverride},
+														                                        ]}
+														                                    ]};
+													
+														    console.log("chart data: "+JSON.stringify(chart1.data));
+
+														    chart1.options = {
+														        "title": "Ride Statistics",
+														        "isStacked": "true",
+														        "fill": 20,
+														        "bar": {groupWidth: "25%"},
+														        "displayExactValues": true,
+														        "vAxis": {
+														            "title": "Ride Category", "gridlines": {"count": 6}
+														        },
+														        "hAxis": {
+														            "title": "Total Rides"
+														        }
+														    };
+
+														    chart1.formatters = {};
+
+														    $scope.chart = chart1;
+														    $scope.hideinvaliddate1 = false;
+															
+														}
+														else {
+															console.log("Error in getting statistics");
+														}
+													}).error(function(error) {
+														console.log("Error in getting statistics: ERROR");
+													});
+												   
+												}
+												else {
+													console.log("Error in getting statistics");
+												}
+											}).error(function(error) {
+												console.log("Error in getting statistics: ERROR");
+											});
+										}
+										else {
+											console.log("Error in getting statistics");
+										}
+									}).error(function(error) {
+										console.log("Error in getting statistics: ERROR");
+									});
+									
+								}
+
+								else {
+									console.log("Error in retriving Lat and Long");
+								}
+							});
+		}
+		
+		
 		
 	};
 });

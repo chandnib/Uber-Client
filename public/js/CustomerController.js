@@ -578,6 +578,8 @@ $scope.getCurrentTripStatus = function(){
 						  $scope.routeToTemplate('/CustomerRideCreated');
 					  }else if ($window.localStorage.rideStatus == "S"){
 						  $scope.routeToTemplate('/CustomerRideStarted');
+					  }else if ($window.localStorage.rideStatus == "E"){
+						  $scope.routeToTemplate('/CustomerBillSummary');
 					  }else{
 						  console.log("No Ongoing Rides!!");
 					  }
