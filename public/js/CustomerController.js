@@ -36,12 +36,15 @@ UberPrototypeCustomer.directive('googledestination', function() {
     };
 });
 
+
+
 UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$location,$window,$sce){
 	 $scope.curuser = {};
 	 
 	 $scope.initData = function(){
 		 console.log("The Current Customer is " + JSON.stringify($scope.curuser));
 		 $window.localStorage.customerId =  $scope.curuser.ROW_ID;
+		 $window.localStorage.creCard = $scope.curuser.CREDIT_CARD_ID;
 		 $window.localStorage.custName = $scope.curuser.FIRST_NAME + " " + $scope.curuser.LAST_NAME;
 	 }
 	$http.get('http://localhost:3000/CustomerEditProfile').success(function(data) {
@@ -265,6 +268,7 @@ UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$loc
 		  
 		  //$scope.showAllCooridnates();
 		  $scope.DriverDetails = true;
+		  $scope.hiddenbutton = true;
 		  
 		  var pickupLat = Number($window.localStorage.pickupLat);
 		  var pickupLng = Number($window.localStorage.pickupLng);
@@ -287,14 +291,70 @@ UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$loc
 		   
 		   $scope.loadreview = function(data){
 			   console.log("inside function");
-			    //$scope.DriverDetails = true;
-			    $scope.drivername = "Joey Williams";
-				$scope.driverrating = "4/5";
-				$scope.carmodel = "Mini Cooper";
-				$scope.carcolor = "Red";
-				$scope.videourl = $sce.trustAsResourceUrl("http://www.youtube.com/embed/XGSy3_Czz8k?autoplay=1");
-				$scope.driverimg = "../images/mastercard.png";
-				
+			    $scope.driverreviews = [];
+			    $scope.drivername = driverinfo.FIRST_NAME + " " + driverinfo.LAST_NAME;
+			    console.log("drivername: "+$scope.drivername);
+			    $scope.drivercarmodel = driverinfo.CAR_MODEL;
+			    $scope.drivercarcolor = driverinfo.COLOR;
+			    $scope.drivercaryear = driverinfo.YEAR;
+			    //$scope.videourl = "https://www.youtube.com/embed/osUEUEQaPzU";
+				$scope.videourl = $sce.trustAsResourceUrl(driverinfo.VIDEO_URL);
+			    $scope.videourl = $sce.trustAsResourceUrl($scope.videourl);
+				$scope.driverimg = driverinfo.IMAGE_URL;
+				$scope.DriverDetails = false;
+				$scope.DriverDetails2 = false;
+				console.log("driver id"+driverinfo.DRIVER_ID);
+				 $http({
+						method : "GET",
+						url : '/getDriverRating',
+						data : {
+							"driverId" : driverinfo.DRIVER_ID
+						}
+					}).success(function(data) {
+						if (data.code == '200') {
+							if(data.rating > 0){
+								
+								$scope.driverrating = Math.round(data.rating, -2)+'/5';
+							}
+							else {
+								$scope.driverrating = 'NA';
+								
+							}
+							if(data.driverReviews.length > 0){
+								for(var i =0; i < data.driverReviews.length && i <= 5; i++){
+									$scope.driverreviews.push(data.driverReviews[i]);
+									
+									console.log("reviews "+$scope.driverreviews[i].review);
+								}
+							}
+							else {
+								$scope.DriverDetails2 = true;
+							}
+							console.log("Data:"+JSON.stringify(data));
+						}
+						else {
+							if(data.rating > 0){
+								$scope.driverrating = Math.round(data.rating, -2)+'/5';
+							}
+							else {
+								$scope.driverrating = 'NA';
+							}
+							if(data.driverReviews.length > 0){
+								for(var i =0; i < data.driverReviews.length && i <= 5; i++){
+									$scope.driverreviews.push(data.driverReviews[i]);
+								}
+							}
+							else {
+								$scope.DriverDetails2 = true;
+							}
+							console.log("Error in retrieving rating");
+						}
+					}).error(function(error) {
+						$scope.driverrating = 'NA';
+						
+						$scope.DriverDetails2 = true;
+						console.log("Error in retrieving rating");
+					});
 		   };
 		  
 		     
@@ -306,7 +366,7 @@ UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$loc
 					"longitude" : pickupLng
 				}
 			}).success(function(res) {
-				
+				 //driverinfo = res.data;
 				 var infoWindow = new google.maps.InfoWindow({
 					 content: '<p>Driver : Joey Thomas</p>' +
 					    '<p>Rating : 4/5</p>' +
@@ -327,22 +387,19 @@ UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$loc
 							//	title: data.title,
 								icon:'../images/car.png'
 							});
-							(function(marker, data) {
 								// Attaching a click event to the current marker
-								google.maps.event.addListener(marker, "click", function(e) {
+								google.maps.event.addListener(marker, "click", (function(marker, data) {
+							         return function() {
 									//infoWindow.setContent(data.toString());
 								  //  infoWindow.setContent(sample);
-									 driverid = data.DRIVER_ID;
-									 console.log("driver id"+driverid);
-								     infoWindow.open(map, marker);
+									 driverinfo = data;
+									 console.log("driver id"+driverinfo.driverid);
+								     //infoWindow.open(map, marker);
 									//$scope.loadreview(data);
-								});
-
-
-							})(marker, data);
-
+									 document.getElementById('clickme').click();
+								}
+							})(marker, data));
 						}
-				
 			}).error(function(error) {
 				console.log("Error calculating the estimate");
 			});
@@ -452,6 +509,48 @@ UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$loc
 			 $scope.TripDetails = $scope.TripDetails === false ? true: false;
 		 };
 		 
+	  };
+	  
+	  $scope.initCustomerPayment = function(){
+		  var months = {
+				    January: 1,
+				    February: 2,
+				    March: 3,
+				    April: 4,
+				    May: 5,
+				    June: 6,
+				    July: 7,
+				    August: 8,
+				    September: 9,
+				    October: 10,
+				    November: 11,
+				    December: 12
+				};
+		  console.log("CRECard"+$window.localStorage.creCard);
+		  $http({
+				method : "GET",
+				url : '/getCreditCardInfo',
+				params : {
+					"creCard" :$window.localStorage.creCard
+				}
+			}).success(function(data) {
+				if (data.code == "200") {
+					$scope.crecardnum = data.value[0].CRECARDNUM;
+					cremonth = data.value[0].MONTH;
+					creyear = data.value[0].YEAR;
+					
+					cremonth = months[cremonth];
+					
+					$scope.credate = cremonth+"\\"+creyear;
+					console.log("credate "+$scope.credate);
+				}
+				else {
+					console.log("Error in getting value");
+				}
+			}).error(function(error) {
+				console.log("Error in getting value");
+			});
+		  
 	  };
 });
 

@@ -514,7 +514,7 @@ UberPrototypeAdmin.controller('AdminReviewController',function($scope,$http,$loc
 									        "title": "Ride Statistics",
 									        "isStacked": "true",
 									        "fill": 20,
-									        
+									        "bar": {groupWidth: "25%"},
 									        "displayExactValues": true,
 									        "vAxis": {
 									            "title": "Date", "gridlines": {"count": 6}
@@ -750,12 +750,14 @@ UberPrototypeAdmin.controller('AdminReviewController',function($scope,$http,$loc
 		$scope.Driverid = "";
 		$scope.area1 = "";
 		$scope.datereq = "";
+		$scope.datereq1 = "";
 	};
 	$scope.RideGraphs = function(){
 		
 		var directionsService = new google.maps.DirectionsService();
 	    var pickup_location = $scope.area1;
 		var startdate = $scope.datereq;
+		var enddate = $scope.datereq1;
 		var Customerid = $scope.Customerid;
 		var Driverid = $scope.Driverid;
 		
@@ -763,6 +765,7 @@ UberPrototypeAdmin.controller('AdminReviewController',function($scope,$http,$loc
 		geocoder.geocode({'address' : pickup_location},
 						function(results, status)
 						{
+							console.log("end date: "+enddate);	
 							if (status == google.maps.GeocoderStatus.OK) 
 							{
 								pickupLat = results[0].geometry.location.lat();
@@ -774,7 +777,8 @@ UberPrototypeAdmin.controller('AdminReviewController',function($scope,$http,$loc
 									data : {
 										"lat" : pickupLat,
 										"long" : pickupLng,
-										"startdate" :startdate
+										"startdate" :startdate,
+										"enddate" : enddate
 									}
 								}).success(function(res) {
 									if (res.code == 200) {
@@ -797,13 +801,15 @@ UberPrototypeAdmin.controller('AdminReviewController',function($scope,$http,$loc
 										"lat" : pickupLat,
 										"long" : pickupLng,
 										"startdate" :startdate,
+										"enddate" : enddate,
 										"Customerid" : Customerid
 									}
 								}).success(function(res) {
 									if (res.code == 200) {
 										//setup google chart here
 										//console.log(JSON.stringify(res.data));
-										$scope.custride = parseInt(res.data[0].CUSTOMERCOUNT);
+										$scope.custride = Number(res.data[0].CUSTOMERCOUNT);
+										console.log("$scope.custride: "+$scope.custride);
 									}
 									else {
 										console.log("Error in getting statistics");
@@ -819,13 +825,14 @@ UberPrototypeAdmin.controller('AdminReviewController',function($scope,$http,$loc
 										"lat" : pickupLat,
 										"long" : pickupLng,
 										"startdate" :startdate,
+										"enddate" : enddate,
 										"Driverid" : Driverid
 									}
 								}).success(function(res) {
 									if (res.code == 200) {
 										//setup google chart here
 										console.log(JSON.stringify(res.data));
-										$scope.driverride = parseInt(res.data[0].DRIVERCOUNT);
+										$scope.driverride = Number(res.data[0].DRIVERCOUNT);
 										console.log("$scope.driverride: "+$scope.driverride);
 										
 										var chart1 = {};

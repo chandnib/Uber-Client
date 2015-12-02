@@ -29,11 +29,27 @@
            </div>
            <div class="row" style="padding-top:10px; padding-bottom:10px;">
             <div class="col-xs-4">
-              <label><font size="3" color="#808080">Date</font></label>
+              <label><font size="3" color="#808080">From Date</font></label>
             </div>
             <div class="col-xs-8">
-              <input type="text" class="form-control" id="datereq" name="datereq" ng-model="datereq" placeholder="%yyyy-%mm-%dd" />
+            <div class="form-group">
+              <input class="form-control  input-lg" type="date" class="form-control" id="datereq" name="datereq" ng-model="datereq" style="height:32px;" required/>
+            <p ng-show="" class="help-block" style="padding: 0px 0px;">Please
+				Select From Date.</p>
+           </div>
+           </div>
+           </div>
+           <div class="row" style="padding-top:10px; padding-bottom:10px;">
+            <div class="col-xs-4">
+              <label><font size="3" color="#808080">To Date</font></label>
             </div>
+            <div class="col-xs-8">
+            <div class="form-group">
+              <input class="form-control  input-lg" type="date" class="form-control" id="datereq1" name="datereq1" ng-model="datereq1" style="height:32px;" required/>
+            <p ng-show="" class="help-block" style="padding: 0px 0px;">Please
+				Select To Date.</p>
+           </div>
+           </div>
            </div>
            
            <div class="row" style="padding-top: 20px; padding-bottom: 20px;">

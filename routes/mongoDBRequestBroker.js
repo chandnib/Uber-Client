@@ -401,6 +401,52 @@ function deligateMQAccessRequest(operation,data,req,res,requestId,rpc){
 			}
 			break;
 			
+				case "searchCustomer" :
+					console.log("searchCustomer ==> " + operation);	
+					if(req.session.passport.user.EMAIL != "" && req.session.passport.user.EMAIL != null){						
+						//data ==> contains Driver Info
+						rpc.makeRequest("searchCustomer", data, function(err, response) {
+							console.log("searchCustomer Response from RabbitMQ Server ==> " + JSON.stringify(response));
+							if (response){
+								if(response.code == 200) {
+									console.log(response);
+									res.status(200).send(response);
+								}else{
+									res.status(404).send(response.err);
+								}
+							}else{
+								res.status(404).send("error in Executing the operation!!");																																																																																																						
+							}
+						});
+					}
+					else{
+						adminAccountOperations.userUnverified(res,"Your Session is no Longer Valid!! Please login again to Proceed.",{},req);
+					}
+					break;
+					
+				case "searchDriver" :
+					console.log("searchDriver ==> " + operation);	
+					if(req.session.passport.user.EMAIL != "" && req.session.passport.user.EMAIL != null){						
+						//data ==> contains Driver Info
+						rpc.makeRequest("searchDriver", data, function(err, response) {
+							console.log("searchDriver Response from RabbitMQ Server ==> " + JSON.stringify(response));
+							if (response){
+								if(response.code == 200) {
+									console.log(response);
+									res.status(200).send(response);
+								}else{
+									res.status(404).send(response.err);
+								}
+							}else{
+								res.status(404).send("error in Executing the operation!!");																																																																																																						
+							}
+						});
+					}
+					else{
+						adminAccountOperations.userUnverified(res,"Your Session is no Longer Valid!! Please login again to Proceed.",{},req);
+					}
+					break;
+							
 		default:
 			break;
 	}

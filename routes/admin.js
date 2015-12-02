@@ -204,80 +204,31 @@ exports.searchBill = function(req,res){
 		res.redirect("/invalidSessionAdminLogin");
 };
 
+exports.searchCustomer = function(req,res){
+	if(req.session.passport != null && req.session.passport != ""){
+		if(req.session.passport.user.EMAIL != "" && req.session.passport.user.EMAIL != null){
+			adminAccountOperations.searchCustomer(req.body,req,res);
+		}
+		else
+			res.redirect("/invalidSessionAdminLogin");
+	}
+	else
+		res.redirect("/invalidSessionAdminLogin");
+};
+
+exports.searchDriver = function(req,res){
+	if(req.session.passport != null && req.session.passport != ""){
+		if(req.session.passport.user.EMAIL != "" && req.session.passport.user.EMAIL != null){
+			adminAccountOperations.searchDriver(req.body,req,res);
+		}
+		else
+			res.redirect("/invalidSessionAdminLogin");
+	}
+	else
+		res.redirect("/invalidSessionAdminLogin");
+};
 //-Rekha Admin details--------------------------
 
-/*exports.totalrideStats = function(req,res){
-	var data = {
-			lat: req.param("lat"),
-			long: req.param("long"),
-			startdate: req.param("startdate"),
-			enddate: req.param("enddate")
-	};
-	rpc.makeRequest("totalrideStats", data, function(err, user) {
-		console.log("User : " + JSON.stringify(user));
-		if (err) {
-			console.log("There is an error: " + err);
-		} else {
-			if (user.code == "200") {
-				console.log("Everthing is fine!!!");
-				res.send(user);
-			} else {
-				console.log("Did not delete. Try again");
-				res.send("Error");
-			}
-		}
-	});
-};
-
-exports.cutomerrideStats = function(req,res){
-	var data = req.body;var data = {
-			lat: req.param("lat"),
-			long: req.param("long"),
-			startdate: req.param("startdate"),
-			enddate: req.param("enddate"),
-			customerid: req.param("customerid")
-	};
-	rpc.makeRequest("cutomerrideStats", data, function(err, user) {
-		console.log("User : " + JSON.stringify(user));
-		if (err) {
-			console.log("There is an error: " + err);
-		} else {
-			if (user.code == "200") {
-				console.log("Everthing is fine!!!");
-				res.send(user);
-			} else {
-				console.log("Did not delete. Try again");
-				res.send("Error");
-			}
-		}
-	});
-};
-
-
-exports.driverrideStats = function(req,res){
-	var data = req.body;var data = {
-			lat: req.param("lat"),
-			long: req.param("long"),
-			startdate: req.param("startdate"),
-			enddate: req.param("enddate"),
-			driverid: req.param("driverid")
-	};
-	rpc.makeRequest("driverrideStats", data, function(err, user) {
-		console.log("User : " + JSON.stringify(user));
-		if (err) {
-			console.log("There is an error: " + err);
-		} else {
-			if (user.code == "200") {
-				console.log("Everthing is fine!!!");
-				res.send(user);
-			} else {
-				console.log("Did not delete. Try again");
-				res.send("Error");
-			}
-		}
-	});
-};
-*/
 exports.revenueStats = function(req,res){
 	var data = {
 			lat: req.param("lat"),
@@ -300,7 +251,8 @@ exports.totalrideStats = function(req,res){
 	var data = {
 			lat: req.param("lat"),
 			long: req.param("long"),
-			startdate: req.param("startdate")
+			startdate: req.param("startdate"),
+			enddate: req.param("enddate")
 	};
 	if(req.session.passport != null && req.session.passport != ""){
 		if(req.session.passport.user.EMAIL != "" && req.session.passport.user.EMAIL != null){
@@ -318,6 +270,7 @@ exports.cutomerrideStats = function(req,res){
 			lat: req.param("lat"),
 			long: req.param("long"),
 			startdate: req.param("startdate"),
+			enddate: req.param("enddate"),
 			Customerid: req.param("Customerid")
 	};
 	if(req.session.passport != null && req.session.passport != ""){
@@ -336,6 +289,7 @@ exports.driverrideStats = function(req,res){
 			lat: req.param("lat"),
 			long: req.param("long"),
 			startdate: req.param("startdate"),
+			enddate: req.param("enddate"),
 			Driverid: req.param("Driverid")
 	};
 	if(req.session.passport != null && req.session.passport != ""){
@@ -349,26 +303,4 @@ exports.driverrideStats = function(req,res){
 		res.redirect("/invalidSessionAdminLogin");
 };
 
-/*exports.revenueStats = function(req,res){
-	var data = {
-			lat: req.param("lat"),
-			long: req.param("long"),
-			startdate: req.param("startdate"),
-			enddate: req.param("enddate")
-	};
-	rpc.makeRequest("revenueStats", data, function(err, user) {
-		console.log("User : " + JSON.stringify(user));
-		if (err) {
-			console.log("There is an error: " + err);
-		} else {
-			if (user.code == "200") {
-				console.log("Everthing is fine!!!");
-				res.send(user);
-			} else {
-				console.log("Did not delete. Try again");
-				res.send("Error");
-			}
-		}
-	});
-};
-*/
+

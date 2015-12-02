@@ -53,6 +53,10 @@ UberPrototypeCustomer.config(['$locationProvider', '$routeProvider', function($l
 	  templateUrl: '/templates/DriverTrips.html',
 	  controller: 'DriverTripsController'
 	}) 
+   .when('/CustomerPayment', {
+    templateUrl: '/templates/CustomerPayment.html',
+    controller: 'CustomerController'
+  })
   /*.when('/BookaRide', {
     templateUrl: '/templates/BookaRide.html',
     controller: 'CustomerController'
@@ -97,6 +101,14 @@ UberPrototypeAdmin.config(['$locationProvider', '$routeProvider', function($loca
 	.when('/SearchBill', {
 	  templateUrl: '/templates/SearchBill.html',
 	  controller: 'searchBillController'
+	})
+	.when('/SearchCustomer', {
+	  templateUrl: '/templates/SearchCustomer.html',
+	  controller: 'searchCustomerController'
+	})
+	.when('/SearchDriver', {
+	  templateUrl: '/templates/SearchDriver.html',
+	  controller: 'searchDriverController'
 	})
 	  .when('/RideStatistics', {
 	  templateUrl: '/templates/RideStatistics.html',

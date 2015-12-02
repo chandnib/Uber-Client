@@ -225,6 +225,8 @@ app.get('/adminHome',admin.adminHome);
 app.get('/invalidAdminLogin',admin.invalidAdminLogin);
 app.get('/invalidSessionAdminLogin',admin.invalidSessionAdminLogin);
 app.post('/searchBill',admin.searchBill);
+app.post('/searchDriver',admin.searchDriver);
+app.post('/searchCustomer',admin.searchCustomer);
 app.post('/loadUnverifiedCustomers', admin.loadUnverifiedCustomers);
 app.post('/approveCustomer',admin.approveCustomer);
 app.post('/rejectCustomer',admin.rejectCustomer);
@@ -250,6 +252,8 @@ app.post('/updateProfile', customer.updateProfile);
 app.post('/uploadProfilePic',customer.uploadProfilePic);
 app.post('/CreateCustomer',customer.CreateCustomer);
 app.post('/uploadRideEventPic',customer.uploadEventRidePic);
+//Rekha
+app.get('/getCreditCardInfo',customer.getCreditCardInfo);
 
 //Driver
 app.get('/invalidSessionDriverLogin',driver.invalidSessionDriverLogin);
@@ -280,6 +284,8 @@ app.get('/fetchRideStatus',rides.fetchRideStatus);
 app.get('/getRideCreated',rides.getRideCreated);
 app.get('/getCustomerTripSummary',rides.getCustomerTripSummary);
 app.get('/getDriverTripSummary',rides.getDriverTripSummary);
+app.get('/getCustomerOngoingRides',rides.getCustomerOngoingRides);
+app.get('/getDriverOngoingRides',rides.getDriverOngoingRides);
 ///-----------------------------------------------------------Rides---------------------------------------------
 
 
@@ -300,16 +306,16 @@ app.post('/driverrideStats',admin.driverrideStats);
 app.post('/revenueStats',admin.revenueStats);
 
 //Server
-/*mongo.connect(mongoSessionConnectURL, function() {
+mongo.connect(mongoSessionConnectURL, function() {
 	http.createServer(app).listen(app.get('port'), function(){
 		console.log('Uber server listening on port ' + app.get('port'));
 	});
-});*/
+});
 
 //Clustering
-	mongo.connect(mongoSessionConnectURL, function() { 
-		app.listen(app.get('port'), function() {
-		//	process.send({ cmd: 'notifyRequest' });
-	console.log("Uber Cluster Server running at PORT ==> " + app.get('port'));
-	});
-})
+//	mongo.connect(mongoSessionConnectURL, function() { 
+//		app.listen(app.get('port'), function() {
+//		//	process.send({ cmd: 'notifyRequest' });
+//	console.log("Uber Cluster Server running at PORT ==> " + app.get('port'));
+//	});
+//})
