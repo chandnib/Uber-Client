@@ -410,3 +410,68 @@ exports.getDriverTripSummary = function(req,res)
 //			});
 //	
 //};
+
+exports.getCustomerOngoingRides = function(req,res)
+{
+	
+	
+	var customer_id = req.param("customer_id");
+	console.log("inside getOngoingRides" +  customer_id );
+	
+	var msg_payload = {};
+		msg_payload = {
+			"customer_id" : customer_id
+		};
+	mq_client.make_request('uber_getCustomerOngoingRides_queue',msg_payload,function(err, results) 
+			{
+				console.log(results);
+				if (results.code == 401) {
+					console.log(results.err);
+				} 
+				else 
+				{
+					console.log("i'm in getCustomerOngoingRides");
+					if (results.code == 200) {
+						console.log("back to node: getCustomerOngoingRides successful");
+						res.send(results);
+					} else {
+						console.log("back to node: getCustomerOngoingRides failed");
+						res.send("failed");
+					}
+				}
+			});
+	
+};
+
+exports.getDriverOngoingRides = function(req,res)
+{
+	
+	
+	var customer_id = req.param("customer_id");
+	console.log("inside getDriverOngoingRides" +  customer_id );
+	
+	var msg_payload = {};
+		msg_payload = {
+			"driver_id" : driver_id
+		};
+	mq_client.make_request('uber_getDriverOngoingRides_queue',msg_payload,function(err, results) 
+			{
+				console.log(results);
+				if (results.code == 401) {
+					console.log(results.err);
+				} 
+				else 
+				{
+					console.log("i'm in getDriverOngoingRides");
+					if (results.code == 200) {
+						console.log("back to node: getDriverOngoingRides successful");
+						res.send(results);
+					} else {
+						console.log("back to node: getDriverOngoingRides failed");
+						res.send("failed");
+					}
+				}
+			});
+	
+};
+
