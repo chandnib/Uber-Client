@@ -207,6 +207,34 @@ app.post('/loginDriver',
 		passport.authenticate('driver-local', {
 			successRedirect: '/driverHome',
 			failureRedirect: '/invalidDriverLogin'}));
+//Logins
+app.post('/loginCustomers',customer.loginCustomers);
+app.post('/loginDrivers',driver.loginDrivers);
+app.post('/loginAdmins',function(req,res){
+	var data = {};
+	data.EMAIL = req.body.username;
+	data.PASSWORD = req.body.password;
+	rpc.makeRequest("verifyAdmin", data,
+		function(err, user) {
+		console.log("loginAdmins : "+ JSON.stringify(user));
+		if(err){
+			res.status(404).send("Error");
+		}
+		else{
+			if(user == null || user == "" || user == {}){
+				res.status(404).send("Error");
+			}
+			else{
+				if(user.code == "200"){
+					res.status(200).send("Successfull");
+				}else{
+					res.status(404).send("Error");
+				}
+
+			}
+		}
+	});
+});
 
 //General
 app.get('/test', function(req, res) {
@@ -252,7 +280,6 @@ app.post('/updateProfile', customer.updateProfile);
 app.post('/uploadProfilePic',customer.uploadProfilePic);
 app.post('/CreateCustomer',customer.CreateCustomer);
 app.post('/uploadRideEventPic',customer.uploadEventRidePic);
-//Rekha
 app.get('/getCreditCardInfo',customer.getCreditCardInfo);
 
 //Driver
@@ -267,11 +294,8 @@ app.post('/addDriver', driver.driverSignUp);
 app.post('/updateDriverProfile', driver.updateProfile);
 app.post('/uploadProfilePicDriver',driver.uploadProfilePicDriver);
 app.post('/uploadDriverVideo',driver.uploadDriverVideo);
-
 app.post('/CreateDrivers',driver.CreateDrivers);
-//Rekha
 app.post('/showDriverin10Mile', driver.showDriverin10Mile);
-
 
 //Rides
 app.post('/createRide',rides.createRide);

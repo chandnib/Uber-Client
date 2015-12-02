@@ -36,7 +36,7 @@
                 <collectionProp name="Arguments.arguments">
                   <elementProp name="" elementType="HTTPArgument">
                     <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                    <stringProp name="Argument.value">{ &quot;username&quot;: &quot;driver@gmail.com&quot;, &quot;password&quot;: &quot;test&quot; }</stringProp>
+                    <stringProp name="Argument.value">{ &quot;username&quot;: &quot;driver4891@uber.com&quot;, &quot;password&quot;: &quot;test&quot; }</stringProp>
                     <stringProp name="Argument.metadata">=</stringProp>
                   </elementProp>
                 </collectionProp>
@@ -74,7 +74,7 @@
                 <collectionProp name="Arguments.arguments">
                   <elementProp name="" elementType="HTTPArgument">
                     <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                    <stringProp name="Argument.value">{ &quot;username&quot;: &quot;bumbleb@gmail.com&quot;, &quot;password&quot;: &quot;pass&quot; }</stringProp>
+                    <stringProp name="Argument.value">{ &quot;username&quot;: &quot;rakshithk@live.com&quot;, &quot;password&quot;: &quot;pass&quot; }</stringProp>
                     <stringProp name="Argument.metadata">=</stringProp>
                   </elementProp>
                 </collectionProp>
@@ -85,7 +85,7 @@
               <stringProp name="HTTPSampler.response_timeout"></stringProp>
               <stringProp name="HTTPSampler.protocol"></stringProp>
               <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-              <stringProp name="HTTPSampler.path">/login</stringProp>
+              <stringProp name="HTTPSampler.path">/loginCustomer</stringProp>
               <stringProp name="HTTPSampler.method">POST</stringProp>
               <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
               <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -191,7 +191,7 @@
   &quot;LASTNAME&quot;: &quot;CustomerL${C}&quot;,&#xd;
   &quot;MOBILENUMBER&quot;: &quot;6692478890&quot;,&#xd;
   &quot;LANGUAGE&quot;: &quot;English&quot;,&#xd;
-  &quot;CREDITCARDNUMBER&quot;: &quot;123465898956${CR}&quot;,&#xd;
+  &quot;CREDITCARDNUMBER&quot;: &quot;411111111111111${CR}&quot;,&#xd;
   &quot;CVV&quot;: &quot;369&quot;,&#xd;
   &quot;MONTH&quot;: &quot;September&quot;,&#xd;
   &quot;YEAR&quot;: &quot;2017&quot;,&#xd;

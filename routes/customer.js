@@ -5,6 +5,32 @@ var connection = amqp.createConnection({
 });
 var rpc = new (require('../rpc/amqprpc'))(connection);
 
+exports.loginCustomers = function(req,res){
+	var data = {};
+	data.EMAIL = req.body.username;
+	data.PASSWORD = req.body.password;
+	rpc.makeRequest("verifyCustomer", data,
+			function(err, user) {
+		console.log("verifyCustomer : "+ JSON.stringify(user));
+		if(err){
+			res.status(404).send("Error");
+		}
+		else{
+			if(user == null || user == "" || user == {}){
+				res.status(404).send("Error");
+			}
+			else{
+				if(user.code == "200"){
+					res.status(200).send("Successfull");
+				}else{
+					res.status(404).send("Error");
+				}
+
+			}
+		}
+	});
+};
+
 exports.signUpCustomer = function(req, res){
 	res.render('Sign_up_Customer', { title: 'HOME' });
 }

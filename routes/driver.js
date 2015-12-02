@@ -3,6 +3,32 @@ var amqp = require('amqp');
 var connection = amqp.createConnection({host:'127.0.0.1'});
 var rpc = new (require('../rpc/amqprpc'))(connection);
 
+exports.loginDrivers = function(req,res){
+	var data = {};
+	data.EMAIL = req.body.username;
+	data.PASSWORD = req.body.password;
+	rpc.makeRequest("verifyDriver", data,
+			function(err, user) {
+		console.log("verifyDriver : "+ JSON.stringify(user));
+		if(err){
+			res.status(404).send("Error");
+		}
+		else{
+			if(user == null || user == "" || user == {}){
+				res.status(404).send("Error");
+			}
+			else{
+				if(user.code == "200"){
+					res.status(200).send("Successfull");
+				}else{
+					res.status(404).send("Error");
+				}
+
+			}
+		}
+	});
+};
+
 exports.driverHome = function(req, res){
 	console.log("Session Set by Passport !!! ==>  " + JSON.stringify(req.session));
 	if(req.session.passport != null && req.session.passport != ""){
