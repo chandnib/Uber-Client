@@ -98,6 +98,14 @@ UberPrototypeAdmin.config(['$locationProvider', '$routeProvider', function($loca
 	  templateUrl: '/templates/SearchBill.html',
 	  controller: 'searchBillController'
 	})
+	.when('/SearchCustomer', {
+	  templateUrl: '/templates/SearchCustomer.html',
+	  controller: 'searchCustomerController'
+	})
+	.when('/SearchDriver', {
+	  templateUrl: '/templates/SearchDriver.html',
+	  controller: 'searchDriverController'
+	})
 	  .when('/RideStatistics', {
 	  templateUrl: '/templates/RideStatistics.html',
 	  controller: 'AdminReviewController'

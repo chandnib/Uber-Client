@@ -204,6 +204,29 @@ exports.searchBill = function(req,res){
 		res.redirect("/invalidSessionAdminLogin");
 };
 
+exports.searchCustomer = function(req,res){
+	if(req.session.passport != null && req.session.passport != ""){
+		if(req.session.passport.user.EMAIL != "" && req.session.passport.user.EMAIL != null){
+			adminAccountOperations.searchCustomer(req.body,req,res);
+		}
+		else
+			res.redirect("/invalidSessionAdminLogin");
+	}
+	else
+		res.redirect("/invalidSessionAdminLogin");
+};
+
+exports.searchDriver = function(req,res){
+	if(req.session.passport != null && req.session.passport != ""){
+		if(req.session.passport.user.EMAIL != "" && req.session.passport.user.EMAIL != null){
+			adminAccountOperations.searchDriver(req.body,req,res);
+		}
+		else
+			res.redirect("/invalidSessionAdminLogin");
+	}
+	else
+		res.redirect("/invalidSessionAdminLogin");
+};
 //-Rekha Admin details--------------------------
 
 /*exports.totalrideStats = function(req,res){

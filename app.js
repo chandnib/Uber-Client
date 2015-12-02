@@ -219,6 +219,8 @@ app.get('/adminHome',admin.adminHome);
 app.get('/invalidAdminLogin',admin.invalidAdminLogin);
 app.get('/invalidSessionAdminLogin',admin.invalidSessionAdminLogin);
 app.post('/searchBill',admin.searchBill);
+app.post('/searchDriver',admin.searchDriver);
+app.post('/searchCustomer',admin.searchCustomer);
 app.post('/loadUnverifiedCustomers', admin.loadUnverifiedCustomers);
 app.post('/approveCustomer',admin.approveCustomer);
 app.post('/rejectCustomer',admin.rejectCustomer);

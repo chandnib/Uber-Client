@@ -27,6 +27,8 @@
       <script type="text/javascript" src="../js/AdminReviewController.js"></script>
     <link href="adminstyle.css" rel="stylesheet" type="text/css">
   <script type="text/javascript" src="../js/searchBillController.js"></script>
+    <script type="text/javascript" src="../js/searchCustomerController.js"></script>
+       <script type="text/javascript" src="../js/searchDriverController.js"></script>
   </head>
   
 <body style="padding-top: 80px; padding-bottom: 70px;" ng-controller="AdminReviewController" ng-init="curuser=<%= user %>;">
@@ -95,7 +97,15 @@
 											class="list-group-item"
 											style="margin-left: 0; margin-right: 0; border-left: none; font-size: 18px; border-right: none">Search
 											Bills</a> 
-                    <a href="" ng-click="routeToTemplate('/CustomerPayment')" class="list-group-item" style="margin-left:0;margin-right:0; border-left:none;font-size:18px;border-right:none">Search Bills</a>
+					<a href="" ng-click="routeToTemplate('/SearchCustomer')"
+											class="list-group-item"
+											style="margin-left: 0; margin-right: 0; border-left: none; font-size: 18px; border-right: none">Search
+											Customer</a>
+					<a href="" ng-click="routeToTemplate('/SearchDriver')"
+											class="list-group-item"
+											style="margin-left: 0; margin-right: 0; border-left: none; font-size: 18px; border-right: none">Search
+											Drivers</a>						 						
+                    <a href="" ng-click="routeToTemplate('/CustomerPayment')" class="list-group-item" style="margin-left:0;margin-right:0; border-left:none;font-size:18px;border-right:none">Customer Payments</a>
                     <a ng-click="logout()" class="list-group-item" style="margin-left:0;margin-right:0; border-left:none;font-size:18px;border-right:none">Logout</a>
                   </div>
                 </div>
