@@ -120,7 +120,15 @@ exports.customerSignUp = function(req, res) {
 					console.log("Everthing is fine!!!");
 					res.redirect("/Log_In");
 				} else {
-					res.redirect("/customerSignUpError");
+					console.log("There was an error: "+user.err);
+					if(user.err=="User already in system")
+						{
+						errorMessage = "Email already taken. Please use another one";
+						}
+					res.send({
+						"statusCode" : 401,
+						"errorMessage": errorMessage
+					});
 				}
 			}
 		});
