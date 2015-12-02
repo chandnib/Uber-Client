@@ -289,6 +289,24 @@ exports.infoCustomer = function(req, res) {
 	});
 };
 
+exports.getCreditCardInfo = function(req, res) {
+	var data = {};
+	data.creCard = req.param("creCard");
+	rpc.makeRequest("getCreditCardInfo", data, function(err, user) {
+		console.log("User : " + JSON.stringify(user));
+		if (err) {
+			console.log("There is an error: " + err);
+		} else {
+			if (user.code == "200") {
+				console.log("Everthing is fine!!!");
+				res.send(user);
+			} else {
+				console.log("Did not delete. Try again");
+			}
+		}
+	});
+};
+
 exports.invalidCustomerLogin = function(req, res) {
 	var user = {};
 	user.errorInloginForm = true;

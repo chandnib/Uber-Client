@@ -17,13 +17,21 @@
               <label><font size="3" color="#808080">Start Date</font></label>
             </div>
            	<div class="col-xs-4">
-              <input type="text" class="form-control" id="startdate" name="startdate" ng-model="startdate" placeholder="%yyyy-%mm-%dd"/>
+           	<div class="form-group">
+              <input class="form-control  input-lg" type="date" class="form-control" id="startdate" name="startdate" ng-model="startdate" style="height:32px;" required/>
+              <p ng-show="" class="help-block" style="padding: 0px 0px;">Please
+				Select From Date.</p>
+				</div>
             </div>
            	<div class="col-xs-2">
               <label><font size="3" color="#808080">End Date</font></label>
             </div>
            	<div class="col-xs-4">
-              <input type="text" class="form-control" id="enddate" name="enddate" ng-model="enddate" placeholder="%yyyy-%mm-%dd"/>
+           	<div class="form-group">
+              <input class="form-control  input-lg" type="date" class="form-control" id="enddate" name="enddate" ng-model="enddate" style="height:32px;" required/>
+            <p ng-show="" class="help-block" style="padding: 0px 0px;">Please
+				Select To Date.</p>
+            </div>
             </div>
             </div>
            <div class="row">

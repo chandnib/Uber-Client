@@ -246,6 +246,8 @@ app.post('/updateProfile', customer.updateProfile);
 app.post('/uploadProfilePic',customer.uploadProfilePic);
 app.post('/CreateCustomer',customer.CreateCustomer);
 app.post('/uploadRideEventPic',customer.uploadEventRidePic);
+//Rekha
+app.get('/getCreditCardInfo',customer.getCreditCardInfo);
 
 //Driver
 app.get('/invalidSessionDriverLogin',driver.invalidSessionDriverLogin);
@@ -296,6 +298,7 @@ app.post('/totalrideStats',admin.totalrideStats);
 app.post('/cutomerrideStats',admin.cutomerrideStats);
 app.post('/driverrideStats',admin.driverrideStats);
 app.post('/revenueStats',admin.revenueStats);
+
 
 //Server
 mongo.connect(mongoSessionConnectURL, function() {
