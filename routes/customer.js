@@ -312,7 +312,7 @@ exports.uploadProfilePic = function(req,res){
 			var fs = require('fs');
 			fs.readFile(req.files.pofilepic.path, function (err, data) {
 				fs.exists(req.files.pofilepic.path)
-				var newPath = "/home/rakshithk/workspace/UberServer/public/uploads/"+req.files.pofilepic.name;
+				var newPath = "/home/rakshithk/workspace/uberprototype/public/uploads/"+req.files.pofilepic.name;
 				console.log("File newPath " + "");
 				fs.writeFile(newPath, data, function (err) {
 					data = {IMAGE_URL: "/public/uploads/"+req.files.pofilepic.name,ROW_ID:req.session.passport.user.ROW_ID}
@@ -369,7 +369,7 @@ exports.uploadEventRidePic = function(req,res){
 			var fs = require('fs');
 			fs.readFile(req.files.eventRidepic.path, function (err, data) {
 				fs.exists(req.files.eventRidepic.path)
-				var newPath = "/home/rakshithk/workspace/UberServer/public/uploads/"+req.files.eventRidepic.name;
+				var newPath = "/home/rakshithk/workspace/uberprototype/public/uploads/"+req.files.eventRidepic.name;
 				console.log("File newPath " + "");
 				fs.writeFile(newPath, data, function (err) {
 					data = {IMAGE_URL: "/public/uploads/"+req.files.eventRidepic.name,ROW_ID:req.session.passport.user.ROW_ID}

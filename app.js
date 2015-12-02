@@ -91,7 +91,8 @@ passport.use('admin-local',new LocalStrategy({ usernameField: 'username',
 					}
 					else{
 						if(user.code == "200"){
-							console.log("Everthing is fine!!!")
+							console.log("Everthing is fine!!!");
+							user.type = "Admin";
 							return done(null, user);
 						}else{
 							return done(null, false);
@@ -141,7 +142,8 @@ passport.use('customer-local', new LocalStrategy({ usernameField: 'username',
 					}
 					else{
 						if(user.code == "200"){
-							console.log("Everthing is fine!!!")
+							console.log("Everthing is fine!!!");
+							user.type = "Customer";
 							return done(null, user);
 						}else{
 							return done(null, false);
@@ -175,7 +177,8 @@ passport.use('driver-local',new LocalStrategy({ usernameField: 'username',
 					}
 					else{
 						if(user.code == "200"){
-							console.log("Everthing is fine!!!")
+							console.log("Everthing is fine!!!");
+							user.type = "Driver";
 							return done(null, user);
 						}else{
 							console.log("Login Failed !!!!!!")
@@ -206,6 +209,9 @@ app.post('/loginDriver',
 			failureRedirect: '/invalidDriverLogin'}));
 
 //General
+app.get('/test', function(req, res) {
+	res.status(200).send("test");
+});
 app.get('/', index.home);
 app.get('/Log_In', index.login);
 app.get('/Log_Out', index.logout);

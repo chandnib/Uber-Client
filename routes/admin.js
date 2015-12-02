@@ -5,7 +5,7 @@ adminAccountOperations.setup();
 exports.adminLoginPage = function(req, res){
 	if(req.session.passport != null && req.session.passport != ""){
 		console.log("Existing Session on Passport !!! ==>  " + JSON.stringify(req.session));
-		if(req.session.passport.user.EMAIL != "" && req.session.passport.user.EMAIL != null){
+		if(req.session.passport.user.EMAIL != "" && req.session.passport.user.EMAIL != null && req.session.passport.user.type == "Admin"){
 			res.redirect("/adminHome");
 		}
 		else
