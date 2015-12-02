@@ -105,7 +105,14 @@ exports.driverSignUp = function(req, res){
 						res.redirect("/Log_In");					
 						}
 					else{
-						res.redirect("/customerSignUpError");
+						if(user.err=="User already in system")
+						{
+						errorMessage = "Email already taken. Please use another one";
+						}
+					res.send({
+						"statusCode" : 401,
+						"errorMessage": errorMessage
+					});
 					}
 			}
 		});
