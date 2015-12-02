@@ -1,5 +1,5 @@
 UberPrototypeAdmin.controller('searchBillController',function($scope,$http,$location,$window,$routeParams){
-	$scope.BillList = {};
+	$scope.BillList = [];
 	$scope.searchInit =function(){
      	$scope.fromdate="";
 		$scope.toDate="";
@@ -41,8 +41,9 @@ UberPrototypeAdmin.controller('searchBillController',function($scope,$http,$loca
 				if (data.code == '200') {
 					console.log("data"+data.data[0].ROW_ID);
 					$scope.BillList = data.data;
+					$scope.showTable=true;
 					$scope.loadMore = true;
-					$scope.currentRow = data.data.length;
+					$scope.currentRow = $scope.currentRow + data.data.length;
 				}
 				else{
 					console.log("Error in getting the bills");
@@ -57,9 +58,9 @@ UberPrototypeAdmin.controller('searchBillController',function($scope,$http,$loca
 			$scope.showTable=false;
      }
      };
-     });
+    
 
-$scope.loadMore =function(){
+$scope.loadMore1 = function(){
 	 console.log("toDate"+$scope.toDate);
 	 console.log("fromdate"+$scope.fromdate);
 	 console.log("custEmailId"+$scope.custEmailId);
@@ -89,14 +90,16 @@ $scope.loadMore =function(){
 			}
 		}).success(function(data) {
 			console.log("data"+JSON.stringify(data));
+			console.log("data.code"+data.code);
 			//checking the response data for statusCode
 			if (data.code == '200') {
 				console.log("data"+data.data[0].ROW_ID);
-				for(i=0;i<data.length;i++){
+				for(i=0;i<data.data.length;i++){
+					console.log("pushing records");
 					$scope.BillList.push(data.data[i]);
 				}
 				$scope.loadMore = true;
-				$scope.currentRow = data.data.length;
+				$scope.currentRow = $scope.currentRow+100;
 				
 			}
 			else{
@@ -113,14 +116,12 @@ else{
 }
 };
 
-$scope.clearAll(){
+$scope.clearAll=function(){
 	$scope.showTable=false;
 	$scope.fromdate="";
 	$scope.toDate="";
-	$scope.custEmailId="";
-    $scope.driverEmailId="";
     $scope.currentRow=0;
     $scope.loadMore=false;
-}
+};
 });
 	

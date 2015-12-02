@@ -53,14 +53,12 @@
 	</div>
 </div>
 <div class="row">
-	<div class="col-md-2"></div>
+	<div class="col-md-3"></div>
 	<div class="col-md-2">
-		<button type="button" class="btn btn-success" ng-click="searchBill()">Search
-			Bill</button>
+		<button type="button" class="btn btn-success" ng-click="searchBill()">Search Bill</button>
 	</div>
 	<div class="col-md-2">
-		<button type="button" class="btn btn-success" ng-click="clearAll()">Search
-			Bill</button>
+		<button type="button" class="btn btn-success" ng-click="clearAll()">Clear Search</button>
 	</div>
 </div>
 <br>
@@ -99,10 +97,10 @@
 
 	</div>
 </div>
-<div class="row">
+<div class="row" ng-show="loadMore">
 	<div class="col-md-5"></div>
 	<div class="col-md-2">
-		<button type="button" class="btn btn-success" ng-click="loadMore()">Load
+		<button type="button" class="btn btn-info" ng-click="loadMore1()">Load
 			More</button>
 	</div>
 </div>
