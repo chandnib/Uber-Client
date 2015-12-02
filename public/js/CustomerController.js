@@ -293,13 +293,14 @@ UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$loc
 		   $scope.loadreview = function(data){
 			   console.log("inside function");
 			    $scope.driverreviews = [];
+			    $scope.driverId = driverinfo.DRIVER_ID;
 			    $scope.drivername = driverinfo.FIRST_NAME + " " + driverinfo.LAST_NAME;
 			    console.log("drivername: "+$scope.drivername);
 			    $scope.drivercarmodel = driverinfo.CAR_MODEL;
 			    $scope.drivercarcolor = driverinfo.COLOR;
 			    $scope.drivercaryear = driverinfo.YEAR;
-			    //$scope.videourl = "https://www.youtube.com/embed/osUEUEQaPzU";
-				$scope.videourl = $sce.trustAsResourceUrl(driverinfo.VIDEO_URL);
+			    $scope.videourl = "https://www.youtube.com/embed/osUEUEQaPzU";
+				//$scope.videourl = $sce.trustAsResourceUrl(driverinfo.VIDEO_URL);
 			    $scope.videourl = $sce.trustAsResourceUrl($scope.videourl);
 				$scope.driverimg = driverinfo.IMAGE_URL;
 				$scope.DriverDetails = false;
@@ -412,7 +413,7 @@ UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$loc
 			   var pickupLng = $window.localStorage.pickupLng;
 			   var dropoffLat = $window.localStorage.dropoffLat;
 			   var dropoffLng = $window.localStorage.dropoffLng;
-			   $window.localStorage.driverId = driverid;
+			   $window.localStorage.driverId = $scope.driverId;
 			   $window.localStorage.category ="C";
 			   
 			   console.log(pickupLat);
@@ -555,7 +556,7 @@ UberPrototypeCustomer.controller('CustomerController',function($scope,$http,$loc
 	  };
 
 $scope.getCurrentTripStatus = function(){
-		  
+		  console.log("inside getCurrentTrips");
 		  $http({
 				method : "GET",
 				url : '/getCustomerOngoingRides',
@@ -570,6 +571,8 @@ $scope.getCurrentTripStatus = function(){
 					  $window.localStorage.dropoff_address = data.value[0].DESTINATION;
 					  $window.localStorage.driverId = data.value[0].DRIVER_ID;
 					  $window.localStorage.rideStatus = data.value[0].STATUS;
+					  
+					  console.log("checking" +$window.localStorage.rideId);
 					  
 					  if ($window.localStorage.rideStatus == "CR"){
 						  $scope.routeToTemplate('/CustomerRideCreated');

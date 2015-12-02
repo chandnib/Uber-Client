@@ -378,39 +378,6 @@ exports.getDriverTripSummary = function(req,res)
 };
 
 
-//exports.getDriverTripSummary = function(req,res)
-//{
-//	console.log("inside getDriverTripSummary");
-//	
-//	var driver_id = req.param("driver_id");
-//	console.log (driver_id);
-//	
-//	var msg_payload = {
-//			"driver_id" : driver_id
-//		};
-//	
-//	mq_client.make_request('uber_getDriverTripSummary_queue',msg_payload,function(err, results) 
-//			{
-//				console.log(results);
-//				if (err)
-//				{
-//					throw err;
-//				} 
-//				else 
-//				{
-//					console.log("i'm here");
-//					if (results.code == 200) {
-//						console.log("back to node: getDriverTripSummary successful");
-//						res.send(results);
-//					} else {
-//						console.log("back to node: getDriverTripSummary failed");
-//						res.send("failed");
-//					}
-//				}
-//			});
-//	
-//};
-
 exports.getCustomerOngoingRides = function(req,res)
 {
 	
@@ -447,8 +414,8 @@ exports.getDriverOngoingRides = function(req,res)
 {
 	
 	
-	var customer_id = req.param("customer_id");
-	console.log("inside getDriverOngoingRides" +  customer_id );
+	var driver_id = req.param("driver_id");
+	console.log("inside getDriverOngoingRides" +  driver_id );
 	
 	var msg_payload = {};
 		msg_payload = {
@@ -474,4 +441,3 @@ exports.getDriverOngoingRides = function(req,res)
 			});
 	
 };
-

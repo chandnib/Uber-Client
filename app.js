@@ -306,16 +306,16 @@ app.post('/driverrideStats',admin.driverrideStats);
 app.post('/revenueStats',admin.revenueStats);
 
 //Server
-mongo.connect(mongoSessionConnectURL, function() {
+/*mongo.connect(mongoSessionConnectURL, function() {
 	http.createServer(app).listen(app.get('port'), function(){
 		console.log('Uber server listening on port ' + app.get('port'));
 	});
-});
+});*/
 
 //Clustering
-//	mongo.connect(mongoSessionConnectURL, function() { 
-//		app.listen(app.get('port'), function() {
-//		//	process.send({ cmd: 'notifyRequest' });
-//	console.log("Uber Cluster Server running at PORT ==> " + app.get('port'));
-//	});
-//})
+	mongo.connect(mongoSessionConnectURL, function() { 
+		app.listen(app.get('port'), function() {
+		//	process.send({ cmd: 'notifyRequest' });
+	console.log("Uber Cluster Server running at PORT ==> " + app.get('port'));
+	});
+})
