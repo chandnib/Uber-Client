@@ -299,7 +299,6 @@ app.post('/cutomerrideStats',admin.cutomerrideStats);
 app.post('/driverrideStats',admin.driverrideStats);
 app.post('/revenueStats',admin.revenueStats);
 
-
 //Server
 mongo.connect(mongoSessionConnectURL, function() {
 	http.createServer(app).listen(app.get('port'), function(){
